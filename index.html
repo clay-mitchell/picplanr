@@ -3,182 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PicPlanr V2 Accuracy Upgrade</title>
+  <title>PicPlanr Calendar Test</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
   <div class="app-shell">
     <aside class="sidebar">
       <div class="brand">
-        <div class="brand-mark">P</div>
+        <div class="logo">P</div>
         <div>
           <h1>PicPlanr</h1>
-          <p>Accuracy-first test build</p>
+          <span>Smart content planning</span>
         </div>
       </div>
 
       <nav>
-        <button class="nav-item active">Onboarding</button>
-        <button class="nav-item">Upload</button>
-        <button class="nav-item">Groups</button>
-        <button class="nav-item">Calendar</button>
+        <button class="nav-btn">Overview</button>
+        <button class="nav-btn">Uploads</button>
+        <button class="nav-btn">Post Groups</button>
+        <button class="nav-btn active">Calendar</button>
+        <button class="nav-btn">Account Profile</button>
       </nav>
 
-      <div class="sidebar-card">
-        <h3>What changed</h3>
-        <ul>
-          <li>Per-image fact extraction</li>
-          <li>Confidence scoring</li>
-          <li>No unsupported claims</li>
-          <li>Captions built only from safe facts</li>
-        </ul>
+      <div class="mini-card">
+        <span class="mini-label">Content ready</span>
+        <strong>8 approved posts</strong>
+        <p>Enough content for approximately 2 weeks.</p>
       </div>
     </aside>
 
     <main class="main">
-      <section class="hero card">
+      <header class="topbar">
         <div>
-          <p class="eyebrow">PicPlanr Version 2</p>
-          <h2>More accurate captions from stricter image analysis</h2>
-          <p class="muted">This version analyses every image separately, filters out low-confidence guesses, then writes grouped captions only from supported details and saved account context.</p>
+          <p class="eyebrow">Content calendar</p>
+          <h2>Your posts, planned at a glance</h2>
+          <p class="subtext">Review PicPlanr’s recommended schedule, move anything you want, then approve the full plan.</p>
         </div>
+        <div class="top-actions">
+          <button class="secondary" id="todayBtn">Today</button>
+          <button class="primary" id="approveAllBtn">Approve full schedule</button>
+        </div>
+      </header>
+
+      <section class="summary-row">
+        <div class="summary-card"><span>Scheduled</span><strong id="scheduledCount">6</strong><small>Across Instagram and LinkedIn</small></div>
+        <div class="summary-card"><span>Awaiting approval</span><strong id="approvalCount">3</strong><small>Ready for your review</small></div>
+        <div class="summary-card"><span>Unscheduled</span><strong id="unscheduledCount">2</strong><small>Drag onto any day</small></div>
+        <div class="summary-card highlight"><span>Best opportunity</span><strong>Tuesday, 7:00pm</strong><small>Strongest predicted slot this week</small></div>
       </section>
 
-      <section class="grid two-col">
-        <div class="card">
-          <h3>1. Account setup</h3>
-          <div class="form-grid">
-            <label>
-              Account type
-              <select id="accountType">
-                <option value="Business">Business</option>
-                <option value="Individual">Individual</option>
-              </select>
-            </label>
-            <label>
-              Brand or account name
-              <input id="brandName" type="text" placeholder="Box Hub / Your name" />
-            </label>
-            <label>
-              Platform
-              <select id="platform">
-                <option value="Instagram">Instagram</option>
-                <option value="LinkedIn">LinkedIn</option>
-              </select>
-            </label>
-            <label>
-              Instagram handle
-              <input id="instagramHandle" type="text" placeholder="@boxhub.uk" />
-            </label>
-            <label>
-              LinkedIn page
-              <input id="linkedinHandle" type="text" placeholder="linkedin.com/company/..." />
-            </label>
-            <label>
-              Website
-              <input id="website" type="text" placeholder="https://..." />
-            </label>
-            <label class="full-span">
-              Competitor or inspiration accounts
-              <input id="competitors" type="text" placeholder="@competitor1, @competitor2" />
-            </label>
-            <label class="full-span">
-              Words or phrases to avoid
-              <input id="avoidWords" type="text" placeholder="unforgettable, elevate, magical" />
-            </label>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3>2. Upload folder or images</h3>
-          <div class="upload-box" id="dropZone">
-            <input id="fileInput" type="file" accept="image/*" multiple webkitdirectory directory />
-            <p class="upload-title">Drop a folder here or click to browse</p>
-            <p class="muted">Up to 50 images. This build compresses images in your browser and analyses them one at a time.</p>
-          </div>
-          <div class="actions">
-            <button id="analyzeBtn" class="primary">Analyse images and build post groups</button>
-            <span id="statusText" class="muted">No images selected yet.</span>
-          </div>
-          <div id="previewGrid" class="preview-grid"></div>
-        </div>
-      </section>
-
-      <section class="card">
-        <h3>3. Analysis progress</h3>
-        <div class="progress-wrap">
-          <div class="progress-bar"><div id="progressFill"></div></div>
-          <p id="progressText" class="muted">Waiting to start.</p>
-        </div>
-        <div id="analysisList" class="analysis-list"></div>
-      </section>
-
-      <section class="card">
-        <div class="section-header">
+      <section class="calendar-toolbar card">
+        <div class="date-controls">
+          <button class="icon-btn" id="prevWeek" aria-label="Previous week">‹</button>
           <div>
-            <h3>4. Generated post groups</h3>
-            <p class="muted">Each group is built from supported facts only. If anything looks wrong, use <strong>Incorrect analysis</strong> and regenerate.</p>
+            <span class="toolbar-label">Viewing</span>
+            <h3 id="weekLabel">15–21 June 2026</h3>
           </div>
+          <button class="icon-btn" id="nextWeek" aria-label="Next week">›</button>
         </div>
-        <div id="groupResults" class="group-results empty-state">
-          Run an analysis to see grouped posts and three caption options per group.
+        <div class="view-switch">
+          <button class="view-btn active" data-view="week">Week</button>
+          <button class="view-btn" data-view="month">Month</button>
         </div>
+        <div class="legend">
+          <span><i class="dot instagram"></i>Instagram</span>
+          <span><i class="dot linkedin"></i>LinkedIn</span>
+          <span><i class="dot draft"></i>Awaiting approval</span>
+        </div>
+      </section>
+
+      <section class="workspace">
+        <div class="calendar card" id="calendarArea">
+          <div class="week-grid" id="weekGrid"></div>
+          <div class="month-grid hidden" id="monthGrid"></div>
+        </div>
+
+        <aside class="right-panel">
+          <div class="card recommendations">
+            <div class="panel-heading">
+              <div>
+                <span class="toolbar-label">PicPlanr guidance</span>
+                <h3>This week</h3>
+              </div>
+              <span class="ai-badge">AI</span>
+            </div>
+            <div class="recommendation-item good">
+              <strong>Good content balance</strong>
+              <p>You have a mix of venue, people-focused and booking-led posts.</p>
+            </div>
+            <div class="recommendation-item">
+              <strong>Best predicted post</strong>
+              <p>Your Tuesday carousel is placed in the strongest evening slot.</p>
+            </div>
+            <div class="recommendation-item warning">
+              <strong>Small gap</strong>
+              <p>No Story content is planned for Friday. PicPlanr recommends adding one.</p>
+            </div>
+          </div>
+
+          <div class="card unscheduled-panel">
+            <div class="panel-heading">
+              <div>
+                <span class="toolbar-label">Approved content</span>
+                <h3>Unscheduled</h3>
+              </div>
+              <span class="count-pill" id="unscheduledPill">2</span>
+            </div>
+            <p class="panel-copy">Drag a post onto any day or use the quick schedule button.</p>
+            <div id="unscheduledList" class="unscheduled-list"></div>
+          </div>
+        </aside>
       </section>
     </main>
   </div>
 
-  <template id="analysisTemplate">
-    <div class="analysis-item">
-      <div class="analysis-thumb"></div>
-      <div class="analysis-copy">
-        <div class="analysis-head">
-          <strong class="filename"></strong>
-          <span class="confidence-badge"></span>
+  <div class="modal-backdrop hidden" id="modalBackdrop">
+    <div class="modal">
+      <button class="modal-close" id="modalClose">×</button>
+      <div class="modal-preview" id="modalPreview"></div>
+      <div class="modal-content">
+        <div class="modal-meta" id="modalMeta"></div>
+        <h3 id="modalTitle"></h3>
+        <p id="modalCaption"></p>
+        <div class="modal-info" id="modalInfo"></div>
+        <div class="modal-actions">
+          <button class="secondary" id="movePostBtn">Move post</button>
+          <button class="secondary" id="editCaptionBtn">Edit caption</button>
+          <button class="primary" id="approvePostBtn">Approve post</button>
         </div>
-        <p class="fact-summary"></p>
-        <div class="tag-row visible-facts"></div>
-        <div class="danger-row do-not-claim"></div>
       </div>
     </div>
-  </template>
+  </div>
 
-  <template id="groupTemplate">
-    <div class="group-card">
-      <div class="group-top">
-        <div class="group-images"></div>
-        <div class="group-meta">
-          <div class="chip-row">
-            <span class="chip post-type"></span>
-            <span class="chip image-count"></span>
-            <span class="chip safe-angle"></span>
-          </div>
-          <h4 class="group-title"></h4>
-          <p class="safe-summary"></p>
-          <p class="timing muted"></p>
-          <p class="reason muted"></p>
-        </div>
-      </div>
-      <div class="captions-grid">
-        <div class="caption-option natural">
-          <h5>Natural</h5>
-          <p class="caption-natural"></p>
-        </div>
-        <div class="caption-option engagement">
-          <h5>Engagement</h5>
-          <p class="caption-engagement"></p>
-        </div>
-        <div class="caption-option goal-led">
-          <h5>Goal-led</h5>
-          <p class="caption-goal"></p>
-        </div>
-      </div>
-      <div class="group-actions">
-        <button class="secondary incorrect-btn">Incorrect analysis</button>
-        <button class="secondary regenerate-btn">Regenerate captions</button>
-      </div>
-    </div>
-  </template>
-
-  <script src="app.js" type="module"></script>
+  <script src="app.js"></script>
 </body>
 </html>

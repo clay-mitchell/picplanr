@@ -1,26 +1,25 @@
-# PicPlanr Accuracy Upgrade
+# PicPlanr Calendar Test
 
-This build upgrades the caption workflow so it is more accurate and less likely to invent details.
+This is the first interactive calendar test for PicPlanr.
 
-## Main changes
+## Included
 
-- Images are analysed one by one
-- Each image returns supported facts with confidence levels
-- The caption layer only uses those supported facts
-- Risky or unsupported claims are filtered out
-- Groups are created after the image analyses are complete
-- Each group gets three caption options
+- Week view with posts visible inside each day
+- Month view
+- Instagram and LinkedIn labels
+- Approved and awaiting-approval statuses
+- Smart scheduling explanations
+- Unscheduled approved-post area
+- Drag-and-drop rescheduling
+- Quick schedule button
+- Post preview window
+- Caption editing
+- Individual post approval
+- Approve full schedule button
+- Weekly AI guidance panel
 
-## Environment variable
+## Uploading to GitHub
 
-Make sure Vercel still has:
+Upload the contents of this folder to the root of your existing PicPlanr GitHub repository and replace the current front-end files.
 
-`OPENAI_API_KEY`
-
-## Files to upload
-
-Upload the contents of this folder to the root of the existing GitHub repository.
-
-## Notes
-
-This is a stricter test build. It is designed to be more conservative, which is better than making unsupported claims.
+This calendar test is front-end only and does not require a new API key or storage connection.
