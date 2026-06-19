@@ -1,7 +1,1 @@
-{
-  "functions": {
-    "api/*.js": {
-      "maxDuration": 30
-    }
-  }
-}
+{"$schema":"https://openapi.vercel.sh/vercel.json","rewrites":[{"source":"/","destination":"/public/index.html"},{"source":"/styles.css","destination":"/public/styles.css"},{"source":"/app.js","destination":"/public/app.js"},{"source":"/api/picplanr","destination":"/api/picplanr.js"}]}

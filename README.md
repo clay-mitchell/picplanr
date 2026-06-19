@@ -1,20 +1,28 @@
-# PicPlanr Visual Month Calendar
+# PicPlanr Integrated V3
 
-This is a user-interface test for the full month calendar.
+This build keeps the complete Version 2 flow and replaces the calendar with a more visual layout.
 
-## Improvements
+## Calendar improvements
 
-- Every scheduled day shows the actual post image
-- Platform, time, post title and caption preview are visible at a glance
-- Full month view
-- Month summary panel
-- Unscheduled approved posts panel
-- Click any post to see the full image, caption and scheduling reason
-- Export month as an .ics Google Calendar file
-- Add an individual post to Google Calendar
+- “This week’s schedule” appears first
+- Each post shows its real image
+- Posting time, platform, title and caption preview are visible
+- Full monthly calendar appears below
+- Clicking a post opens the full image and editable caption
+- Google Calendar export remains included
 
-## Upload to GitHub
+## Upload structure
 
-Upload the contents of this folder to the root of the existing PicPlanr GitHub repository and commit the changes.
+Upload the contents of this folder to the root of the existing GitHub repository.
 
-This test uses sample image URLs to demonstrate the layout. The production version should use the real approved PicPlanr image URLs saved in Vercel Blob or another storage service.
+Important front-end files:
+
+- `public/index.html`
+- `public/styles-v3.css`
+- `public/app-v3.js`
+
+The versioned file names prevent the browser or Vercel from continuing to load the previous cached calendar.
+
+Keep the existing Vercel environment variable:
+
+`OPENAI_API_KEY`
