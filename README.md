@@ -1,28 +1,30 @@
-# PicPlanr Integrated V6 — Balanced Monthly Scheduling
+# PicPlanr Integrated V7 — Correct Dates and Monthly Distribution
 
-This version changes the calendar scheduling rules.
+This update fixes two calendar problems.
 
-## New scheduling behaviour
+## Fixed
 
-- Approved content is spread across the full selected month
-- No week can contain more than 4 posts
-- The scheduler aims for an even number of posts each week
-- Preferred AI-recommended days and times are still used where possible
-- Similar posts are not all placed into the first week
-- The weekly preview opens on the first scheduled week
+1. The weekly view previously matched posts by weekday only.
+   This made posts from other weeks appear inside the same visible week.
+   It now matches the full date.
 
-## Example
+2. Scheduling previously started at the beginning of the selected month.
+   It now starts from tomorrow and uses the next 30 days, so no post is
+   scheduled in the past.
 
-Seven approved posts will normally be spread across approximately four weeks instead of all appearing in one week.
+## Scheduling rules
 
-## Upload
+- Content is spread over the next 30 days
+- The target is an even number of posts across approximately four weeks
+- Maximum 4 posts in any week
+- AI-recommended days and times are used where they fit
+- The month calendar opens on the month containing the first scheduled post
 
-Upload the contents of this folder to the root of the existing GitHub repository.
-
-The new cache-busted front-end files are:
+## New front-end files
 
 - `public/index.html`
-- `public/styles-v6.css`
-- `public/app-v6.js`
+- `public/styles-v7.css`
+- `public/app-v7.js`
 
-Keep all existing Vercel environment variables.
+Upload the contents of this folder to the root of the existing GitHub repository.
+Keep all current Vercel environment variables.
