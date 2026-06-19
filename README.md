@@ -1,27 +1,19 @@
-# PicPlanr Integrated V8 — Brand Logo Added
+# PicPlanr Integrated V9 — Clean First-Time Onboarding
 
-This version adds the new PicPlanr logo into the latest system build.
+This version removes the demo account details from the onboarding form.
 
-## Added
+## Changed
 
-- full PicPlanr logo in the left sidebar
-- compact PicPlanr logo in the top header
-- favicon linked to the PicPlanr logo image
-- updated front-end asset paths
+- The Name field is blank
+- The Industry or content category field is blank
+- Neutral placeholders are shown for first-time users
+- Social handle placeholders now use generic examples
 
-## Files updated
+## New front-end files
 
 - `public/index.html`
-- `public/styles-v8.css`
-- `public/app-v8.js`
-- `public/assets/picplanr-logo.png`
+- `public/styles-v9.css`
+- `public/app-v9.js`
 
-## Upload
-
-1. Unzip this folder
-2. Upload the contents to the root of your existing GitHub repository
-3. Replace matching files
-4. Commit changes
-5. Let Vercel redeploy
-
-Keep your existing environment variables.
+Upload the contents of this folder to the root of your existing GitHub repository and replace the matching files.
+Keep all existing Vercel environment variables.
