@@ -4,7 +4,7 @@ create extension if not exists pgcrypto;
 create table if not exists public.social_connections (
   id uuid primary key default gen_random_uuid(),
   user_id uuid,
-  provider text not null check (provider in ('instagram','linkedin')),
+  provider text not null check (provider in ('instagram','linkedin','tiktok')),
   provider_account_id text,
   provider_account_name text,
   encrypted_access_token text,
@@ -24,6 +24,7 @@ create table if not exists public.scheduled_posts (
   caption text not null,
   media_url text not null,
   post_format text,
+  media_type text not null default 'image' check (media_type in ('image','video','carousel')),
   scheduled_for timestamptz not null,
   status text not null default 'draft'
     check (status in ('draft','approved','scheduled','publishing','published','needs_attention','cancelled')),

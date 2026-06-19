@@ -1,61 +1,52 @@
-# PicPlanr Integrated V4 — Connected Accounts and Automatic Publishing Foundation
+# PicPlanr Integrated V5 — TikTok Video Publishing Foundation
 
-This version keeps the full PicPlanr workflow and adds the next product layer:
+This version adds TikTok alongside Instagram and LinkedIn.
 
-- Connected Accounts screen
-- Instagram and LinkedIn connection controls
-- Publishing-readiness checklist
-- Save approved calendar posts to a publishing queue
-- Scheduled-publishing database schema
-- Vercel scheduled job route
-- Test mode for checking the workflow without publishing publicly
-- Post publishing statuses
+## Added
 
-## Important
+- TikTok handle in onboarding
+- TikTok Connected Account card
+- TikTok readiness indicator
+- TikTok Login Kit authorisation route
+- TikTok video upload and scheduling support
+- Video files accepted in the upload screen
+- Video entries can be saved to the publishing queue
+- TikTok provider adapter scaffold
+- Database support for TikTok and video media
 
-The interface and publishing infrastructure are included, but real social posting cannot be activated until:
+## Current TikTok limitation
 
-1. A Supabase project is connected
-2. Image storage is connected
-3. A Meta developer application is created and approved
-4. A LinkedIn developer application is created and approved
-5. Secure user authentication and token encryption are connected
+The interface and backend foundation are included, but live TikTok publishing still requires:
 
-This is required by the social platforms; it cannot be bypassed by uploading code alone.
+1. A TikTok for Developers application
+2. Login Kit enabled
+3. Content Posting API enabled
+4. Approved redirect addresses
+5. Requested scopes approved
+6. App review for Direct Post
+7. A verified media domain or supported upload flow
+8. User-facing TikTok privacy and interaction choices
 
-## Environment variables
+Keep `PUBLISHING_TEST_MODE=true` until those requirements are approved.
 
-Existing:
+## TikTok environment variables
+
+- `TIKTOK_CLIENT_KEY`
+- `TIKTOK_CLIENT_SECRET`
+- `TIKTOK_REDIRECT_URI`
+- `TIKTOK_SCOPES=user.info.basic,video.publish,video.upload`
+
+## Existing environment variables
+
+Keep all Version 4 variables, including:
 
 - `OPENAI_API_KEY`
-
-Publishing foundation:
-
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
-- `SUPABASE_STORAGE_BUCKET` or `BLOB_READ_WRITE_TOKEN`
+- `BLOB_READ_WRITE_TOKEN` or `SUPABASE_STORAGE_BUCKET`
 - `CRON_SECRET`
 - `PUBLISHING_TEST_MODE=true`
 
-Instagram later:
+## Database
 
-- `META_APP_ID`
-- `META_APP_SECRET`
-- `META_REDIRECT_URI`
-
-LinkedIn later:
-
-- `LINKEDIN_CLIENT_ID`
-- `LINKEDIN_CLIENT_SECRET`
-- `LINKEDIN_REDIRECT_URI`
-- `LINKEDIN_SCOPES`
-
-## Database setup
-
-Run `supabase/schema.sql` inside the Supabase SQL editor.
-
-## Test mode
-
-Keep `PUBLISHING_TEST_MODE=true` while developing. Due posts will move to Published without being sent to a public social account.
-
-Set it to `false` only after approved platform connections and real publishing adapters are active.
+Run the updated `supabase/schema.sql` in a new test database. If the previous schema is already installed, use a database migration rather than recreating production tables.

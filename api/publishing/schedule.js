@@ -18,7 +18,8 @@ async function saveToSupabase(posts){
       scheduled_for:p.scheduled_for,
       media_url:p.media_url,
       status:'scheduled',
-      post_format:p.post_format
+      post_format:p.post_format,
+      media_type:p.media_type||'image'
     })))
   });
   if(!r.ok)throw new Error(await r.text());

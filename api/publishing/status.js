@@ -9,8 +9,10 @@ export default async function handler(req,res){
     storageReady:Boolean(process.env.BLOB_READ_WRITE_TOKEN||process.env.SUPABASE_STORAGE_BUCKET),
     instagramConfigured:Boolean(process.env.META_APP_ID&&process.env.META_APP_SECRET&&process.env.META_REDIRECT_URI),
     linkedinConfigured:Boolean(process.env.LINKEDIN_CLIENT_ID&&process.env.LINKEDIN_CLIENT_SECRET&&process.env.LINKEDIN_REDIRECT_URI),
+    tiktokConfigured:Boolean(process.env.TIKTOK_CLIENT_KEY&&process.env.TIKTOK_CLIENT_SECRET&&process.env.TIKTOK_REDIRECT_URI),
     schedulerReady:Boolean(process.env.CRON_SECRET),
     instagramConnected:false,
-    linkedinConnected:false
+    linkedinConnected:false,
+    tiktokConnected:false
   });
 }
