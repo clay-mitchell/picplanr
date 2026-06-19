@@ -1,110 +1,89 @@
 const posts = [
-  {id:1,date:'2026-06-02',time:'19:00',title:'Venue transformation carousel',platform:'Instagram',type:'Carousel',status:'Approved',image:'assets/desk.jpg',caption:'From blank space to a room ready for a full evening of celebrations.',reason:'Tuesday evening is the strongest predicted Instagram slot.'},
-  {id:2,date:'2026-06-04',time:'09:30',title:'Corporate event case study',platform:'LinkedIn',type:'Single post',status:'Approved',image:'assets/camera.jpg',caption:'A look at how the venue was adapted for a professional event with a flexible layout and full production support.',reason:'Weekday mornings suit professional audiences.'},
-  {id:3,date:'2026-06-06',time:'11:00',title:'Weekend atmosphere',platform:'Instagram',type:'Carousel',status:'Awaiting approval',image:'assets/mountains.jpg',caption:'The kind of atmosphere that makes the whole room feel alive.',reason:'Saturday late morning is a useful lifestyle-content window.'},
-  {id:4,date:'2026-06-09',time:'19:15',title:'Inside the venue',platform:'Instagram',type:'Single post',status:'Approved',image:'assets/plant.jpg',caption:'A closer look at one of the spaces that can be shaped around your event.',reason:'Evening browsing time suits venue inspiration content.'},
-  {id:5,date:'2026-06-11',time:'10:00',title:'Business partnership post',platform:'LinkedIn',type:'Single post',status:'Approved',image:'assets/coast.jpg',caption:'Another strong collaboration brought to life through careful planning, production and a flexible space.',reason:'Thursday morning is a strong professional posting window.'},
-  {id:6,date:'2026-06-13',time:'18:30',title:'People-focused event moment',platform:'Instagram',type:'Carousel',status:'Awaiting approval',image:'assets/camera.jpg',caption:'The room matters, but the people and atmosphere are what bring it to life.',reason:'Saturday evening supports social event content.'},
-  {id:7,date:'2026-06-16',time:'19:00',title:'Booking-focused venue post',platform:'Instagram',type:'Single post',status:'Approved',image:'assets/desk.jpg',caption:'Planning an event in Glasgow? Our team can help shape the space around the occasion.',reason:'Tuesday evening is a high-intent planning window.'},
-  {id:8,date:'2026-06-18',time:'09:00',title:'Behind the scenes planning',platform:'LinkedIn',type:'Single post',status:'Approved',image:'assets/plant.jpg',caption:'A look at the preparation that happens before guests arrive and the event begins.',reason:'Early weekday posts suit behind-the-scenes business content.'},
-  {id:9,date:'2026-06-20',time:'12:00',title:'Weekend venue details',platform:'Instagram',type:'Carousel',status:'Approved',image:'assets/mountains.jpg',caption:'The smaller details make a big difference when the whole room comes together.',reason:'Midday weekend browsing suits visual detail posts.'},
-  {id:10,date:'2026-06-23',time:'18:45',title:'Event highlight carousel',platform:'Instagram',type:'Carousel',status:'Approved',image:'assets/coast.jpg',caption:'A full room, a brilliant crowd and exactly the kind of atmosphere we love to see.',reason:'Tuesday evenings remain the best predicted engagement window.'},
-  {id:11,date:'2026-06-25',time:'10:30',title:'Flexible event space',platform:'LinkedIn',type:'Single post',status:'Awaiting approval',image:'assets/desk.jpg',caption:'A flexible venue can make a major difference to how an event flows from arrival through to the final guest leaving.',reason:'Late morning supports professional discovery.'},
-  {id:12,date:'2026-06-27',time:'19:00',title:'Saturday celebration post',platform:'Instagram',type:'Single post',status:'Approved',image:'assets/camera.jpg',caption:'Another Saturday filled with good people, great energy and a room ready to celebrate.',reason:'Weekend evening timing matches the content and audience mindset.'},
-  {id:13,date:'2026-06-30',time:'19:00',title:'End of month recap',platform:'Instagram',type:'Carousel',status:'Approved',image:'assets/plant.jpg',caption:'A look back at some of the moments that made this month a busy one.',reason:'A month-end evening recap encourages reflection and engagement.'}
+  {id:1,date:'2026-06-02',time:'7:00 PM',platform:'Instagram',type:'Carousel',status:'Approved',title:'Dining and dancing at Box Hub',caption:'A room that can move from dinner to dancing without missing a beat.',image:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=700&q=80',reason:'Tuesday evenings suit event inspiration and venue browsing.'},
+  {id:2,date:'2026-06-04',time:'3:00 PM',platform:'LinkedIn',type:'Single post',status:'Awaiting approval',title:'Flexible event spaces',caption:'A practical look at how the venue can adapt for corporate and private events.',image:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=700&q=80',reason:'Mid-afternoon LinkedIn timing suits professionals planning future events.'},
+  {id:3,date:'2026-06-08',time:'10:00 AM',platform:'Instagram',type:'Carousel',status:'Approved',title:'A blank canvas for your event',caption:'From the first setup to the final guest arrival, the space is designed to work around you.',image:'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=700&q=80',reason:'Monday morning gives planners time to save and revisit venue ideas.'},
+  {id:4,date:'2026-06-13',time:'11:00 AM',platform:'Instagram',type:'Carousel',status:'Approved',title:'Outdoor event possibilities',caption:'A closer look at the outdoor space and the ways it can support a relaxed celebration.',image:'https://images.unsplash.com/photo-1519225421980-715cb0215aed?auto=format&fit=crop&w=700&q=80',reason:'Weekend late morning suits relaxed event inspiration.'},
+  {id:5,date:'2026-06-17',time:'2:00 PM',platform:'LinkedIn',type:'Single post',status:'Awaiting approval',title:'Professional event presentation',caption:'Clear signage, practical layouts and a setup designed to keep the event running smoothly.',image:'https://images.unsplash.com/photo-1505373877841-8d25f7d46678?auto=format&fit=crop&w=700&q=80',reason:'Wednesday afternoon performs well for professional venue content.'},
+  {id:6,date:'2026-06-19',time:'6:00 PM',platform:'Instagram',type:'Carousel',status:'Approved',title:'Wedding and celebration spaces',caption:'A setting that can feel polished, personal and completely your own.',image:'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=700&q=80',reason:'Friday evening aligns with weekend planning and celebration content.'},
+  {id:7,date:'2026-06-24',time:'7:30 PM',platform:'Instagram',type:'Single post',status:'Approved',title:'A full room and a great atmosphere',caption:'Exactly the kind of energy we love seeing in the venue.',image:'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=700&q=80',reason:'Evening engagement is stronger for lively event content.'},
+  {id:8,date:'2026-06-28',time:'4:00 PM',platform:'Instagram',type:'Single post',status:'Awaiting approval',title:'Venue details that make a difference',caption:'Small details, warm lighting and a space ready to be made your own.',image:'https://images.unsplash.com/photo-1507501336603-6e31db2be093?auto=format&fit=crop&w=700&q=80',reason:'Sunday afternoon suits relaxed browsing and future event planning.'}
 ];
 
-let currentYear=2026,currentMonth=5,activePost=null;
-const monthGrid=document.getElementById('monthGrid');
-const monthLabel=document.getElementById('monthLabel');
-const modalBackdrop=document.getElementById('modalBackdrop');
-const monthNames=['January','February','March','April','May','June','July','August','September','October','November','December'];
+const unscheduled = [
+  {title:'Behind the scenes setup',type:'Story set',image:'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=300&q=80'},
+  {title:'Guest arrival moments',type:'Carousel',image:'https://images.unsplash.com/photo-1519167758481-83f550bb49b3?auto=format&fit=crop&w=300&q=80'}
+];
 
-function render(){
-  monthLabel.textContent=`${monthNames[currentMonth]} ${currentYear}`;
-  monthGrid.innerHTML='';
-  const firstDay=new Date(currentYear,currentMonth,1).getDay();
-  const daysInMonth=new Date(currentYear,currentMonth+1,0).getDate();
-  const prevDays=new Date(currentYear,currentMonth,0).getDate();
-  const totalCells=42;
-  for(let i=0;i<totalCells;i++){
-    const cell=document.createElement('div');cell.className='day-cell';
-    let dayNum,cellMonth=currentMonth,cellYear=currentYear,outside=false;
-    if(i<firstDay){dayNum=prevDays-firstDay+i+1;cellMonth=currentMonth-1;outside=true}
-    else if(i>=firstDay+daysInMonth){dayNum=i-(firstDay+daysInMonth)+1;cellMonth=currentMonth+1;outside=true}
-    else dayNum=i-firstDay+1;
-    if(cellMonth<0){cellMonth=11;cellYear--} if(cellMonth>11){cellMonth=0;cellYear++}
-    const dateStr=`${cellYear}-${String(cellMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
-    if(outside)cell.classList.add('outside');
-    if(dateStr==='2026-06-19')cell.classList.add('today');
-    cell.innerHTML=`<div class="day-number"><strong>${dayNum}</strong></div>`;
-    const dayPosts=posts.filter(p=>p.date===dateStr).sort((a,b)=>a.time.localeCompare(b.time));
-    dayPosts.slice(0,2).forEach(post=>cell.appendChild(createPostMini(post)));
-    if(dayPosts.length>2){const more=document.createElement('div');more.className='more-count';more.textContent=`+${dayPosts.length-2} more`;cell.appendChild(more)}
+let currentDate = new Date(2026,5,1);
+let activePost = null;
+const monthGrid = document.getElementById('monthGrid');
+const monthTitle = document.getElementById('monthTitle');
+const summaryMonth = document.getElementById('summaryMonth');
+const modal = document.getElementById('modalBackdrop');
+const toast = document.getElementById('toast');
+
+function renderCalendar(){
+  const year=currentDate.getFullYear(),month=currentDate.getMonth();
+  const label=currentDate.toLocaleString('en-GB',{month:'long',year:'numeric'});
+  monthTitle.textContent=label;summaryMonth.textContent=label;monthGrid.innerHTML='';
+  const first=new Date(year,month,1);
+  const mondayIndex=(first.getDay()+6)%7;
+  const daysInMonth=new Date(year,month+1,0).getDate();
+  const prevDays=new Date(year,month,0).getDate();
+  for(let i=0;i<42;i++){
+    let dayNum,cellMonth=month,cellYear=year,outside=false;
+    if(i<mondayIndex){dayNum=prevDays-mondayIndex+i+1;cellMonth=month-1;outside=true;if(cellMonth<0){cellMonth=11;cellYear--}}
+    else if(i>=mondayIndex+daysInMonth){dayNum=i-(mondayIndex+daysInMonth)+1;cellMonth=month+1;outside=true;if(cellMonth>11){cellMonth=0;cellYear++}}
+    else dayNum=i-mondayIndex+1;
+    const dateKey=`${cellYear}-${String(cellMonth+1).padStart(2,'0')}-${String(dayNum).padStart(2,'0')}`;
+    const cell=document.createElement('div');cell.className='day-cell'+(outside?' outside':'');
+    const num=document.createElement('div');num.className='day-number';num.textContent=dayNum;cell.appendChild(num);
+    posts.filter(p=>p.date===dateKey).forEach(p=>cell.appendChild(makePostCard(p)));
     monthGrid.appendChild(cell);
   }
-  updateCounts();
+  updateSummary(year,month);
 }
 
-function createPostMini(post){
-  const card=document.createElement('article');card.className='post-mini';
-  const platformClass=post.platform.toLowerCase();
-  const statusTag=post.status!=='Approved'?'<span class="tag awaiting">Review</span>':'';
-  card.innerHTML=`<img src="${post.image}" alt="${post.title}"><div class="post-copy"><div class="post-time">${formatTime(post.time)}</div><div class="post-title">${post.title}</div><div class="post-tags"><span class="tag ${platformClass}">${post.platform}</span>${statusTag}</div></div>`;
-  card.addEventListener('click',()=>openModal(post));return card;
+function makePostCard(post){
+  const card=document.createElement('article');card.className='post-card';card.innerHTML=`
+    <img src="${post.image}" alt="${post.title}">
+    <div class="post-body">
+      <div class="post-meta"><span class="platform-tag ${post.platform.toLowerCase()}">${post.platform}</span><span class="post-time">${post.time}</span></div>
+      <h4 class="post-title">${post.title}</h4>
+      <p class="post-caption">${post.caption}</p>
+      <div class="status-line"><span class="status-dot ${post.status.startsWith('Approved')?'approved':'awaiting'}"></span>${post.status}</div>
+    </div>`;
+  card.addEventListener('click',()=>openPost(post));return card;
 }
 
-function updateCounts(){
-  const visible=posts.filter(p=>{const d=new Date(`${p.date}T12:00:00`);return d.getFullYear()===currentYear&&d.getMonth()===currentMonth});
-  document.getElementById('scheduledCount').textContent=visible.length;
-  document.getElementById('instagramCount').textContent=visible.filter(p=>p.platform==='Instagram').length;
-  document.getElementById('linkedinCount').textContent=visible.filter(p=>p.platform==='LinkedIn').length;
+function updateSummary(year,month){
+  const monthPosts=posts.filter(p=>{const d=new Date(p.date+'T12:00:00');return d.getFullYear()===year&&d.getMonth()===month});
+  document.getElementById('instagramCount').textContent=monthPosts.filter(p=>p.platform==='Instagram').length;
+  document.getElementById('linkedinCount').textContent=monthPosts.filter(p=>p.platform==='LinkedIn').length;
+  document.getElementById('approvedCount').textContent=monthPosts.filter(p=>p.status==='Approved').length;
+  document.getElementById('awaitingCount').textContent=monthPosts.filter(p=>p.status!=='Approved').length;
 }
 
-function openModal(post){
-  activePost=post;document.getElementById('modalImage').src=post.image;document.getElementById('modalTitle').textContent=post.title;document.getElementById('modalCaption').textContent=post.caption;
-  document.getElementById('modalMeta').innerHTML=`<span>${post.platform}</span><span>${post.type}</span><span>${post.status}</span>`;
-  document.getElementById('modalInfo').innerHTML=`<strong>Scheduled:</strong> ${formatDate(post.date)} at ${formatTime(post.time)}<br><strong>Why this time:</strong> ${post.reason}`;
-  document.getElementById('approveBtn').textContent=post.status==='Approved'?'Approved':'Approve post';modalBackdrop.classList.remove('hidden');
-}
-function closeModal(){modalBackdrop.classList.add('hidden');activePost=null}
-
-document.getElementById('modalClose').addEventListener('click',closeModal);modalBackdrop.addEventListener('click',e=>{if(e.target===modalBackdrop)closeModal()});
-document.getElementById('approveBtn').addEventListener('click',()=>{if(!activePost)return;activePost.status='Approved';showToast('Post approved');render();openModal(activePost)});
-document.getElementById('googleEventBtn').addEventListener('click',()=>{if(activePost)window.open(buildGoogleEventUrl(activePost),'_blank')});
-document.getElementById('prevMonth').addEventListener('click',()=>{currentMonth--;if(currentMonth<0){currentMonth=11;currentYear--}render()});
-document.getElementById('nextMonth').addEventListener('click',()=>{currentMonth++;if(currentMonth>11){currentMonth=0;currentYear++}render()});
-document.getElementById('todayBtn').addEventListener('click',()=>{currentYear=2026;currentMonth=5;render()});
-
-document.getElementById('connectBtn').addEventListener('click',()=>{
-  document.getElementById('calendarStatus').textContent='Connection demo';
-  document.getElementById('sidebarStatus').textContent='Connection demo enabled';
-  showToast('This test shows the connection flow. Real sync needs Google sign-in and Calendar API setup.');
-});
-
-document.getElementById('exportBtn').addEventListener('click',exportICS);document.getElementById('exportBtn2').addEventListener('click',exportICS);
-document.getElementById('openGoogleBtn').addEventListener('click',()=>window.open('https://calendar.google.com','_blank'));
-
-function exportICS(){
-  const visible=posts.filter(p=>{const d=new Date(`${p.date}T12:00:00`);return d.getFullYear()===currentYear&&d.getMonth()===currentMonth});
-  const body=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//PicPlanr//Content Calendar//EN','CALSCALE:GREGORIAN'];
-  visible.forEach(post=>{
-    const start=toICSDate(post.date,post.time);const end=toICSDate(post.date,addMinutes(post.time,30));
-    body.push('BEGIN:VEVENT',`UID:picplanr-${post.id}-${post.date}@picplanr`,`DTSTAMP:${toICSDate('2026-06-19','12:00')}`,`DTSTART:${start}`,`DTEND:${end}`,`SUMMARY:${escapeICS(`${post.platform}: ${post.title}`)}`,`DESCRIPTION:${escapeICS(`${post.caption}\n\nWhy this time: ${post.reason}`)}`,'END:VEVENT');
-  });
-  body.push('END:VCALENDAR');
-  const blob=new Blob([body.join('\r\n')],{type:'text/calendar;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`PicPlanr-${monthNames[currentMonth]}-${currentYear}.ics`;a.click();URL.revokeObjectURL(url);showToast('Calendar file downloaded');
+function renderUnscheduled(){
+  const list=document.getElementById('unscheduledList');list.innerHTML='';
+  unscheduled.forEach(item=>{const card=document.createElement('div');card.className='unscheduled-card';card.innerHTML=`<img src="${item.image}" alt="${item.title}"><div><h4>${item.title}</h4><p>${item.type} · ready to schedule</p></div>`;list.appendChild(card)});
 }
 
-function buildGoogleEventUrl(post){
-  const start=googleDate(post.date,post.time),end=googleDate(post.date,addMinutes(post.time,30));
-  const params=new URLSearchParams({action:'TEMPLATE',text:`${post.platform}: ${post.title}`,dates:`${start}/${end}`,details:`${post.caption}\n\nWhy this time: ${post.reason}`});return `https://calendar.google.com/calendar/render?${params}`;
+function openPost(post){
+  activePost=post;document.getElementById('modalImage').src=post.image;document.getElementById('modalTitle').textContent=post.title;document.getElementById('modalCaption').textContent=post.caption;document.getElementById('modalTags').innerHTML=`<span class="platform-tag ${post.platform.toLowerCase()}">${post.platform}</span><span class="platform-tag linkedin">${post.type}</span><span class="platform-tag instagram">${post.time}</span>`;document.getElementById('modalReason').textContent=`Why this time: ${post.reason}`;document.getElementById('approveBtn').textContent=post.status==='Approved'?'Approved':'Approve post';modal.classList.remove('hidden');
 }
-function formatTime(t){const [h,m]=t.split(':').map(Number);const suffix=h>=12?'pm':'am';const hour=h%12||12;return `${hour}:${String(m).padStart(2,'0')}${suffix}`}
-function formatDate(d){return new Date(`${d}T12:00:00`).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}
-function addMinutes(t,mins){let [h,m]=t.split(':').map(Number);m+=mins;h=(h+Math.floor(m/60))%24;m%=60;return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`}
-function toICSDate(date,time){return `${date.replaceAll('-','')}T${time.replace(':','')}00`}
-function googleDate(date,time){return `${date.replaceAll('-','')}T${time.replace(':','')}00`}
-function escapeICS(s){return s.replace(/\\/g,'\\\\').replace(/\n/g,'\\n').replace(/,/g,'\\,').replace(/;/g,'\\;')}
-function showToast(message){const t=document.getElementById('toast');t.textContent=message;t.classList.remove('hidden');setTimeout(()=>t.classList.add('hidden'),3200)}
-render();
+
+function showToast(message){toast.textContent=message;toast.classList.remove('hidden');setTimeout(()=>toast.classList.add('hidden'),2200)}
+
+document.getElementById('prevMonth').onclick=()=>{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()-1,1);renderCalendar()};
+document.getElementById('nextMonth').onclick=()=>{currentDate=new Date(currentDate.getFullYear(),currentDate.getMonth()+1,1);renderCalendar()};
+document.getElementById('modalClose').onclick=()=>modal.classList.add('hidden');
+modal.addEventListener('click',e=>{if(e.target===modal)modal.classList.add('hidden')});
+document.getElementById('approveBtn').onclick=()=>{if(!activePost)return;activePost.status='Approved';renderCalendar();openPost(activePost);showToast('Post approved')};
+document.getElementById('addGoogleBtn').onclick=()=>{if(!activePost)return;const start=activePost.date.replaceAll('-','')+'T'+to24(activePost.time)+'00';const url=`https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent('PicPlanr: '+activePost.title)}&dates=${start}/${start}&details=${encodeURIComponent(activePost.caption)}`;window.open(url,'_blank')};
+document.getElementById('googleBtn').onclick=()=>showToast('Google Calendar connection will use secure Google sign-in in the live version.');
+document.getElementById('exportBtn').onclick=exportICS;
+document.getElementById('newPostBtn').onclick=()=>showToast('New content flow will open the upload and approval stage.');
+function to24(time){const [t,period]=time.split(' ');let [h,m]=t.split(':').map(Number);if(period==='PM'&&h!==12)h+=12;if(period==='AM'&&h===12)h=0;return String(h).padStart(2,'0')+String(m).padStart(2,'0')}
+function exportICS(){const events=posts.map(p=>`BEGIN:VEVENT\nSUMMARY:PicPlanr: ${p.title}\nDTSTART:${p.date.replaceAll('-','')}T${to24(p.time)}00\nDESCRIPTION:${p.caption.replace(/\n/g,' ')}\nEND:VEVENT`).join('\n');const blob=new Blob([`BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//PicPlanr//Calendar//EN\n${events}\nEND:VCALENDAR`],{type:'text/calendar'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='picplanr-month.ics';a.click();URL.revokeObjectURL(a.href);showToast('Calendar file downloaded')}
+renderCalendar();renderUnscheduled();

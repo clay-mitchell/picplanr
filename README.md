@@ -1,22 +1,20 @@
-# PicPlanr Full Month Calendar Test
+# PicPlanr Visual Month Calendar
 
-This version includes:
+This is a user-interface test for the full month calendar.
 
-- A full month calendar view
-- Post images visible inside every scheduled day
-- Instagram and LinkedIn labels
-- Post approval status
-- Full post preview modal
-- One-click Google Calendar event links
-- Full-month `.ics` export for Google Calendar import
-- A demonstration Connect Google Calendar button
+## Improvements
 
-## Important Google Calendar note
+- Every scheduled day shows the actual post image
+- Platform, time, post title and caption preview are visible at a glance
+- Full month view
+- Month summary panel
+- Unscheduled approved posts panel
+- Click any post to see the full image, caption and scheduling reason
+- Export month as an .ics Google Calendar file
+- Add an individual post to Google Calendar
 
-The `.ics` export works now and can be imported into Google Calendar.
+## Upload to GitHub
 
-A permanent live connection requires Google OAuth, which means secure Google sign-in, and the Google Calendar API. That should be added after the calendar layout and user flow are approved.
+Upload the contents of this folder to the root of the existing PicPlanr GitHub repository and commit the changes.
 
-## Uploading to GitHub
-
-Upload the contents of this folder to the root of the existing PicPlanr GitHub repository and commit the changes. Vercel should deploy it automatically.
+This test uses sample image URLs to demonstrate the layout. The production version should use the real approved PicPlanr image URLs saved in Vercel Blob or another storage service.
