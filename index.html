@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PicPlanr Calendar Test</title>
+  <title>PicPlanr Full Month Calendar</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -16,19 +16,17 @@
           <span>Smart content planning</span>
         </div>
       </div>
-
       <nav>
-        <button class="nav-btn">Overview</button>
-        <button class="nav-btn">Uploads</button>
-        <button class="nav-btn">Post Groups</button>
-        <button class="nav-btn active">Calendar</button>
-        <button class="nav-btn">Account Profile</button>
+        <button>Overview</button>
+        <button>Uploads</button>
+        <button>Post Groups</button>
+        <button class="active">Calendar</button>
+        <button>Account Profile</button>
       </nav>
-
-      <div class="mini-card">
-        <span class="mini-label">Content ready</span>
-        <strong>8 approved posts</strong>
-        <p>Enough content for approximately 2 weeks.</p>
+      <div class="sidebar-card">
+        <span>Calendar status</span>
+        <strong id="sidebarStatus">Not connected</strong>
+        <p>Export this plan to Google Calendar or connect an account in the full product.</p>
       </div>
     </aside>
 
@@ -36,83 +34,65 @@
       <header class="topbar">
         <div>
           <p class="eyebrow">Content calendar</p>
-          <h2>Your posts, planned at a glance</h2>
-          <p class="subtext">Review PicPlanr’s recommended schedule, move anything you want, then approve the full plan.</p>
+          <h2>Your full month at a glance</h2>
+          <p class="subtext">Every scheduled post includes its image, platform, format and time so the month is easy to understand instantly.</p>
         </div>
         <div class="top-actions">
-          <button class="secondary" id="todayBtn">Today</button>
-          <button class="primary" id="approveAllBtn">Approve full schedule</button>
+          <button class="secondary" id="connectBtn">Connect Google Calendar</button>
+          <button class="primary" id="exportBtn">Export month</button>
         </div>
       </header>
 
       <section class="summary-row">
-        <div class="summary-card"><span>Scheduled</span><strong id="scheduledCount">6</strong><small>Across Instagram and LinkedIn</small></div>
-        <div class="summary-card"><span>Awaiting approval</span><strong id="approvalCount">3</strong><small>Ready for your review</small></div>
-        <div class="summary-card"><span>Unscheduled</span><strong id="unscheduledCount">2</strong><small>Drag onto any day</small></div>
-        <div class="summary-card highlight"><span>Best opportunity</span><strong>Tuesday, 7:00pm</strong><small>Strongest predicted slot this week</small></div>
+        <div class="summary-card"><span>Scheduled posts</span><strong id="scheduledCount">0</strong><small>Across the full month</small></div>
+        <div class="summary-card"><span>Instagram</span><strong id="instagramCount">0</strong><small>Posts and carousels</small></div>
+        <div class="summary-card"><span>LinkedIn</span><strong id="linkedinCount">0</strong><small>Professional content</small></div>
+        <div class="summary-card highlight"><span>Google Calendar</span><strong id="calendarStatus">Ready to export</strong><small>Download an .ics calendar file</small></div>
       </section>
 
       <section class="calendar-toolbar card">
-        <div class="date-controls">
-          <button class="icon-btn" id="prevWeek" aria-label="Previous week">‹</button>
+        <div class="month-controls">
+          <button class="icon-btn" id="prevMonth">‹</button>
           <div>
             <span class="toolbar-label">Viewing</span>
-            <h3 id="weekLabel">15–21 June 2026</h3>
+            <h3 id="monthLabel">June 2026</h3>
           </div>
-          <button class="icon-btn" id="nextWeek" aria-label="Next week">›</button>
-        </div>
-        <div class="view-switch">
-          <button class="view-btn active" data-view="week">Week</button>
-          <button class="view-btn" data-view="month">Month</button>
+          <button class="icon-btn" id="nextMonth">›</button>
         </div>
         <div class="legend">
           <span><i class="dot instagram"></i>Instagram</span>
           <span><i class="dot linkedin"></i>LinkedIn</span>
-          <span><i class="dot draft"></i>Awaiting approval</span>
+          <span><i class="dot awaiting"></i>Awaiting approval</span>
         </div>
+        <button class="secondary" id="todayBtn">This month</button>
       </section>
 
-      <section class="workspace">
-        <div class="calendar card" id="calendarArea">
-          <div class="week-grid" id="weekGrid"></div>
-          <div class="month-grid hidden" id="monthGrid"></div>
+      <section class="calendar-shell card">
+        <div class="weekday-row">
+          <div>Sunday</div><div>Monday</div><div>Tuesday</div><div>Wednesday</div><div>Thursday</div><div>Friday</div><div>Saturday</div>
         </div>
+        <div class="month-grid" id="monthGrid"></div>
+      </section>
 
-        <aside class="right-panel">
-          <div class="card recommendations">
-            <div class="panel-heading">
-              <div>
-                <span class="toolbar-label">PicPlanr guidance</span>
-                <h3>This week</h3>
-              </div>
-              <span class="ai-badge">AI</span>
-            </div>
-            <div class="recommendation-item good">
-              <strong>Good content balance</strong>
-              <p>You have a mix of venue, people-focused and booking-led posts.</p>
-            </div>
-            <div class="recommendation-item">
-              <strong>Best predicted post</strong>
-              <p>Your Tuesday carousel is placed in the strongest evening slot.</p>
-            </div>
-            <div class="recommendation-item warning">
-              <strong>Small gap</strong>
-              <p>No Story content is planned for Friday. PicPlanr recommends adding one.</p>
-            </div>
+      <section class="bottom-grid">
+        <div class="card guidance-card">
+          <p class="eyebrow">PicPlanr guidance</p>
+          <h3>June plan summary</h3>
+          <div class="guidance-list">
+            <div><strong>Balanced month</strong><span>Venue, people, booking and business content are spread across the month.</span></div>
+            <div><strong>Strongest slot</strong><span>Tuesday evening remains the best predicted Instagram window.</span></div>
+            <div><strong>LinkedIn spacing</strong><span>Professional posts are placed on weekday mornings and early afternoons.</span></div>
           </div>
-
-          <div class="card unscheduled-panel">
-            <div class="panel-heading">
-              <div>
-                <span class="toolbar-label">Approved content</span>
-                <h3>Unscheduled</h3>
-              </div>
-              <span class="count-pill" id="unscheduledPill">2</span>
-            </div>
-            <p class="panel-copy">Drag a post onto any day or use the quick schedule button.</p>
-            <div id="unscheduledList" class="unscheduled-list"></div>
+        </div>
+        <div class="card sync-card">
+          <p class="eyebrow">Google Calendar</p>
+          <h3>See your plan outside PicPlanr</h3>
+          <p>Use <strong>Export month</strong> to download a calendar file that can be imported into Google Calendar. In the full product, the Connect button would use Google sign-in and keep approved posts synchronised automatically.</p>
+          <div class="sync-actions">
+            <button class="primary" id="exportBtn2">Download calendar file</button>
+            <button class="secondary" id="openGoogleBtn">Open Google Calendar</button>
           </div>
-        </aside>
+        </div>
       </section>
     </main>
   </div>
@@ -120,21 +100,21 @@
   <div class="modal-backdrop hidden" id="modalBackdrop">
     <div class="modal">
       <button class="modal-close" id="modalClose">×</button>
-      <div class="modal-preview" id="modalPreview"></div>
+      <img id="modalImage" alt="Scheduled post preview" />
       <div class="modal-content">
         <div class="modal-meta" id="modalMeta"></div>
         <h3 id="modalTitle"></h3>
         <p id="modalCaption"></p>
         <div class="modal-info" id="modalInfo"></div>
         <div class="modal-actions">
-          <button class="secondary" id="movePostBtn">Move post</button>
-          <button class="secondary" id="editCaptionBtn">Edit caption</button>
-          <button class="primary" id="approvePostBtn">Approve post</button>
+          <button class="secondary" id="googleEventBtn">Add this post to Google Calendar</button>
+          <button class="primary" id="approveBtn">Approve post</button>
         </div>
       </div>
     </div>
   </div>
 
+  <div class="toast hidden" id="toast"></div>
   <script src="app.js"></script>
 </body>
 </html>
