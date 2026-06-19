@@ -3,72 +3,182 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PicPlanr Live AI Dashboard Demo</title>
+  <title>PicPlanr V2 Accuracy Upgrade</title>
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-<div class="shell">
-  <aside class="sidebar">
-    <div class="brand"><div class="logo">P</div><span>PicPlanr</span></div>
-    <nav>
-      <button class="nav active" data-view="dashboard"><span>⌂</span>Dashboard</button>
-      <button class="nav" data-view="upload"><span>⇧</span>Upload</button>
-      <button class="nav" data-view="captions"><span>✦</span>Captions</button>
-      <button class="nav" data-view="calendar"><span>▣</span>Calendar</button>
-      <button class="nav" data-view="published"><span>✓</span>Published</button>
-      <button class="nav" data-view="analytics"><span>⌁</span>Analytics</button>
-      <button class="nav" data-view="settings"><span>⚙</span>Settings</button>
-    </nav>
-    <div class="sidebar-card">
-      <strong>Live AI demo</strong>
-      <div class="meter"><i style="width:15%"></i></div>
-      <small id="usageText">0 images analysed this session</small>
-      <button data-view-jump="upload">Upload content</button>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">P</div>
+        <div>
+          <h1>PicPlanr</h1>
+          <p>Accuracy-first test build</p>
+        </div>
+      </div>
+
+      <nav>
+        <button class="nav-item active">Onboarding</button>
+        <button class="nav-item">Upload</button>
+        <button class="nav-item">Groups</button>
+        <button class="nav-item">Calendar</button>
+      </nav>
+
+      <div class="sidebar-card">
+        <h3>What changed</h3>
+        <ul>
+          <li>Per-image fact extraction</li>
+          <li>Confidence scoring</li>
+          <li>No unsupported claims</li>
+          <li>Captions built only from safe facts</li>
+        </ul>
+      </div>
+    </aside>
+
+    <main class="main">
+      <section class="hero card">
+        <div>
+          <p class="eyebrow">PicPlanr Version 2</p>
+          <h2>More accurate captions from stricter image analysis</h2>
+          <p class="muted">This version analyses every image separately, filters out low-confidence guesses, then writes grouped captions only from supported details and saved account context.</p>
+        </div>
+      </section>
+
+      <section class="grid two-col">
+        <div class="card">
+          <h3>1. Account setup</h3>
+          <div class="form-grid">
+            <label>
+              Account type
+              <select id="accountType">
+                <option value="Business">Business</option>
+                <option value="Individual">Individual</option>
+              </select>
+            </label>
+            <label>
+              Brand or account name
+              <input id="brandName" type="text" placeholder="Box Hub / Your name" />
+            </label>
+            <label>
+              Platform
+              <select id="platform">
+                <option value="Instagram">Instagram</option>
+                <option value="LinkedIn">LinkedIn</option>
+              </select>
+            </label>
+            <label>
+              Instagram handle
+              <input id="instagramHandle" type="text" placeholder="@boxhub.uk" />
+            </label>
+            <label>
+              LinkedIn page
+              <input id="linkedinHandle" type="text" placeholder="linkedin.com/company/..." />
+            </label>
+            <label>
+              Website
+              <input id="website" type="text" placeholder="https://..." />
+            </label>
+            <label class="full-span">
+              Competitor or inspiration accounts
+              <input id="competitors" type="text" placeholder="@competitor1, @competitor2" />
+            </label>
+            <label class="full-span">
+              Words or phrases to avoid
+              <input id="avoidWords" type="text" placeholder="unforgettable, elevate, magical" />
+            </label>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3>2. Upload folder or images</h3>
+          <div class="upload-box" id="dropZone">
+            <input id="fileInput" type="file" accept="image/*" multiple webkitdirectory directory />
+            <p class="upload-title">Drop a folder here or click to browse</p>
+            <p class="muted">Up to 50 images. This build compresses images in your browser and analyses them one at a time.</p>
+          </div>
+          <div class="actions">
+            <button id="analyzeBtn" class="primary">Analyse images and build post groups</button>
+            <span id="statusText" class="muted">No images selected yet.</span>
+          </div>
+          <div id="previewGrid" class="preview-grid"></div>
+        </div>
+      </section>
+
+      <section class="card">
+        <h3>3. Analysis progress</h3>
+        <div class="progress-wrap">
+          <div class="progress-bar"><div id="progressFill"></div></div>
+          <p id="progressText" class="muted">Waiting to start.</p>
+        </div>
+        <div id="analysisList" class="analysis-list"></div>
+      </section>
+
+      <section class="card">
+        <div class="section-header">
+          <div>
+            <h3>4. Generated post groups</h3>
+            <p class="muted">Each group is built from supported facts only. If anything looks wrong, use <strong>Incorrect analysis</strong> and regenerate.</p>
+          </div>
+        </div>
+        <div id="groupResults" class="group-results empty-state">
+          Run an analysis to see grouped posts and three caption options per group.
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <template id="analysisTemplate">
+    <div class="analysis-item">
+      <div class="analysis-thumb"></div>
+      <div class="analysis-copy">
+        <div class="analysis-head">
+          <strong class="filename"></strong>
+          <span class="confidence-badge"></span>
+        </div>
+        <p class="fact-summary"></p>
+        <div class="tag-row visible-facts"></div>
+        <div class="danger-row do-not-claim"></div>
+      </div>
     </div>
-  </aside>
+  </template>
 
-  <main class="main">
-    <header class="topbar">
-      <div><span class="eyebrow">PICPLANR WORKSPACE</span><h1 id="pageTitle">This week's plan</h1></div>
-      <div class="top-actions"><button class="icon-btn">◔</button><div class="avatar">CM</div><button class="primary" id="newContentBtn">+ New content</button></div>
-    </header>
-
-    <section class="view active" id="dashboardView">
-      <div class="dashboard-head"><div><h2>This week's plan</h2><p>Approved AI captions appear here automatically.</p></div><div class="week-controls"><button>‹</button><button>›</button><button data-view-jump="upload">+</button></div></div>
-      <div class="week-strip"><div><span>Mon</span><strong>15</strong></div><div><span>Tue</span><strong>16</strong></div><div class="selected"><span>Wed</span><strong>17</strong></div><div><span>Thu</span><strong>18</strong></div><div><span>Fri</span><strong>19</strong></div><div><span>Sat</span><strong>20</strong></div><div><span>Sun</span><strong>21</strong></div></div>
-      <div class="content-row" id="contentRow">
-        <article class="post-card"><div class="thumb venue"><span class="platform">IG</span></div><div class="post-meta"><span>10:00 AM</span><span>Post</span></div><h3>Upload content to begin</h3><p>Demo placeholder</p></article>
+  <template id="groupTemplate">
+    <div class="group-card">
+      <div class="group-top">
+        <div class="group-images"></div>
+        <div class="group-meta">
+          <div class="chip-row">
+            <span class="chip post-type"></span>
+            <span class="chip image-count"></span>
+            <span class="chip safe-angle"></span>
+          </div>
+          <h4 class="group-title"></h4>
+          <p class="safe-summary"></p>
+          <p class="timing muted"></p>
+          <p class="reason muted"></p>
+        </div>
       </div>
-      <div class="ai-card"><div class="ai-icon">✦</div><div><h3>AI recommendation</h3><p id="aiRecommendation">Upload several images and PicPlanr will analyse each one, write a specific caption, and prepare it for approval.</p></div><div class="sparkline"><i></i><i></i><i></i><i></i><i></i><i></i></div><button class="primary" data-view-jump="upload">Analyse images</button></div>
-      <div class="lower-grid"><section class="panel"><div class="panel-head"><div><h3>Recent uploads</h3><p>This session</p></div><button data-view-jump="upload">View all</button></div><div class="upload-mini" id="recentUploads"><span class="mini m1"></span><span class="mini m2"></span><span class="mini m3"></span><span class="mini m4"></span></div></section><section class="panel"><div class="panel-head"><div><h3>Caption progress</h3><p>This session</p></div><strong id="progressCount">0 / 0</strong></div><div class="progress"><i id="progressBar" style="width:0%"></i></div><div class="progress-labels"><span id="approvedLabel">0 approved</span><span id="reviewLabel">0 need review</span></div></section></div>
-    </section>
-
-    <section class="view" id="uploadView">
-      <div class="hero-panel upload-hero"><div><span class="eyebrow">STEP 1</span><h2>Upload and analyse your content</h2><p>Choose up to 10 images. The live demo analyses every image separately.</p></div><button class="primary" id="selectFilesBtn">Choose images</button></div>
-      <div class="setup-strip">
-        <label>Brand name<input id="brandName" value="PicPlanr Demo Brand" maxlength="80"></label>
-        <label>Platform<select id="platform"><option>Instagram</option><option>LinkedIn</option><option>TikTok</option></select></label>
-        <label>Caption tone<select id="tone"><option>Natural, polished and human</option><option>Friendly and relaxed</option><option>Professional and confident</option><option>Luxury and refined</option></select></label>
+      <div class="captions-grid">
+        <div class="caption-option natural">
+          <h5>Natural</h5>
+          <p class="caption-natural"></p>
+        </div>
+        <div class="caption-option engagement">
+          <h5>Engagement</h5>
+          <p class="caption-engagement"></p>
+        </div>
+        <div class="caption-option goal-led">
+          <h5>Goal-led</h5>
+          <p class="caption-goal"></p>
+        </div>
       </div>
-      <div class="dropzone" id="dropzone"><input id="fileInput" type="file" accept="image/jpeg,image/png,image/webp" multiple hidden><div class="drop-icon">⇧</div><h3>Drag and drop images here</h3><p>JPG, PNG or WebP · Up to 10 images</p></div>
-      <div class="upload-count" id="uploadCount">No images selected</div>
-      <div class="uploaded-grid" id="uploadedGrid"></div>
-      <div class="analysis-bar"><button class="primary" id="analyseBtn">✦ Analyse images and write captions</button><button class="icon-btn" id="clearBtn" title="Clear uploads">×</button><span class="analysis-status" id="analysisStatus">Your images stay in this browser until you analyse them.</span></div>
-    </section>
+      <div class="group-actions">
+        <button class="secondary incorrect-btn">Incorrect analysis</button>
+        <button class="secondary regenerate-btn">Regenerate captions</button>
+      </div>
+    </div>
+  </template>
 
-    <section class="view" id="captionsView">
-      <div class="hero-panel"><div><span class="eyebrow">STEP 2</span><h2>Review personalised captions</h2><p>Every result is generated from the exact image shown beside it.</p></div><button class="primary" id="approveAll">Approve all</button></div>
-      <div class="caption-list" id="captionList"><div class="empty-caption">Upload images and click <strong>Analyse images</strong> to generate live captions.</div></div>
-    </section>
-
-    <section class="view" id="calendarView"><div class="hero-panel"><div><span class="eyebrow">STEP 3</span><h2>Content calendar</h2><p>Approved captions are prepared for scheduling.</p></div><button class="primary" id="autoScheduleBtn">Auto-schedule</button></div><div class="calendar-grid" id="calendarGrid"><div class="cal-head">Mon</div><div class="cal-head">Tue</div><div class="cal-head">Wed</div><div class="cal-head">Thu</div><div class="cal-head">Fri</div><div class="cal-head">Sat</div><div class="cal-head">Sun</div><div class="day"><span>15</span></div><div class="day"><span>16</span></div><div class="day"><span>17</span></div><div class="day"><span>18</span></div><div class="day"><span>19</span></div><div class="day"><span>20</span></div><div class="day"><span>21</span></div></div></section>
-    <section class="view" id="publishedView"><div class="hero-panel"><div><span class="eyebrow">HISTORY</span><h2>Published content</h2><p>Publishing is simulated in this demo.</p></div></div><div class="published-list" id="publishedList"><div><span class="mini m1"></span><div><h3>No published posts yet</h3><p>Approved content will appear here after social publishing is connected.</p></div><span class="success">Demo</span></div></div></section>
-    <section class="view" id="analyticsView"><div class="hero-panel"><div><span class="eyebrow">PERFORMANCE</span><h2>Analytics</h2><p>Live social analytics will be added after platform connections.</p></div></div><div class="stats-grid"><article><span>Images analysed</span><strong id="analysedStat">0</strong><small>This session</small></article><article><span>Captions approved</span><strong id="approvedStat">0</strong><small>Ready to schedule</small></article><article><span>Best platform</span><strong>—</strong><small>Connect accounts later</small></article><article><span>Best time</span><strong>—</strong><small>Needs live data</small></article></div></section>
-    <section class="view" id="settingsView"><div class="hero-panel"><div><span class="eyebrow">ACCOUNT</span><h2>Settings</h2><p>Brand information used when creating captions.</p></div></div><div class="settings-grid"><label>Brand name<input id="settingsBrand" value="PicPlanr Demo Brand"></label><label>Business description<input id="businessDescription" placeholder="Optional: Glasgow events venue for weddings and private hire"></label><label>Preferred tone<select id="settingsTone"><option>Natural, polished and human</option><option>Friendly and relaxed</option><option>Professional and confident</option><option>Luxury and refined</option></select></label><label>Default platform<select id="settingsPlatform"><option>Instagram</option><option>LinkedIn</option><option>TikTok</option></select></label></div></section>
-  </main>
-</div>
-<div class="modal" id="newContentModal"><div class="modal-card"><button class="close">×</button><span class="eyebrow">NEW CONTENT</span><h2>Add content</h2><p>Choose how you want to begin.</p><div class="modal-options"><button data-view-jump="upload">Upload images</button><button data-view-jump="captions">Review captions</button><button data-view-jump="calendar">Open calendar</button></div></div></div>
-<div class="processing-overlay" id="processingOverlay"><div class="processing-card"><div class="spinner"></div><h3>Analysing your images</h3><p id="processingText">PicPlanr is looking at the visible details in each photo and writing a specific caption.</p></div></div>
-<script src="app.js"></script>
+  <script src="app.js" type="module"></script>
 </body>
 </html>

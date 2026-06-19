@@ -1,1 +1,217 @@
-const state={uploads:[],results:[],approved:new Set()};const views={dashboard:dashboardView,upload:uploadView,captions:captionsView,calendar:calendarView,published:publishedView,analytics:analyticsView,settings:settingsView};const titles={dashboard:"This week's plan",upload:'Upload content',captions:'Captions',calendar:'Calendar',published:'Published',analytics:'Analytics',settings:'Settings'};function showView(name){Object.values(views).forEach(v=>v.classList.remove('active'));views[name].classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.view===name));pageTitle.textContent=titles[name]||'PicPlanr';newContentModal.classList.remove('open')}document.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>showView(b.dataset.view));document.querySelectorAll('[data-view-jump]').forEach(b=>b.onclick=()=>showView(b.dataset.viewJump));newContentBtn.onclick=()=>newContentModal.classList.add('open');document.querySelector('.close').onclick=()=>newContentModal.classList.remove('open');const dropzone=document.getElementById('dropzone'),fileInput=document.getElementById('fileInput'),uploadedGrid=document.getElementById('uploadedGrid');selectFilesBtn.onclick=()=>fileInput.click();dropzone.onclick=()=>fileInput.click();fileInput.onchange=e=>handleFiles(e.target.files);dropzone.ondragover=e=>{e.preventDefault();dropzone.style.borderColor='#7e5cff'};dropzone.ondragleave=()=>dropzone.style.borderColor='#2a3658';dropzone.ondrop=e=>{e.preventDefault();dropzone.style.borderColor='#2a3658';handleFiles(e.dataTransfer.files)};async function imageToDataUrl(file){return await new Promise((resolve,reject)=>{const r=new FileReader();r.onload=()=>resolve(r.result);r.onerror=reject;r.readAsDataURL(file)})}async function handleFiles(files){const chosen=Array.from(files).filter(f=>f.type.startsWith('image/')).slice(0,Math.max(0,10-state.uploads.length));for(const file of chosen){if(file.size>8*1024*1024){setStatus(`${file.name} is larger than 8 MB and was skipped.`,'error');continue}const dataUrl=await imageToDataUrl(file);state.uploads.push({name:file.name,dataUrl})}renderUploads()}function renderUploads(){uploadedGrid.innerHTML='';state.uploads.forEach((item,index)=>{const a=document.createElement('article');a.className='uploaded-item';a.innerHTML=`<button class="remove-upload" data-index="${index}">×</button><img src="${item.dataUrl}" alt=""><span>${escapeHtml(item.name)}</span>`;uploadedGrid.appendChild(a)});uploadedGrid.querySelectorAll('.remove-upload').forEach(b=>b.onclick=e=>{e.stopPropagation();state.uploads.splice(Number(b.dataset.index),1);renderUploads()});uploadCount.textContent=state.uploads.length?`${state.uploads.length} image${state.uploads.length===1?'':'s'} ready to analyse`:'No images selected';renderRecentUploads()}function renderRecentUploads(){recentUploads.innerHTML='';const items=state.uploads.slice(0,4);if(!items.length){recentUploads.innerHTML='<span class="mini m1"></span><span class="mini m2"></span><span class="mini m3"></span><span class="mini m4"></span>';return}items.forEach(x=>{const s=document.createElement('span');s.className='mini';s.style.backgroundImage=`url(${x.dataUrl})`;s.style.backgroundSize='cover';s.style.backgroundPosition='center';recentUploads.appendChild(s)})}clearBtn.onclick=()=>{state.uploads=[];state.results=[];state.approved.clear();renderUploads();renderCaptions();updateStats();setStatus('Uploads cleared.','')};function setStatus(text,type=''){analysisStatus.textContent=text;analysisStatus.className=`analysis-status ${type}`.trim()}function syncSettings(){if(settingsBrand.value.trim())brandName.value=settingsBrand.value.trim();tone.value=settingsTone.value;platform.value=settingsPlatform.value}settingsBrand.oninput=()=>brandName.value=settingsBrand.value;settingsTone.onchange=()=>tone.value=settingsTone.value;settingsPlatform.onchange=()=>platform.value=settingsPlatform.value;analyseBtn.onclick=analyseImages;async function analyseImages(){if(!state.uploads.length){setStatus('Choose at least one image first.','error');return}const brand=brandName.value.trim();if(!brand){setStatus('Add your brand name first.','error');return}processingOverlay.classList.add('open');processingText.textContent=`Analysing ${state.uploads.length} image${state.uploads.length===1?'':'s'} separately…`;setStatus('Sending images securely for analysis…','');try{const response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({brandName:brand,businessDescription:businessDescription.value.trim(),tone:tone.value,platform:platform.value,images:state.uploads})});const body=await response.json().catch(()=>({}));if(!response.ok)throw new Error(body.error||`Analysis failed (${response.status}).`);state.results=(body.results||[]).map((r,i)=>({...r,localImage:state.uploads[r.index??i]?.dataUrl||'',approved:false}));state.approved.clear();renderCaptions();updateStats();showView('captions');setStatus(`${state.results.length} personalised caption${state.results.length===1?'':'s'} created.`,'success')}catch(err){setStatus(err.message||'Image analysis failed.','error');alert(err.message||'Image analysis failed.')}finally{processingOverlay.classList.remove('open')}}function renderCaptions(){captionList.innerHTML='';if(!state.results.length){captionList.innerHTML='<div class="empty-caption">Upload images and click <strong>Analyse images</strong> to generate live captions.</div>';return}state.results.forEach((r,index)=>{const article=document.createElement('article');article.className='caption-item';const details=(r.visible_details||[]).map(x=>escapeHtml(x)).join(' · ');const tags=(r.hashtags||[]).map(x=>`<span>${escapeHtml(x)}</span>`).join('');const clarification=r.clarification_question?`<div class="clarification"><strong>Needs clarification:</strong> ${escapeHtml(r.clarification_question)}</div>`:'';article.innerHTML=`<div class="cap-thumb" style="background-image:url(${r.localImage});background-size:cover;background-position:center"></div><div class="cap-body"><div class="caption-meta"><span class="badge">${escapeHtml(r.platform||platform.value)}</span><span class="badge format">${escapeHtml(r.recommended_format||'Post')}</span><span class="badge confidence">${escapeHtml(r.confidence||'medium')} confidence</span></div><h3>${escapeHtml(r.caption_title||r.filename||`Image ${index+1}`)}</h3><div class="visual-details"><strong>What PicPlanr used:</strong><br>${details||'Visible details analysed from the image.'}</div>${clarification}<textarea data-index="${index}">${escapeHtml(r.caption||'')}</textarea><div class="hashtag-row">${tags}</div><div class="cap-actions"><button class="copy-btn" data-index="${index}">Copy</button><button class="regenerate-btn" data-index="${index}">Regenerate</button><button class="primary approve" data-index="${index}">${state.approved.has(index)?'Approved':'Approve'}</button></div></div>`;captionList.appendChild(article)});captionList.querySelectorAll('textarea').forEach(t=>t.oninput=()=>state.results[Number(t.dataset.index)].caption=t.value);captionList.querySelectorAll('.copy-btn').forEach(b=>b.onclick=()=>copyCaption(Number(b.dataset.index),b));captionList.querySelectorAll('.approve').forEach(b=>b.onclick=()=>approveCaption(Number(b.dataset.index)));captionList.querySelectorAll('.regenerate-btn').forEach(b=>b.onclick=()=>regenerate(Number(b.dataset.index),b))}async function copyCaption(index,button){await navigator.clipboard.writeText(state.results[index].caption||'');const old=button.textContent;button.textContent='Copied';setTimeout(()=>button.textContent=old,1000)}function approveCaption(index){state.approved.add(index);renderCaptions();updateStats();renderDashboardCards()}approveAll.onclick=()=>{state.results.forEach((_,i)=>state.approved.add(i));renderCaptions();updateStats();renderDashboardCards()};async function regenerate(index,button){button.disabled=true;button.textContent='Working…';const item=state.uploads[state.results[index].index??index];try{const response=await fetch('/api/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({brandName:brandName.value.trim(),businessDescription:businessDescription.value.trim(),tone:tone.value,platform:platform.value,regenerate:true,images:[item]})});const body=await response.json();if(!response.ok)throw new Error(body.error||'Regeneration failed.');const r=body.results?.[0];if(r){state.results[index]={...r,localImage:item.dataUrl,approved:false};state.approved.delete(index);renderCaptions();updateStats()}}catch(err){alert(err.message)}finally{button.disabled=false;button.textContent='Regenerate'}}function updateStats(){const total=state.results.length,approved=state.approved.size;progressCount.textContent=`${approved} / ${total}`;progressBar.style.width=total?`${Math.round(approved/total*100)}%`:'0%';approvedLabel.textContent=`${approved} approved`;reviewLabel.textContent=`${Math.max(0,total-approved)} need review`;analysedStat.textContent=total;approvedStat.textContent=approved;usageText.textContent=`${total} image${total===1?'':'s'} analysed this session`;aiRecommendation.textContent=total?`${total} image${total===1?' has':'s have'} been analysed. ${approved} caption${approved===1?' is':'s are'} approved and ready for the weekly plan.`:'Upload several images and PicPlanr will analyse each one, write a specific caption, and prepare it for approval.'}function renderDashboardCards(){const approved=[...state.approved];contentRow.innerHTML='';if(!approved.length){contentRow.innerHTML='<article class="post-card"><div class="thumb venue"><span class="platform">IG</span></div><div class="post-meta"><span>10:00 AM</span><span>Post</span></div><h3>Approve captions to fill your plan</h3><p>Waiting for content</p></article>';return}approved.slice(0,5).forEach((index,i)=>{const r=state.results[index];const a=document.createElement('article');a.className='post-card dynamic';a.innerHTML=`<div class="thumb" style="background-image:url(${r.localImage})"><span class="platform">${platform.value==='Instagram'?'IG':platform.value==='TikTok'?'TT':'in'}</span></div><div class="post-meta"><span>${['10:00 AM','12:30 PM','9:00 AM','1:00 PM','11:00 AM'][i]}</span><span>${escapeHtml(r.recommended_format||'Post')}</span></div><h3>${escapeHtml(r.caption_title||r.filename||'Approved caption')}</h3><p class="status-approved">Approved</p>`;contentRow.appendChild(a)})}autoScheduleBtn.onclick=()=>{const approved=[...state.approved];const days=calendarGrid.querySelectorAll('.day');days.forEach(d=>d.querySelectorAll('.cal-post').forEach(p=>p.remove()));approved.slice(0,7).forEach((index,i)=>{const p=document.createElement('div');p.className=`cal-post ${['purple','blue','orange','green'][i%4]}`;p.textContent=(state.results[index].caption_title||state.results[index].filename||'Approved post').slice(0,30);days[i].appendChild(p)})};function escapeHtml(value){return String(value??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}renderUploads();renderCaptions();updateStats();renderDashboardCards();syncSettings();
+const state = {
+  files: [],
+  previews: [],
+  analyses: [],
+  groups: []
+};
+
+const fileInput = document.getElementById('fileInput');
+const previewGrid = document.getElementById('previewGrid');
+const analyzeBtn = document.getElementById('analyzeBtn');
+const statusText = document.getElementById('statusText');
+const progressFill = document.getElementById('progressFill');
+const progressText = document.getElementById('progressText');
+const analysisList = document.getElementById('analysisList');
+const groupResults = document.getElementById('groupResults');
+const analysisTemplate = document.getElementById('analysisTemplate');
+const groupTemplate = document.getElementById('groupTemplate');
+
+fileInput.addEventListener('change', async (event) => {
+  const selected = [...event.target.files].filter(file => file.type.startsWith('image/')).slice(0, 50);
+  state.files = selected;
+  state.previews = await Promise.all(selected.map(fileToDataUrl));
+  renderPreviews();
+  statusText.textContent = `${selected.length} image${selected.length === 1 ? '' : 's'} ready to analyse.`;
+});
+
+analyzeBtn.addEventListener('click', async () => {
+  if (!state.files.length) {
+    alert('Please upload at least one image first.');
+    return;
+  }
+
+  state.analyses = [];
+  state.groups = [];
+  analysisList.innerHTML = '';
+  groupResults.className = 'group-results';
+  groupResults.innerHTML = '';
+
+  const accountContext = getAccountContext();
+  progressFill.style.width = '0%';
+  progressText.textContent = `Analysing ${state.files.length} image${state.files.length === 1 ? '' : 's'} one by one...`;
+
+  for (let i = 0; i < state.files.length; i++) {
+    const file = state.files[i];
+    const compressed = await compressImage(file);
+    const preview = state.previews[i];
+
+    try {
+      const response = await fetch('/api/analyze-image', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          imageDataUrl: compressed,
+          fileName: file.name,
+          accountContext,
+        })
+      });
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.error || `Analysis failed (${response.status})`);
+      state.analyses.push({ ...data, fileName: file.name, preview, index: i });
+      renderAnalysisItem({ ...data, fileName: file.name, preview, index: i });
+    } catch (error) {
+      alert(error.message);
+      progressText.textContent = 'Analysis stopped because of an error.';
+      return;
+    }
+
+    const percentage = Math.round(((i + 1) / state.files.length) * 100);
+    progressFill.style.width = `${percentage}%`;
+    progressText.textContent = `Analysed ${i + 1} of ${state.files.length} images.`;
+  }
+
+  try {
+    progressText.textContent = 'Building smart post groups and writing captions...';
+    const response = await fetch('/api/group-posts', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        accountContext,
+        analyses: state.analyses.map(({ preview, ...rest }) => rest)
+      })
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.error || `Grouping failed (${response.status})`);
+    state.groups = data.groups || [];
+    renderGroups();
+    progressText.textContent = `Done. Created ${state.groups.length} post group${state.groups.length === 1 ? '' : 's'}.`;
+  } catch (error) {
+    alert(error.message);
+    progressText.textContent = 'Grouping stopped because of an error.';
+  }
+});
+
+function getAccountContext() {
+  return {
+    accountType: document.getElementById('accountType').value,
+    brandName: document.getElementById('brandName').value.trim(),
+    platform: document.getElementById('platform').value,
+    instagramHandle: document.getElementById('instagramHandle').value.trim(),
+    linkedinHandle: document.getElementById('linkedinHandle').value.trim(),
+    website: document.getElementById('website').value.trim(),
+    competitors: document.getElementById('competitors').value.trim(),
+    avoidWords: document.getElementById('avoidWords').value.trim()
+  };
+}
+
+function renderPreviews() {
+  previewGrid.innerHTML = '';
+  state.previews.forEach(src => {
+    const wrap = document.createElement('div');
+    wrap.className = 'preview-item';
+    const img = document.createElement('img');
+    img.src = src;
+    wrap.appendChild(img);
+    previewGrid.appendChild(wrap);
+  });
+}
+
+function renderAnalysisItem(item) {
+  const node = analysisTemplate.content.firstElementChild.cloneNode(true);
+  node.querySelector('.analysis-thumb').style.backgroundImage = `url(${item.preview})`;
+  node.querySelector('.filename').textContent = item.fileName;
+  const badge = node.querySelector('.confidence-badge');
+  badge.textContent = `${item.overall_confidence || 'medium'} confidence`;
+  badge.classList.add(`confidence-${(item.overall_confidence || 'medium').toLowerCase()}`);
+  node.querySelector('.fact-summary').textContent = item.fact_summary;
+
+  const factsWrap = node.querySelector('.visible-facts');
+  (item.visible_facts || []).slice(0, 6).forEach(fact => {
+    const span = document.createElement('span');
+    span.className = 'tag';
+    span.textContent = fact.detail;
+    factsWrap.appendChild(span);
+  });
+
+  const dangerWrap = node.querySelector('.do-not-claim');
+  (item.do_not_claim || []).slice(0, 4).forEach(claim => {
+    const span = document.createElement('span');
+    span.className = 'danger-tag';
+    span.textContent = `Avoid: ${claim}`;
+    dangerWrap.appendChild(span);
+  });
+
+  analysisList.appendChild(node);
+}
+
+function renderGroups() {
+  groupResults.innerHTML = '';
+  if (!state.groups.length) {
+    groupResults.className = 'group-results empty-state';
+    groupResults.textContent = 'No groups were created.';
+    return;
+  }
+
+  groupResults.className = 'group-results';
+  state.groups.forEach((group, groupIndex) => {
+    const node = groupTemplate.content.firstElementChild.cloneNode(true);
+    node.querySelector('.post-type').textContent = group.post_type;
+    node.querySelector('.image-count').textContent = `${group.image_indexes.length} image${group.image_indexes.length === 1 ? '' : 's'}`;
+    node.querySelector('.safe-angle').textContent = group.safe_angle || 'Safe angle';
+    node.querySelector('.group-title').textContent = group.title;
+    node.querySelector('.safe-summary').textContent = group.safe_summary;
+    node.querySelector('.timing').textContent = `Recommended time: ${group.recommended_time.day} at ${group.recommended_time.time} — ${group.recommended_time.reason}`;
+    node.querySelector('.reason').textContent = `Grouped because: ${group.reason}`;
+    node.querySelector('.caption-natural').textContent = group.captions.natural;
+    node.querySelector('.caption-engagement').textContent = group.captions.engagement;
+    node.querySelector('.caption-goal').textContent = group.captions.goal_led;
+
+    const imageWrap = node.querySelector('.group-images');
+    group.image_indexes.forEach(index => {
+      const img = document.createElement('img');
+      img.src = state.previews[index];
+      imageWrap.appendChild(img);
+    });
+
+    node.querySelector('.incorrect-btn').addEventListener('click', () => {
+      alert('Thanks — in the real product, this would let you flag the angle as wrong and ask PicPlanr to regroup or regenerate more cautiously.');
+    });
+    node.querySelector('.regenerate-btn').addEventListener('click', () => {
+      alert('For this test build, regenerate is a planned next step. The core upgrade here is the new stricter analysis flow.');
+    });
+
+    groupResults.appendChild(node);
+  });
+}
+
+function fileToDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
+function compressImage(file, maxWidth = 1400, quality = 0.78) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      img.src = event.target.result;
+    };
+    reader.onerror = reject;
+    img.onload = () => {
+      const scale = Math.min(1, maxWidth / img.width);
+      const canvas = document.createElement('canvas');
+      canvas.width = Math.round(img.width * scale);
+      canvas.height = Math.round(img.height * scale);
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', quality));
+    };
+    img.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
