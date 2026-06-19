@@ -1,9 +1,72 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v3.css?v=3"></head><body>
-<div class="app"><aside><div class="brand"><div class="mark">P</div>PicPlanr</div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="audit">2. Account review</button><button class="nav" data-step="upload">3. Upload folder</button><button class="nav" data-step="posts">4. Post groups</button><button class="nav" data-step="calendar">5. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v4.css?v=4"></head><body>
+<div class="app"><aside><div class="brand"><div class="mark">P</div>PicPlanr</div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Post groups</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
 <div class="choice-grid"><button class="account-choice selected" data-type="Business"><strong>Business</strong><span>Brands, venues, shops, services and organisations</span></button><button class="account-choice" data-type="Individual"><strong>Individual</strong><span>Influencers, creators, professionals and personal accounts</span></button></div>
 <div class="form-grid"><label>Name<input id="accountName" value="Box Hub"></label><label>Industry or content category<input id="industry" value="Events venue"></label><label>Primary platform<select id="platform"><option>Instagram</option><option>LinkedIn</option></select></label><label>Main goal<select id="goal"><option>Increase enquiries</option><option>Grow engagement</option><option>Build trust</option><option>Grow followers</option><option>Promote partnerships</option></select></label><label>Instagram handle<input id="instagram" placeholder="@youraccount"></label><label>LinkedIn page<input id="linkedin" placeholder="Company or profile name"></label><label>Website<input id="website" placeholder="https://yourwebsite.com"></label><label>Competitors or inspiration accounts<input id="competitors" placeholder="Account names separated by commas"></label><label class="wide">Words or phrases to avoid <span class="optional">(optional)</span><input id="avoid" value="stunning, unforgettable, elevate, magical"></label></div><div class="connection-note"><strong>Automatic account understanding</strong><span>Enter your handles now. In the live product, connected social accounts will let PicPlanr study recent posts, captions, profile details and performance data automatically. This test creates a first-pass profile from the account information above.</span></div><button class="primary" id="buildProfile">Analyse account</button><div id="profileResult" class="result hidden"></div></section>
+
+<section id="connections" class="view">
+  <div class="hero">
+    <div>
+      <small>STEP 2</small>
+      <h2>Connect social accounts</h2>
+      <p>Clients sign in securely with the social platform. PicPlanr never receives or stores their password.</p>
+    </div>
+    <span class="pill" id="connectionSummary">No accounts connected</span>
+  </div>
+
+  <div class="connections-grid">
+    <article class="connection-card">
+      <div class="connection-brand instagram-brand">
+        <div class="connection-icon">◎</div>
+        <div>
+          <h3>Instagram</h3>
+          <p>Publish approved single-image posts and carousels.</p>
+        </div>
+      </div>
+      <div class="connection-status">
+        <span class="status-dot"></span>
+        <strong id="instagramStatus">Not connected</strong>
+      </div>
+      <button class="primary" id="connectInstagram">Connect Instagram</button>
+      <p class="connection-help">Works with eligible professional accounts once the Meta developer application is approved.</p>
+    </article>
+
+    <article class="connection-card">
+      <div class="connection-brand linkedin-brand">
+        <div class="connection-icon">in</div>
+        <div>
+          <h3>LinkedIn</h3>
+          <p>Publish to an individual profile or an authorised company page.</p>
+        </div>
+      </div>
+      <div class="connection-status">
+        <span class="status-dot"></span>
+        <strong id="linkedinStatus">Not connected</strong>
+      </div>
+      <button class="primary" id="connectLinkedIn">Connect LinkedIn</button>
+      <p class="connection-help">Company-page publishing requires the connected user to hold the correct page role.</p>
+    </article>
+  </div>
+
+  <div class="publishing-readiness">
+    <div>
+      <small>PUBLISHING SETUP</small>
+      <h3>Automatic publishing readiness</h3>
+    </div>
+    <div class="readiness-list">
+      <div><span id="readyDatabase">○</span><p><strong>Database</strong><small>Stores users, connections and scheduled posts</small></p></div>
+      <div><span id="readyStorage">○</span><p><strong>Image storage</strong><small>Provides public media links for publishing</small></p></div>
+      <div><span id="readyInstagram">○</span><p><strong>Instagram application</strong><small>Meta permissions and application review</small></p></div>
+      <div><span id="readyLinkedIn">○</span><p><strong>LinkedIn application</strong><small>LinkedIn permissions and application review</small></p></div>
+      <div><span id="readyScheduler">○</span><p><strong>Publishing scheduler</strong><small>Checks for approved posts that are due</small></p></div>
+    </div>
+    <div id="setupMessage" class="connection-note">
+      <strong>Safe test mode</strong>
+      <span>This build can test the full scheduling flow without publishing publicly. Real publishing activates after the required platform credentials are added.</span>
+    </div>
+  </div>
+</section>
 <section id="audit" class="view"><div class="hero"><div><small>STEP 2</small><h2>Improve the foundations</h2><p>PicPlanr turns the account profile into clear visual, content and positioning recommendations. Live account statistics will be added through official social connections.</p></div><button class="primary" id="runAudit">Run account review</button></div><div id="auditResult" class="empty">Complete account setup, then run the review.</div></section>
 <section id="upload" class="view"><div class="hero"><div><small>STEP 3</small><h2>Upload a folder of images</h2><p>PicPlanr compresses and analyses each image separately, then groups related images into efficient posts.</p></div><button class="primary" id="chooseFolder">Choose folder</button></div><input id="folderInput" type="file" webkitdirectory directory multiple accept="image/*" hidden><input id="fileInput" type="file" multiple accept="image/*" hidden><div class="drop" id="drop"><strong>Drop a folder or multiple images here</strong><span>Up to 50 images · JPG, PNG or WebP</span><button id="chooseFiles">Choose images instead</button></div><div class="progress-wrap hidden" id="progressWrap"><div><span id="progressText">Preparing…</span><span id="progressCount">0 / 0</span></div><div class="progress"><i id="progressBar"></i></div></div><div id="previewGrid" class="preview-grid"></div><button class="primary hidden" id="analyseFolder">Analyse and create post groups</button></section>
 <section id="posts" class="view"><div class="hero"><div><small>STEP 4</small><h2>Choose your caption</h2><p>Each post group receives three distinct options: natural, engagement-led and goal-led.</p></div><button class="secondary" id="approveAll">Approve all selected</button></div><div id="groups" class="empty">Upload and analyse a folder first.</div></section>
@@ -17,7 +80,7 @@
     </div>
     <div class="calendar-actions">
       <button class="secondary" id="connectGoogle">Connect Google Calendar</button>
-      <button class="secondary" id="exportCalendar">Export month</button>
+      <button class="secondary" id="exportCalendar">Export month</button><button class="secondary" id="savePublishingQueue">Save publishing queue</button>
       <button class="primary" id="makeSchedule">Build schedule</button>
     </div>
   </div>
@@ -49,5 +112,5 @@
   </div>
 </section>
 
-<div id="postModal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="closeModal">×</button><img id="modalImage" alt="Post preview"><div class="modal-body"><div class="tags" id="modalTags"></div><h2 id="modalTitle"></h2><p id="modalWhen" class="muted"></p><label>Selected caption<textarea id="modalCaption" rows="7"></textarea></label><p id="modalReason" class="reason"></p><div class="modal-actions"><button class="secondary" id="addGooglePost">Add to Google Calendar</button><button class="primary" id="saveCaption">Save caption</button></div></div></div></div>
-</main></div><script src="app-v3.js?v=3"></script></body></html>
+<div id="postModal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="closeModal">×</button><img id="modalImage" alt="Post preview"><div class="modal-body"><div class="tags" id="modalTags"></div><h2 id="modalTitle"></h2><p id="modalWhen" class="muted"></p><label>Selected caption<textarea id="modalCaption" rows="7"></textarea></label><p id="modalReason" class="reason"></p><div class="publish-state"><span>Status</span><strong id="modalPublishStatus">Draft</strong></div><div class="modal-actions"><button class="secondary" id="addGooglePost">Add to Google Calendar</button><button class="primary" id="saveCaption">Save caption</button></div></div></div></div>
+</main></div><script src="app-v4.js?v=4"></script></body></html>
