@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v5.css?v=5"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v6.css?v=6"></head><body>
 <div class="app"><aside><div class="brand"><div class="mark">P</div>PicPlanr</div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Post groups</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -92,12 +92,12 @@
     <div>
       <small>STEP 5</small>
       <h2>Your content schedule</h2>
-      <p>See exactly what is posting, when it is posting and the selected caption.</p>
+      <p>Approved posts are spread across the month, with no more than four scheduled in any week.</p>
     </div>
     <div class="calendar-actions">
       <button class="secondary" id="connectGoogle">Connect Google Calendar</button>
       <button class="secondary" id="exportCalendar">Export month</button><button class="secondary" id="savePublishingQueue">Save publishing queue</button>
-      <button class="primary" id="makeSchedule">Build schedule</button>
+      <div class="schedule-rule"><strong>Monthly balance</strong><span>Maximum 4 posts per week</span></div><button class="primary" id="makeSchedule">Build schedule</button>
     </div>
   </div>
 
@@ -129,4 +129,4 @@
 </section>
 
 <div id="postModal" class="modal hidden"><div class="modal-card"><button class="modal-close" id="closeModal">×</button><img id="modalImage" alt="Post preview"><div class="modal-body"><div class="tags" id="modalTags"></div><h2 id="modalTitle"></h2><p id="modalWhen" class="muted"></p><label>Selected caption<textarea id="modalCaption" rows="7"></textarea></label><p id="modalReason" class="reason"></p><div class="publish-state"><span>Status</span><strong id="modalPublishStatus">Draft</strong></div><div class="modal-actions"><button class="secondary" id="addGooglePost">Add to Google Calendar</button><button class="primary" id="saveCaption">Save caption</button></div></div></div></div>
-</main></div><script src="app-v5.js?v=5"></script></body></html>
+</main></div><script src="app-v6.js?v=6"></script></body></html>
