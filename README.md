@@ -1,25 +1,24 @@
-# PicPlanr Integrated V21 — Profile Reference Fix
+# PicPlanr Integrated V22 — Accurate Profile Preview
 
-This version fixes the error:
+This version fixes the misleading profile reference.
 
-`Can't find variable: renderProfileReference`
+## Changed
 
-## Cause
+- removes fake post, follower and following numbers
+- clearly labels the section as Preview only
+- uses only onboarding information entered by the user
+- does not pretend to show the real Instagram account
+- shows uploaded images only when available
+- otherwise displays Connect account placeholders
+- keeps a neutral PicPlanr image until the real profile image is available
 
-The profile reference functions were accidentally placed inside the account context function, so the rest of the application could not access them.
-
-## Fixed
-
-- `renderProfileReference` is now available globally
-- account analysis can complete normally
-- the profile reference preview still updates after account analysis
-- all Version 20 profile preview features remain included
+Real profile data can appear only after the social account connection is completed.
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v21.css`
-- `public/app-v21.js`
+- `public/styles-v22.css`
+- `public/app-v22.js`
 
-Upload the contents of this folder to the root of your existing GitHub repository and replace matching files.
+Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
 Keep all existing Vercel environment variables.

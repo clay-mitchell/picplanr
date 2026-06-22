@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v21.css?v=21"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v22.css?v=22"></head><body>
 <div class="app"><aside><div class="brand brand-logo"><img src="assets/picplanr-logo.png" alt="PicPlanr logo"></div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Content ideas</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div class="header-title-wrap"><img class="header-logo" src="assets/picplanr-logo.png" alt="PicPlanr logo"><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -98,8 +98,8 @@
     <div class="profile-reference-heading">
       <div>
         <small>PROFILE REFERENCE</small>
-        <h3>How the account currently appears</h3>
-        <p class="muted">This preview helps explain the recommendations below. A live connected account will use the real profile image, bio and account details.</p>
+        <h3>Account profile preview</h3>
+        <p class="muted">This preview only uses information entered during onboarding. Real profile images, posts and statistics will appear after the social account is connected.</p>
       </div>
       <button class="secondary" id="refreshProfilePreview">Refresh preview</button>
     </div>
@@ -107,14 +107,14 @@
     <div class="profile-reference-layout">
       <div class="profile-screenshot-frame" id="profileScreenshotFrame">
         <div class="profile-topbar">
-          <span class="profile-platform-label" id="profilePlatformLabel">Instagram</span>
+          <div class="profile-platform-wrap"><span class="profile-platform-label" id="profilePlatformLabel">Instagram</span><span class="preview-only-badge" id="profilePreviewBadge">Preview only</span></div>
           <span class="profile-menu-dots">•••</span>
         </div>
         <div class="profile-summary-row">
           <img id="profileAvatar" src="assets/picplanr-logo.png" alt="Profile image">
-          <div class="profile-stat"><strong id="profilePostsCount">24</strong><span>posts</span></div>
-          <div class="profile-stat"><strong id="profileFollowersCount">1,280</strong><span>followers</span></div>
-          <div class="profile-stat"><strong id="profileFollowingCount">420</strong><span>following</span></div>
+          <div class="profile-stat"><strong id="profilePostsCount">—</strong><span>posts</span></div>
+          <div class="profile-stat"><strong id="profileFollowersCount">—</strong><span>followers</span></div>
+          <div class="profile-stat"><strong id="profileFollowingCount">—</strong><span>following</span></div>
         </div>
         <div class="profile-copy">
           <strong id="profileDisplayName">Your account name</strong>
@@ -128,12 +128,12 @@
           <button type="button">Contact</button>
         </div>
         <div class="profile-grid-preview">
-          <div class="profile-grid-tile tile-one"></div>
-          <div class="profile-grid-tile tile-two"></div>
-          <div class="profile-grid-tile tile-three"></div>
-          <div class="profile-grid-tile tile-four"></div>
-          <div class="profile-grid-tile tile-five"></div>
-          <div class="profile-grid-tile tile-six"></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
+          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
         </div>
       </div>
 
@@ -256,4 +256,4 @@
     <span id="loadingMessage">PicPlanr is processing your request.</span>
   </div>
 </div>
-<script src="app-v21.js?v=21"></script></body></html>
+<script src="app-v22.js?v=22"></script></body></html>
