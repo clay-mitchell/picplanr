@@ -1,29 +1,25 @@
-# PicPlanr Integrated V17 — Loading States
+# PicPlanr Integrated V18 — Group Validation Fix
 
-This update adds visible feedback when a longer action is running.
+This version fixes the error:
 
-## Added
+`group is not defined`
 
-- full-screen loading overlay
-- animated spinner
-- action-specific progress messages
-- loading spinner inside the active button
-- temporary button disabling to prevent repeated clicks
+## Cause
 
-## Loading feedback added to
+The accuracy-validation route was using the proposed content group but the server had not included `group` when reading the request body.
 
-- Analyse account
-- Run account review
-- Build or rebuild schedule
-- Save publishing queue
+## Fixed
 
-The image-analysis screen already keeps its detailed progress bar and image count.
+- the API now reads the `group` value correctly
+- validation requests now return a clear message if the group is missing
+- all Version 17 loading states remain included
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v17.css`
-- `public/app-v17.js`
+- `public/styles-v18.css`
+- `public/app-v18.js`
+- `api/picplanr.js`
 
 Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
 Keep all existing Vercel environment variables.
