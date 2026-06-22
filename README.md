@@ -1,30 +1,30 @@
-# PicPlanr Integrated V27 — Missing Captions Fix
+# PicPlanr Integrated V28 — Story Caption Fix
 
-This version fixes blank caption cards after the accuracy check.
+This version fixes Story ideas that displayed the image and instructions but no caption choices.
 
 ## Cause
 
-The accuracy checker sometimes returned caption objects using fields such as `caption`, `content` or `copy` instead of the expected `text` field. The interface therefore rendered empty cards even though the artificial intelligence had returned wording.
+The Story response did not always use the exact `text` field expected by the interface. The system also reused the post-caption normaliser, which renamed Story options incorrectly.
 
 ## Fixed
 
-- accepts caption text from several common response fields
-- accepts plain caption strings
-- standardises every option to:
-  - Natural
+- dedicated Story caption normaliser
+- exact Story option labels:
+  - Quick update
   - Engagement
-  - Goal-led
-- falls back to the original draft captions when the accuracy response is incomplete
-- removes groups only when three usable caption options genuinely cannot be recovered
-- gives the artificial intelligence an exact required caption structure
-- instructs the accuracy checker to rewrite inaccurate captions instead of returning blanks
+  - Call to action
+- accepts Story wording returned as text, caption, copy, content, value, phrase or overlay_text
+- generates safe subject-based fallback text when the response is incomplete
+- Story caption cards can no longer render empty
+- the AI now receives an exact required JSON structure
+- the AI is no longer allowed to return an empty Story text array
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v27.css`
-- `public/app-v27.js`
+- `public/styles-v28.css`
+- `public/app-v28.js`
 - `api/picplanr.js`
 
 Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
-Keep all current Vercel environment variables.
+Keep all existing Vercel environment variables.
