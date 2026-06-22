@@ -1,28 +1,25 @@
-# PicPlanr Integrated V20 — Profile Reference Preview
+# PicPlanr Integrated V21 — Profile Reference Fix
 
-This version adds a profile screenshot-style preview to the Account Review section.
+This version fixes the error:
 
-## Added
+`Can't find variable: renderProfileReference`
 
-- profile reference card
-- account name and handle preview
-- platform label
-- profile image
-- bio preview based on onboarding information
-- website preview
-- profile statistics layout
-- visual content grid
-- uploaded images automatically appear in the content grid
-- checklist explaining what PicPlanr reviews
-- Refresh preview button
+## Cause
 
-In the live connected product, this preview can be replaced with real profile data and recent posts from the connected social account.
+The profile reference functions were accidentally placed inside the account context function, so the rest of the application could not access them.
+
+## Fixed
+
+- `renderProfileReference` is now available globally
+- account analysis can complete normally
+- the profile reference preview still updates after account analysis
+- all Version 20 profile preview features remain included
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v20.css`
-- `public/app-v20.js`
+- `public/styles-v21.css`
+- `public/app-v21.js`
 
-Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
+Upload the contents of this folder to the root of your existing GitHub repository and replace matching files.
 Keep all existing Vercel environment variables.
