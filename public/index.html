@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v19.css?v=19"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v20.css?v=20"></head><body>
 <div class="app"><aside><div class="brand brand-logo"><img src="assets/picplanr-logo.png" alt="PicPlanr logo"></div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Content ideas</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div class="header-title-wrap"><img class="header-logo" src="assets/picplanr-logo.png" alt="PicPlanr logo"><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -83,7 +83,75 @@
     </div>
   </div>
 </section>
-<section id="audit" class="view"><div class="hero"><div><small>STEP 2</small><h2>Improve the foundations</h2><p>PicPlanr turns the account profile into clear visual, content and positioning recommendations. Live account statistics will be added through official social connections.</p></div><button class="primary" id="runAudit">Run account review</button></div><div id="auditResult" class="empty">Complete account setup, then run the review.</div></section>
+
+<section id="audit" class="view">
+  <div class="hero">
+    <div>
+      <small>STEP 3</small>
+      <h2>Improve the foundations</h2>
+      <p>PicPlanr reviews the profile alongside the account information, then suggests clear visual, content and positioning improvements.</p>
+    </div>
+    <button class="primary" id="runAudit">Run account review</button>
+  </div>
+
+  <section class="profile-reference-card">
+    <div class="profile-reference-heading">
+      <div>
+        <small>PROFILE REFERENCE</small>
+        <h3>How the account currently appears</h3>
+        <p class="muted">This preview helps explain the recommendations below. A live connected account will use the real profile image, bio and account details.</p>
+      </div>
+      <button class="secondary" id="refreshProfilePreview">Refresh preview</button>
+    </div>
+
+    <div class="profile-reference-layout">
+      <div class="profile-screenshot-frame" id="profileScreenshotFrame">
+        <div class="profile-topbar">
+          <span class="profile-platform-label" id="profilePlatformLabel">Instagram</span>
+          <span class="profile-menu-dots">•••</span>
+        </div>
+        <div class="profile-summary-row">
+          <img id="profileAvatar" src="assets/picplanr-logo.png" alt="Profile image">
+          <div class="profile-stat"><strong id="profilePostsCount">24</strong><span>posts</span></div>
+          <div class="profile-stat"><strong id="profileFollowersCount">1,280</strong><span>followers</span></div>
+          <div class="profile-stat"><strong id="profileFollowingCount">420</strong><span>following</span></div>
+        </div>
+        <div class="profile-copy">
+          <strong id="profileDisplayName">Your account name</strong>
+          <span id="profileHandle">@yourhandle</span>
+          <p id="profileBio">Your account description will appear here.</p>
+          <a id="profileWebsite" href="#" tabindex="-1">yourwebsite.com</a>
+        </div>
+        <div class="profile-action-row">
+          <button type="button">Following</button>
+          <button type="button">Message</button>
+          <button type="button">Contact</button>
+        </div>
+        <div class="profile-grid-preview">
+          <div class="profile-grid-tile tile-one"></div>
+          <div class="profile-grid-tile tile-two"></div>
+          <div class="profile-grid-tile tile-three"></div>
+          <div class="profile-grid-tile tile-four"></div>
+          <div class="profile-grid-tile tile-five"></div>
+          <div class="profile-grid-tile tile-six"></div>
+        </div>
+      </div>
+
+      <div class="profile-reference-notes">
+        <h4>What PicPlanr reviews</h4>
+        <div class="profile-check-list">
+          <div><span>✓</span><p><strong>Profile image</strong><small>Clear, recognisable and consistent with the brand</small></p></div>
+          <div><span>✓</span><p><strong>Name and handle</strong><small>Easy to find and understand at a glance</small></p></div>
+          <div><span>✓</span><p><strong>Bio</strong><small>Explains who the account is for and what action to take</small></p></div>
+          <div><span>✓</span><p><strong>Visual consistency</strong><small>Images, colours and layout feel connected</small></p></div>
+          <div><span>✓</span><p><strong>Account foundations</strong><small>Website, contact details and platform choice are complete</small></p></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div id="auditResult" class="empty">Complete account setup, then run the review.</div>
+</section>
 <section id="upload" class="view"><div class="hero"><div><small>STEP 3</small><h2>Upload images or videos</h2><p>PicPlanr analyses images for post planning and can now carry approved videos into TikTok scheduling.</p></div><button class="primary" id="chooseFolder">Choose folder</button></div><input id="folderInput" type="file" webkitdirectory directory multiple accept="image/*,video/mp4,video/quicktime" hidden><input id="fileInput" type="file" multiple accept="image/*,video/mp4,video/quicktime" hidden><div class="drop" id="drop"><strong>Drop a folder, images or videos here</strong><span>Images: JPG, PNG or WebP · Videos: MP4 or MOV</span><button id="chooseFiles">Choose files instead</button></div><div class="progress-wrap hidden" id="progressWrap"><div><span id="progressText">Preparing…</span><span id="progressCount">0 / 0</span></div><div class="progress"><i id="progressBar"></i></div></div><div id="previewGrid" class="preview-grid"></div><button class="primary hidden" id="analyseFolder">Analyse and create post groups</button></section>
 
 <section id="posts" class="view">
@@ -188,4 +256,4 @@
     <span id="loadingMessage">PicPlanr is processing your request.</span>
   </div>
 </div>
-<script src="app-v19.js?v=19"></script></body></html>
+<script src="app-v20.js?v=20"></script></body></html>
