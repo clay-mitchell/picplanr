@@ -1,24 +1,23 @@
-# PicPlanr Integrated V22 — Accurate Profile Preview
+# PicPlanr Integrated V23 — Honest Account Review
 
-This version fixes the misleading profile reference.
+This version removes misleading profile and brand voice outputs.
 
 ## Changed
 
-- removes fake post, follower and following numbers
-- clearly labels the section as Preview only
-- uses only onboarding information entered by the user
-- does not pretend to show the real Instagram account
-- shows uploaded images only when available
-- otherwise displays Connect account placeholders
-- keeps a neutral PicPlanr image until the real profile image is available
-
-Real profile data can appear only after the social account connection is completed.
+- removes the fake Instagram profile preview
+- shows only onboarding information actually supplied
+- clearly marks live account data as unavailable until connected
+- prevents account analysis when name, category and a handle or website are missing
+- stops the AI inventing an industry from the account name
+- renames brand voice to Initial account understanding
+- account review may only claim strengths supported by supplied information
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v22.css`
-- `public/app-v22.js`
+- `public/styles-v23.css`
+- `public/app-v23.js`
+- `api/picplanr.js`
 
 Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
-Keep all existing Vercel environment variables.
+Keep all current Vercel environment variables.

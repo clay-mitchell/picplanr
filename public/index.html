@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v22.css?v=22"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v23.css?v=23"></head><body>
 <div class="app"><aside><div class="brand brand-logo"><img src="assets/picplanr-logo.png" alt="PicPlanr logo"></div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Content ideas</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div class="header-title-wrap"><img class="header-logo" src="assets/picplanr-logo.png" alt="PicPlanr logo"><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -94,61 +94,51 @@
     <button class="primary" id="runAudit">Run account review</button>
   </div>
 
-  <section class="profile-reference-card">
-    <div class="profile-reference-heading">
-      <div>
-        <small>PROFILE REFERENCE</small>
-        <h3>Account profile preview</h3>
-        <p class="muted">This preview only uses information entered during onboarding. Real profile images, posts and statistics will appear after the social account is connected.</p>
-      </div>
-      <button class="secondary" id="refreshProfilePreview">Refresh preview</button>
+  
+<section class="profile-reference-card">
+  <div class="profile-reference-heading">
+    <div>
+      <small>ACCOUNT INFORMATION</small>
+      <h3>What PicPlanr currently knows</h3>
+      <p class="muted">This section only shows information supplied during onboarding. Live profile images, posts, statistics and account style will appear after the social account is securely connected.</p>
+    </div>
+    <button class="secondary" id="refreshProfilePreview">Refresh details</button>
+  </div>
+
+  <div class="account-knowledge-layout">
+    <div class="account-knowledge-card">
+      <div class="knowledge-row"><span>Name</span><strong id="knownName">Not provided</strong></div>
+      <div class="knowledge-row"><span>Account type</span><strong id="knownAccountType">Not provided</strong></div>
+      <div class="knowledge-row"><span>Industry or category</span><strong id="knownIndustry">Not provided</strong></div>
+      <div class="knowledge-row"><span>Primary platform</span><strong id="knownPlatform">Not provided</strong></div>
+      <div class="knowledge-row"><span>Social handle</span><strong id="knownHandle">Not provided</strong></div>
+      <div class="knowledge-row"><span>Website</span><strong id="knownWebsite">Not provided</strong></div>
+      <div class="knowledge-row"><span>Main goal</span><strong id="knownGoal">Not provided</strong></div>
     </div>
 
-    <div class="profile-reference-layout">
-      <div class="profile-screenshot-frame" id="profileScreenshotFrame">
-        <div class="profile-topbar">
-          <div class="profile-platform-wrap"><span class="profile-platform-label" id="profilePlatformLabel">Instagram</span><span class="preview-only-badge" id="profilePreviewBadge">Preview only</span></div>
-          <span class="profile-menu-dots">•••</span>
-        </div>
-        <div class="profile-summary-row">
-          <img id="profileAvatar" src="assets/picplanr-logo.png" alt="Profile image">
-          <div class="profile-stat"><strong id="profilePostsCount">—</strong><span>posts</span></div>
-          <div class="profile-stat"><strong id="profileFollowersCount">—</strong><span>followers</span></div>
-          <div class="profile-stat"><strong id="profileFollowingCount">—</strong><span>following</span></div>
-        </div>
-        <div class="profile-copy">
-          <strong id="profileDisplayName">Your account name</strong>
-          <span id="profileHandle">@yourhandle</span>
-          <p id="profileBio">Your account description will appear here.</p>
-          <a id="profileWebsite" href="#" tabindex="-1">yourwebsite.com</a>
-        </div>
-        <div class="profile-action-row">
-          <button type="button">Following</button>
-          <button type="button">Message</button>
-          <button type="button">Contact</button>
-        </div>
-        <div class="profile-grid-preview">
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-          <div class="profile-grid-tile empty-tile"><span>Connect account</span></div>
-        </div>
-      </div>
-
-      <div class="profile-reference-notes">
-        <h4>What PicPlanr reviews</h4>
-        <div class="profile-check-list">
-          <div><span>✓</span><p><strong>Profile image</strong><small>Clear, recognisable and consistent with the brand</small></p></div>
-          <div><span>✓</span><p><strong>Name and handle</strong><small>Easy to find and understand at a glance</small></p></div>
-          <div><span>✓</span><p><strong>Bio</strong><small>Explains who the account is for and what action to take</small></p></div>
-          <div><span>✓</span><p><strong>Visual consistency</strong><small>Images, colours and layout feel connected</small></p></div>
-          <div><span>✓</span><p><strong>Account foundations</strong><small>Website, contact details and platform choice are complete</small></p></div>
-        </div>
-      </div>
+    <div class="account-connection-state">
+      <div class="connection-empty-icon">↗</div>
+      <h4>Live account data is not connected yet</h4>
+      <p>PicPlanr cannot accurately review the real profile image, bio, follower data, recent posts, visual consistency or performance until the client connects the social account.</p>
+      <button class="primary" type="button" id="goToConnections">Connect a social account</button>
     </div>
-  </section>
+  </div>
+
+  <div class="review-availability">
+    <div class="review-status-row">
+      <span class="review-status supplied">Available</span>
+      <p><strong>Onboarding details</strong><small>Name, category, platform, goal and supplied links</small></p>
+    </div>
+    <div class="review-status-row">
+      <span class="review-status unavailable">Not connected</span>
+      <p><strong>Live profile review</strong><small>Profile image, bio, recent posts and visual consistency</small></p>
+    </div>
+    <div class="review-status-row">
+      <span class="review-status unavailable">Not connected</span>
+      <p><strong>Performance analysis</strong><small>Reach, engagement, audience activity and best posting times</small></p>
+    </div>
+  </div>
+</section></section>
 
   <div id="auditResult" class="empty">Complete account setup, then run the review.</div>
 </section>
@@ -256,4 +246,4 @@
     <span id="loadingMessage">PicPlanr is processing your request.</span>
   </div>
 </div>
-<script src="app-v22.js?v=22"></script></body></html>
+<script src="app-v23.js?v=23"></script></body></html>
