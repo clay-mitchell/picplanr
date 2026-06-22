@@ -1,28 +1,29 @@
-# PicPlanr Integrated V26 — Story Accuracy Fix
+# PicPlanr Integrated V27 — Missing Captions Fix
 
-This version fixes inaccurate Story ideas.
+This version fixes blank caption cards after the accuracy check.
 
-## What changed
+## Cause
 
-- each portrait image is checked separately
-- the original image is sent directly to the Story accuracy step
-- Story text must focus on the single main subject
-- background details cannot replace the main subject
-- a visible dog produces dog-focused Story text, not venue décor claims
-- unsupported services, policies, events, offers and dates are blocked
-- ambiguous images are skipped instead of receiving invented text
-- Story options remain:
-  - Quick update
+The accuracy checker sometimes returned caption objects using fields such as `caption`, `content` or `copy` instead of the expected `text` field. The interface therefore rendered empty cards even though the artificial intelligence had returned wording.
+
+## Fixed
+
+- accepts caption text from several common response fields
+- accepts plain caption strings
+- standardises every option to:
+  - Natural
   - Engagement
-  - Call to action
-- all Story text uses British English and no long dashes
-- each Story displays an accuracy-checked badge
+  - Goal-led
+- falls back to the original draft captions when the accuracy response is incomplete
+- removes groups only when three usable caption options genuinely cannot be recovered
+- gives the artificial intelligence an exact required caption structure
+- instructs the accuracy checker to rewrite inaccurate captions instead of returning blanks
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v26.css`
-- `public/app-v26.js`
+- `public/styles-v27.css`
+- `public/app-v27.js`
 - `api/picplanr.js`
 
 Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
