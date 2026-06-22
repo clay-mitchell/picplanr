@@ -1,29 +1,23 @@
-# PicPlanr Integrated V28 — Story Caption Fix
+# PicPlanr Integrated V29 — All Photos and Editable Captions
 
-This version fixes Story ideas that displayed the image and instructions but no caption choices.
+This version fixes three workflow issues.
 
-## Cause
+## Changed
 
-The Story response did not always use the exact `text` field expected by the interface. The system also reused the post-caption normaliser, which renamed Story options incorrectly.
-
-## Fixed
-
-- dedicated Story caption normaliser
-- exact Story option labels:
-  - Quick update
-  - Engagement
-  - Call to action
-- accepts Story wording returned as text, caption, copy, content, value, phrase or overlay_text
-- generates safe subject-based fallback text when the response is incomplete
-- Story caption cards can no longer render empty
-- the AI now receives an exact required JSON structure
-- the AI is no longer allowed to return an empty Story text array
+- every uploaded image is kept in the content workflow
+- images missed by the AI grouping step become their own single-post idea
+- post ideas remain the priority
+- Story ideas sit underneath post ideas
+- Natural, Engagement and Goal-led captions are now editable
+- Story text options are also editable
+- user edits are saved in the current session and used when approving captions
+- post groups are sorted by original upload order
 
 ## Updated files
 
 - `public/index.html`
-- `public/styles-v28.css`
-- `public/app-v28.js`
+- `public/styles-v29.css`
+- `public/app-v29.js`
 - `api/picplanr.js`
 
 Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
