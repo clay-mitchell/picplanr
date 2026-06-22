@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v23.css?v=23"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v24.css?v=24"></head><body>
 <div class="app"><aside><div class="brand brand-logo"><img src="assets/picplanr-logo.png" alt="PicPlanr logo"></div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Content ideas</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 2 test</strong><span>Business + Individual onboarding, folder analysis, grouped posts and three caption choices.</span></div></aside>
 <main><header><div class="header-title-wrap"><img class="header-logo" src="assets/picplanr-logo.png" alt="PicPlanr logo"><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -95,48 +95,134 @@
   </div>
 
   
+
 <section class="profile-reference-card">
   <div class="profile-reference-heading">
     <div>
-      <small>ACCOUNT INFORMATION</small>
-      <h3>What PicPlanr currently knows</h3>
-      <p class="muted">This section only shows information supplied during onboarding. Live profile images, posts, statistics and account style will appear after the social account is securely connected.</p>
+      <small>ACCOUNT PREVIEW</small>
+      <h3>How the supplied social accounts will appear</h3>
+      <p class="muted">These previews use onboarding information only. Real profile photos, statistics, bios and recent content will appear after each account is securely connected.</p>
     </div>
-    <button class="secondary" id="refreshProfilePreview">Refresh details</button>
+    <button class="secondary" id="refreshProfilePreview">Refresh previews</button>
   </div>
 
-  <div class="account-knowledge-layout">
-    <div class="account-knowledge-card">
-      <div class="knowledge-row"><span>Name</span><strong id="knownName">Not provided</strong></div>
-      <div class="knowledge-row"><span>Account type</span><strong id="knownAccountType">Not provided</strong></div>
-      <div class="knowledge-row"><span>Industry or category</span><strong id="knownIndustry">Not provided</strong></div>
-      <div class="knowledge-row"><span>Primary platform</span><strong id="knownPlatform">Not provided</strong></div>
-      <div class="knowledge-row"><span>Social handle</span><strong id="knownHandle">Not provided</strong></div>
-      <div class="knowledge-row"><span>Website</span><strong id="knownWebsite">Not provided</strong></div>
-      <div class="knowledge-row"><span>Main goal</span><strong id="knownGoal">Not provided</strong></div>
-    </div>
-
-    <div class="account-connection-state">
-      <div class="connection-empty-icon">↗</div>
-      <h4>Live account data is not connected yet</h4>
-      <p>PicPlanr cannot accurately review the real profile image, bio, follower data, recent posts, visual consistency or performance until the client connects the social account.</p>
-      <button class="primary" type="button" id="goToConnections">Connect a social account</button>
-    </div>
+  <div class="social-preview-tabs" role="tablist">
+    <button class="social-preview-tab active" data-preview="instagram" id="instagramPreviewTab">Instagram</button>
+    <button class="social-preview-tab" data-preview="tiktok" id="tiktokPreviewTab">TikTok</button>
   </div>
 
-  <div class="review-availability">
-    <div class="review-status-row">
-      <span class="review-status supplied">Available</span>
-      <p><strong>Onboarding details</strong><small>Name, category, platform, goal and supplied links</small></p>
+  <div class="social-preview-stage">
+    <article class="social-preview-panel active" id="instagramPreviewPanel">
+      <div class="platform-preview-card instagram-preview-card">
+        <div class="platform-preview-topbar">
+          <strong>Instagram</strong>
+          <span class="preview-only-badge">Preview only</span>
+        </div>
+
+        <div class="instagram-profile-row">
+          <div class="social-avatar-placeholder" id="instagramAvatarPreview">
+            <span>IG</span>
+          </div>
+          <div class="social-stat"><strong>—</strong><span>posts</span></div>
+          <div class="social-stat"><strong>—</strong><span>followers</span></div>
+          <div class="social-stat"><strong>—</strong><span>following</span></div>
+        </div>
+
+        <div class="social-profile-copy">
+          <strong id="instagramPreviewName">Your account name</strong>
+          <span id="instagramPreviewHandle">@yourhandle</span>
+          <p id="instagramPreviewBio">Add an industry or category to create a basic preview.</p>
+          <a id="instagramPreviewWebsite" href="#" tabindex="-1">yourwebsite.com</a>
+        </div>
+
+        <div class="social-preview-actions">
+          <button type="button">Follow</button>
+          <button type="button">Message</button>
+          <button type="button">Contact</button>
+        </div>
+
+        <div class="instagram-grid-placeholder" id="instagramGridPreview">
+          <div><span>Connect Instagram</span></div>
+          <div><span>Connect Instagram</span></div>
+          <div><span>Connect Instagram</span></div>
+          <div><span>Connect Instagram</span></div>
+          <div><span>Connect Instagram</span></div>
+          <div><span>Connect Instagram</span></div>
+        </div>
+      </div>
+
+      <div class="social-preview-explainer">
+        <h4>What will become live after connection</h4>
+        <ul>
+          <li>Profile image and biography</li>
+          <li>Follower and following information</li>
+          <li>Recent post thumbnails</li>
+          <li>Visual consistency review</li>
+          <li>Audience activity and posting performance</li>
+        </ul>
+      </div>
+    </article>
+
+    <article class="social-preview-panel" id="tiktokPreviewPanel">
+      <div class="platform-preview-card tiktok-preview-card">
+        <div class="platform-preview-topbar dark">
+          <strong>TikTok</strong>
+          <span class="preview-only-badge dark-badge">Preview only</span>
+        </div>
+
+        <div class="tiktok-profile-centre">
+          <div class="social-avatar-placeholder tiktok-avatar" id="tiktokAvatarPreview">
+            <span>♪</span>
+          </div>
+          <strong id="tiktokPreviewName">Your account name</strong>
+          <span id="tiktokPreviewHandle">@yourhandle</span>
+        </div>
+
+        <div class="tiktok-stats">
+          <div><strong>—</strong><span>Following</span></div>
+          <div><strong>—</strong><span>Followers</span></div>
+          <div><strong>—</strong><span>Likes</span></div>
+        </div>
+
+        <div class="tiktok-bio-preview">
+          <p id="tiktokPreviewBio">Add an industry or category to create a basic preview.</p>
+          <a id="tiktokPreviewWebsite" href="#" tabindex="-1">yourwebsite.com</a>
+        </div>
+
+        <div class="tiktok-action-row">
+          <button type="button">Follow</button>
+          <button type="button">Message</button>
+        </div>
+
+        <div class="tiktok-video-grid" id="tiktokGridPreview">
+          <div><span>Connect TikTok</span></div>
+          <div><span>Connect TikTok</span></div>
+          <div><span>Connect TikTok</span></div>
+          <div><span>Connect TikTok</span></div>
+          <div><span>Connect TikTok</span></div>
+          <div><span>Connect TikTok</span></div>
+        </div>
+      </div>
+
+      <div class="social-preview-explainer">
+        <h4>What will become live after connection</h4>
+        <ul>
+          <li>Profile image and biography</li>
+          <li>Follower, following and likes information</li>
+          <li>Recent video thumbnails</li>
+          <li>Video style and topic review</li>
+          <li>Audience activity and posting performance</li>
+        </ul>
+      </div>
+    </article>
+  </div>
+
+  <div class="preview-connection-note">
+    <div>
+      <strong id="previewConnectionHeading">Account preview only</strong>
+      <span id="previewConnectionMessage">Connect Instagram or TikTok to replace placeholders with the real account.</span>
     </div>
-    <div class="review-status-row">
-      <span class="review-status unavailable">Not connected</span>
-      <p><strong>Live profile review</strong><small>Profile image, bio, recent posts and visual consistency</small></p>
-    </div>
-    <div class="review-status-row">
-      <span class="review-status unavailable">Not connected</span>
-      <p><strong>Performance analysis</strong><small>Reach, engagement, audience activity and best posting times</small></p>
-    </div>
+    <button class="primary" type="button" id="goToConnections">Connect social accounts</button>
   </div>
 </section></section>
 
@@ -246,4 +332,4 @@
     <span id="loadingMessage">PicPlanr is processing your request.</span>
   </div>
 </div>
-<script src="app-v23.js?v=23"></script></body></html>
+<script src="app-v24.js?v=24"></script></body></html>
