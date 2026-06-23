@@ -1,27 +1,16 @@
-# PicPlanr Integrated V30 — Natural Social Captions
+# PicPlanr Version 31
 
-This version changes the caption engine so captions sound like social posts rather than descriptions of photographs.
+This build adds an Account Strength Score designed to create an immediate, useful first result for new users.
 
-## Changed
+## New in Version 31
 
-- captions no longer repeat everything visible in the image
-- Natural captions are short and conversational
-- Engagement captions ask one simple relevant question
-- Goal-led captions connect gently to the account goal
-- literal openings such as “A closer look at” and “This image shows” are blocked
-- artificial phrases such as showcase, elevate, stunning, ambience and perfect backdrop are discouraged
-- captions are limited to 4 to 22 words
-- titles are written as content angles rather than image descriptions
-- standalone fallback posts now use natural subject-aware wording
-- British English and no long dashes remain enforced
-- caption editing remains available
+- Account Strength score out of 100
+- Seven scored areas: profile clarity, visual consistency, content balance, trust and proof, video readiness, posting consistency and conversion readiness
+- Clear strongest points, weaknesses and best next action
+- Profile screenshot assisted analysis for Instagram and TikTok
+- Honest provisional scoring when a live account or screenshot is unavailable
+- Existing Version 30 natural captions, content ideas, Stories and calendar features retained
 
-## Updated files
+## Deploy
 
-- `public/index.html`
-- `public/styles-v30.css`
-- `public/app-v30.js`
-- `api/picplanr.js`
-
-Upload the contents of this folder to the root of the existing GitHub repository and replace matching files.
-Keep all current Vercel environment variables.
+Upload this folder to GitHub or Vercel as before. Keep the `OPENAI_API_KEY` environment variable configured in Vercel.
