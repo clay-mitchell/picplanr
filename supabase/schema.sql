@@ -10,6 +10,7 @@ create table if not exists public.social_connections (
   encrypted_access_token text,
   token_expires_at timestamptz,
   status text not null default 'connected',
+  metadata jsonb not null default '{}'::jsonb,
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
@@ -49,3 +50,5 @@ alter table public.scheduled_posts enable row level security;
 alter table public.publish_attempts enable row level security;
 
 -- Add authenticated-user policies after Supabase Auth is connected.
+
+create index if not exists social_connections_provider_idx on public.social_connections(provider);
