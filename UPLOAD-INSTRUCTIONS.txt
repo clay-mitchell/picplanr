@@ -1,34 +1,21 @@
-PicPlanr Version 34: Deep Website Analysis
+PicPlanr Account Review Only Fix
 
-Replace at the main level of GitHub:
+Replace these two files in the ORIGINAL GitHub repository:
 - index.html
 - app-v32.js
-- styles-v32.css
 
-Add this new file in this exact folder:
-- api/website/analyse.js
+Do not replace any other files.
 
-Do not delete or replace any social connection, publishing, Supabase or domain files.
+What this fixes:
+- The large Account Strength score stays inside Account Review.
+- Upload Folder, Content Ideas and Smart Calendar no longer show the score section.
+- The top-right Account Strength score is replaced with "Workspace ready" outside Account Review.
+- Existing domain, API, social connection, Supabase and publishing files are untouched.
 
-What this version does:
-- reads up to six useful public website pages
-- analyses customer markets, brand tone and positioning
-- shows evidence-led strengths and weaknesses
-- reviews trust, calls to action and the customer journey
-- gives limited on-page search visibility advice
-- creates five content pillars, three quick wins and three first content ideas
-- passes the resulting brand profile into later PicPlanr image and caption analysis
-- keeps the Account Strength result inside the Account Review page
-
-Testing:
-1. Upload the four files, preserving the api/website folder.
-2. Wait for Vercel to show Ready.
-3. Open the newest unique .vercel.app deployment first.
-4. Enter boxhub.uk and click Decode my brand.
-5. The analysis should identify the business from website evidence and list the pages explored.
-
-Required Vercel setting:
-- OPENAI_API_KEY must already be present.
-
-Optional:
-- OPENAI_TEXT_MODEL, otherwise gpt-4.1-mini is used.
+After upload:
+1. Wait for Vercel to show the new deployment as Ready.
+2. Open the latest deployment.
+3. Hard refresh:
+   Mac: Command + Shift + R
+   Windows: Ctrl + Shift + R
+4. Test Account Review, Upload Folder, Content Ideas and Smart Calendar.
