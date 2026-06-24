@@ -978,3 +978,15 @@ body[data-page="audit"] #auditResult.empty{
 body:not([data-page="audit"]) #statusPill[data-review-score]{
   display:none !important;
 }
+
+
+/* PicPlanr Version 35.1 — Account Review score isolation */
+body:not([data-page="audit"]) #auditResult,
+body:not([data-page="audit"]) .account-strength-results{
+  display:none !important;
+  visibility:hidden !important;
+}
+body[data-page="audit"] #auditResult,
+body[data-page="audit"] .account-strength-results{
+  visibility:visible;
+}

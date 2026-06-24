@@ -1,37 +1,23 @@
-PICPLANR VERSION 35 CLEAN REBUILD
+PICPLANR VERSION 35.1 — SCORE ISOLATION
 
-Upload these three files to the v35-clean-rebuild branch:
-- index.html (replace existing)
-- app-v35.js (new)
-- styles-v35.css (new)
+Upload these four files to the v35-clean-rebuild branch:
 
-Do not replace or delete:
-- api/
-- assets/
-- public/
-- supabase/
-- package.json
-- vercel.json
-- any environment variables
+- index.html
+- app-v35.js
+- styles-v35.css
+- page-guard-v351.js
 
-The new index.html loads ONLY:
-- app-v35.js?v=3501
-- styles-v35.css?v=3501
+Replace the first three when GitHub asks.
+page-guard-v351.js is a new file.
 
-This means old app-v32.js, app.js, styles-v32.css, styles.css and
-review-page-fix.js cannot control Version 35, even if they remain in the repository.
+This update continuously:
+- keeps auditResult inside Account Review
+- hides every account-strength-results panel outside Account Review
+- removes the top-right score outside Account Review
+- protects against later scripts redrawing or moving the score
 
-Testing:
-1. Make sure GitHub shows branch: v35-clean-rebuild.
-2. Upload the three files and commit.
-3. Open the Vercel Preview deployment for this branch.
-4. Do not promote it to Production yet.
-5. Check:
-   - Account Review: score visible
-   - Upload Folder: score absent
-   - Content Ideas: score absent
-   - Smart Calendar: score absent
-6. The browser tab should say "PicPlanr Version 35".
-7. The sidebar should say "Version 35 Clean".
-
-Only after those checks should the branch be merged into main.
+After committing:
+1. Open the new Vercel Preview deployment for v35-clean-rebuild.
+2. Confirm the sidebar says Version 35.1 Clean.
+3. Hard refresh.
+4. Test Account Review, Upload Folder, Content Ideas and Smart Calendar.
