@@ -251,7 +251,7 @@ function hideLoading(button){
     }
   }
 }
-const state={accountType:'Business',profile:null,files:[],images:[],groups:[],approved:new Set(),storyIdeas:[],approvedStories:new Set(),profileScreenshots:{instagram:null,tiktok:null},audit:null};
+const state={accountType:'Business',profile:null,websiteAnalysis:null,files:[],images:[],groups:[],approved:new Set(),storyIdeas:[],approvedStories:new Set(),profileScreenshots:{instagram:null,tiktok:null},audit:null};
 const titles={onboarding:'Account setup',connections:'Connected accounts',audit:'Account review',upload:'Upload folder',posts:'Content ideas',calendar:'Smart calendar'};
 function show(step){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(step).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.step===step));$('title').textContent=titles[step]}
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.step));document.querySelectorAll('.account-choice').forEach(b=>b.onclick=()=>{state.accountType=b.dataset.type;document.querySelectorAll('.account-choice').forEach(x=>x.classList.toggle('selected',x===b));$('goal').innerHTML=state.accountType==='Business'?'<option>Increase enquiries</option><option>Build trust</option><option>Increase sales</option><option>Promote partnerships</option>':'<option>Grow engagement</option><option>Grow followers</option><option>Build a personal brand</option><option>Secure brand partnerships</option><option>Share consistently</option>'});
@@ -293,8 +293,110 @@ function activateSocialPreview(platform){
   });
 }
 async function api(action,payload){const r=await fetch('/api/picplanr',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({action,...payload})});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||'Something went wrong.');return b}
-$('buildProfile').onclick=async()=>{const btn=$('buildProfile');const ctx=context();const missing=[];if(!ctx.name)missing.push('name');if(!ctx.industry)missing.push('industry or content category');if(!ctx.instagram&&!ctx.linkedin&&!ctx.tiktok&&!ctx.website)missing.push('a social handle or website');if(missing.length){alert(`Please add ${missing.join(', ')} before PicPlanr analyses the account.`);return}showLoading('Analysing your account','PicPlanr is using only the details you supplied. Live social data will be added after account connection.',btn);try{state.profile=(await api('profile',{context:ctx})).profile;renderProfile();renderProfileReference();$('statusPill').textContent='Initial profile ready';}catch(e){alert(e.message)}finally{hideLoading(btn)}};
-function renderProfile(){const p=state.profile;$('profileResult').classList.remove('hidden');$('profileResult').innerHTML=`<h3>Your ${state.accountType==='Business'?'brand':'personal'} voice</h3><p>${esc(p.summary)}</p><div class="tags">${(p.voice_traits||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div><p><strong>Content direction:</strong> ${esc(p.content_direction)}</p><p><strong>How PicPlanr should write:</strong> ${esc(p.writing_rules)}</p>${p.confidence_note?`<p class="confidence-note"><strong>Information limits:</strong> ${esc(p.confidence_note)}</p>`:''}`}
+async function analyseWebsite(payload){const r=await fetch('/api/website/analyse',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});const b=await r.json().catch(()=>({}));if(!r.ok)throw new Error(b.error||'Website analysis failed.');return b}
+$('buildProfile').onclick=async()=>{
+  const btn=$('buildProfile');
+  const ctx=context();
+  const missing=[];
+  if(!ctx.name)missing.push('name');
+  if(!ctx.industry)missing.push('industry or content category');
+  if(!ctx.instagram&&!ctx.linkedin&&!ctx.tiktok&&!ctx.website)missing.push('a social handle or website');
+  if(missing.length){alert(`Please add ${missing.join(', ')} before PicPlanr analyses the account.`);return}
+
+  const messages=ctx.website?[
+    'Exploring your public website pages',
+    'Learning what makes your business different',
+    'Identifying your strongest customer markets',
+    'Understanding your brand voice',
+    'Finding opportunities to improve enquiries',
+    'Building your PicPlanr content strategy'
+  ]:['Understanding the details you supplied','Building your first PicPlanr profile'];
+  let messageIndex=0;
+  showLoading(ctx.website?'Decoding your brand':'Analysing your account',messages[0],btn);
+  const messageTimer=setInterval(()=>{
+    messageIndex=(messageIndex+1)%messages.length;
+    if($('loadingMessage'))$('loadingMessage').textContent=messages[messageIndex];
+  },1700);
+
+  try{
+    if(ctx.website){
+      const data=await analyseWebsite({website:ctx.website,providedContext:ctx});
+      state.websiteAnalysis=data.analysis||data.brand_profile;
+      state.profile=data.profile;
+      try{localStorage.setItem('picplanrWebsiteAnalysis',JSON.stringify(state.websiteAnalysis));}catch{}
+      renderWebsiteAnalysis(state.websiteAnalysis);
+      $('statusPill').textContent=`${state.websiteAnalysis.pages_read||1} website pages decoded`;
+    }else{
+      state.profile=(await api('profile',{context:ctx})).profile;
+      renderBasicProfile();
+      $('statusPill').textContent='Initial profile ready';
+    }
+    renderProfileReference();
+  }catch(e){
+    alert(e.message);
+  }finally{
+    clearInterval(messageTimer);
+    hideLoading(btn);
+  }
+};
+
+function listItems(items,renderer){
+  return (Array.isArray(items)?items:[]).map(renderer).join('');
+}
+
+function renderBasicProfile(){
+  const p=state.profile;
+  $('profileResult').classList.remove('hidden');
+  $('profileResult').innerHTML=`<section class="analysis-card analysis-card-wide"><small>FIRST PROFILE</small><h3>Your ${state.accountType==='Business'?'brand':'personal'} voice</h3><p>${esc(p.summary)}</p><div class="tags">${(p.voice_traits||[]).map(x=>`<span class="tag">${esc(x)}</span>`).join('')}</div><p><strong>Content direction:</strong> ${esc(p.content_direction)}</p><p><strong>How PicPlanr should write:</strong> ${esc(p.writing_rules)}</p>${p.confidence_note?`<p class="confidence-note"><strong>Information limits:</strong> ${esc(p.confidence_note)}</p>`:''}</section>`;
+}
+
+function renderWebsiteAnalysis(a){
+  if(!a)return;
+  $('profileResult').classList.remove('hidden');
+  const pages=listItems(a.source_pages,(page)=>`<span class="source-page">${esc(page.title||page.url)}</span>`);
+  const strengths=listItems(a.strengths,(item)=>`<article class="insight-item positive"><strong>${esc(item.title)}</strong><p>${esc(item.evidence)}</p></article>`);
+  const weaknesses=listItems(a.weaknesses,(item)=>`<article class="insight-item opportunity"><strong>${esc(item.title)}</strong><p>${esc(item.impact)}</p><span>${esc(item.fix)}</span></article>`);
+  const audiences=listItems(a.audience_segments,(item)=>`<article class="audience-card"><strong>${esc(item.name)}</strong><p>${esc(item.need)}</p><span>Message to lead with: ${esc(item.message)}</span></article>`);
+  const pillars=listItems(a.content_pillars,(item,index)=>`<article class="pillar-card"><b>0${index+1}</b><div><strong>${esc(item.title)}</strong><p>${esc(item.purpose)}</p><span>${esc(item.example)}</span></div></article>`);
+  const wins=listItems(a.quick_wins,(item)=>`<article class="quick-win"><span>${esc(item.effort)}</span><strong>${esc(item.action)}</strong><p>${esc(item.reason)}</p></article>`);
+  const ideas=listItems(a.first_content_ideas,(item)=>`<article class="first-idea"><span>${esc(item.format)}</span><strong>${esc(item.title)}</strong><p>${esc(item.angle)}</p></article>`);
+  const products=listItems(a.products_services,(item)=>`<span class="tag">${esc(item)}</span>`);
+  const traits=listItems(a.brand_personality,(item)=>`<span class="tag brand-trait">${esc(item)}</span>`);
+  const toneExamples=listItems(a.tone_examples,(item)=>`<li>${esc(item)}</li>`);
+  const trust=listItems(a.conversion_review?.trust_signals,(item)=>`<li>${esc(item)}</li>`);
+  const missingTrust=listItems(a.conversion_review?.missing_trust_signals,(item)=>`<li>${esc(item)}</li>`);
+  const searchGood=listItems(a.search_visibility?.working_well,(item)=>`<li>${esc(item)}</li>`);
+  const searchOpps=listItems(a.search_visibility?.opportunities,(item)=>`<li>${esc(item)}</li>`);
+
+  $('profileResult').innerHTML=`
+    <section class="brand-decoded-hero">
+      <div><small>YOUR BRAND, DECODED</small><h2>${esc(a.analysis_headline||'PicPlanr has understood your business')}</h2><p>${esc(a.brand_summary)}</p><div class="analysis-meta"><span>${esc(String(a.pages_read||1))} pages explored</span><span>${esc(a.industry||'Industry not clear')}</span><span>${esc(a.location||'Location not clear')}</span></div></div>
+      <div class="brand-orbit"><strong>${esc((a.business_name||context().name||'Brand').slice(0,2).toUpperCase())}</strong><span>Brand profile ready</span></div>
+    </section>
+
+    <section class="analysis-grid two">
+      <article class="analysis-card"><small>MARKET POSITION</small><h3>Where you sit</h3><p>${esc(a.market_position)}</p><div class="tags">${products}</div></article>
+      <article class="analysis-card"><small>BRAND PERSONALITY</small><h3>How your brand feels</h3><div class="tags">${traits}</div><p>${esc(a.tone_of_voice)}</p><ul class="compact-list">${toneExamples}</ul></article>
+    </section>
+
+    <section class="analysis-card analysis-card-wide"><small>WHO YOU SHOULD SPEAK TO</small><h3>Your strongest audience opportunities</h3><div class="audience-grid">${audiences}</div></section>
+
+    <section class="analysis-grid two">
+      <article class="analysis-card"><small>WHAT IS WORKING</small><h3>Your website strengths</h3><div class="insight-list">${strengths}</div></article>
+      <article class="analysis-card"><small>WHERE VALUE IS LEAKING</small><h3>What could be stronger</h3><div class="insight-list">${weaknesses}</div></article>
+    </section>
+
+    <section class="analysis-grid two">
+      <article class="analysis-card"><small>CUSTOMER JOURNEY</small><h3>Turning visits into enquiries</h3><p>${esc(a.conversion_review?.current_journey||'')}</p><p><strong>Calls to action:</strong> ${esc(a.conversion_review?.call_to_action_review||'')}</p><div class="mini-columns"><div><b>Trust already visible</b><ul>${trust}</ul></div><div><b>Trust to strengthen</b><ul>${missingTrust}</ul></div></div></article>
+      <article class="analysis-card"><small>SEARCH VISIBILITY</small><h3>Helping customers find you</h3><div class="mini-columns"><div><b>Working well</b><ul>${searchGood}</ul></div><div><b>Opportunities</b><ul>${searchOpps}</ul></div></div></article>
+    </section>
+
+    <section class="analysis-card analysis-card-wide"><small>YOUR CONTENT ENGINE</small><h3>Five content pillars built from your website</h3><div class="pillar-grid">${pillars}</div></section>
+    <section class="analysis-card analysis-card-wide"><small>FASTEST VALUE</small><h3>Three quick wins</h3><div class="quick-win-grid">${wins}</div></section>
+    <section class="analysis-card analysis-card-wide"><small>START CREATING</small><h3>Your first PicPlanr content ideas</h3><div class="first-idea-grid">${ideas}</div><button class="primary analysis-next" type="button" onclick="show('upload')">Upload photos and build my content plan</button></section>
+    <section class="analysis-sources"><strong>Pages PicPlanr explored</strong><div>${pages}</div><p>${esc(a.confidence_note||'')}</p></section>`;
+}
+
 function scoreTone(score){if(score>=80)return 'Excellent';if(score>=65)return 'Strong';if(score>=50)return 'Developing';return 'Needs attention'}
 function renderAudit(a){
   state.audit=a;
@@ -1205,3 +1307,5 @@ if(params.get('instagram_status')==='connected'){
   history.replaceState({},'',location.pathname);
 }
 refreshInstagramConnection();
+
+try{const saved=JSON.parse(localStorage.getItem('picplanrWebsiteAnalysis')||'null');if(saved){state.websiteAnalysis=saved;}}catch{}

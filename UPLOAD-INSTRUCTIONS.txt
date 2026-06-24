@@ -1,20 +1,34 @@
-PicPlanr Version 33.7 — clean Account Review page fix
+PicPlanr Version 34: Deep Website Analysis
 
-Replace these two files at the main level of GitHub:
+Replace at the main level of GitHub:
 - index.html
 - app-v32.js
+- styles-v32.css
 
-Do not upload review-page-fix.js. Delete review-page-fix.js from GitHub if it exists.
+Add this new file in this exact folder:
+- api/website/analyse.js
 
-This rebuild:
-- physically places auditResult inside the Account Review section
-- removes the previous patch script
-- rewrites page navigation so only one page can display at a time
-- hides the score and top-right Account Strength label outside Account Review
+Do not delete or replace any social connection, publishing, Supabase or domain files.
 
-After upload:
-1. Commit the two replacements.
-2. Delete review-page-fix.js if present.
-3. Wait for Vercel to show Ready.
-4. Open the latest .vercel.app deployment.
-5. Hard refresh with Command + Shift + R on Mac or Ctrl + Shift + R on Windows.
+What this version does:
+- reads up to six useful public website pages
+- analyses customer markets, brand tone and positioning
+- shows evidence-led strengths and weaknesses
+- reviews trust, calls to action and the customer journey
+- gives limited on-page search visibility advice
+- creates five content pillars, three quick wins and three first content ideas
+- passes the resulting brand profile into later PicPlanr image and caption analysis
+- keeps the Account Strength result inside the Account Review page
+
+Testing:
+1. Upload the four files, preserving the api/website folder.
+2. Wait for Vercel to show Ready.
+3. Open the newest unique .vercel.app deployment first.
+4. Enter boxhub.uk and click Decode my brand.
+5. The analysis should identify the business from website evidence and list the pages explored.
+
+Required Vercel setting:
+- OPENAI_API_KEY must already be present.
+
+Optional:
+- OPENAI_TEXT_MODEL, otherwise gpt-4.1-mini is used.
