@@ -1,49 +1,52 @@
-# PicPlanr Version 32
+# PicPlanr Version 33 Add-on
 
-This build adds a real public Instagram connection and live Account Strength analysis foundation.
+This update safely combines the existing Version 32 project, the LinkedIn connection start route that has not yet been uploaded to GitHub, and the new website brand-analysis experience.
 
-## Included
+## What this adds
 
-- Instagram Login start and callback routes
-- Security state check to prevent forged login callbacks
-- Encrypted Instagram access-token storage
-- Supabase connection records
-- Live profile and recent-media retrieval
-- Available media insights retrieval
-- Account Strength analysis using recent Instagram data
-- Disconnect option
-- Existing PicPlanr content ideas, captions, Stories and calendar retained
+- Real public website reading across the homepage and selected About, Services and Contact pages
+- Evidence-led brand analysis using only website text and details supplied by the customer
+- Brand summary, audience, personality, tone, selling points, content opportunities and quick wins
+- Changing analysis messages without fake percentages
+- Editable brand-profile results
+- Local browser saving plus optional Supabase saving
+- Three immediate content directions after saving
+- Manual onboarding option for customers without a website
+- The saved brand profile is passed into later image analysis, captions and content planning
 
-## Required Vercel environment variables
+## Existing work retained
+
+- Instagram connection and account analysis
+- LinkedIn connection start route
+- TikTok connection start route
+- Connected-account screen
+- Content upload, grouping, caption choices, Stories and calendar
+- Publishing queue and Vercel scheduled publishing settings
+
+## Upload to GitHub
+
+Upload the contents of this folder into the root of the existing PicPlanr repository, preserving the folder structure. This package is additive and does not change domain records or Vercel domain settings.
+
+## Supabase database update
+
+Run `supabase/schema.sql` in the Supabase SQL Editor. It uses `create table if not exists`, so it keeps the existing social and publishing tables and adds `brand_profiles` safely.
+
+## Existing environment variables
+
+Keep all existing Version 32 variables. The new website analysis uses:
 
 - `OPENAI_API_KEY`
-- `META_APP_ID`
-- `META_APP_SECRET`
-- `META_REDIRECT_URI=https://www.picplanrapp.com/api/oauth/instagram/callback`
-- `TOKEN_ENCRYPTION_KEY` (use a long random value of at least 32 characters)
+- Optional: `OPENAI_TEXT_MODEL` (defaults to `gpt-4.1-mini`)
 - `SUPABASE_URL`
 - `SUPABASE_SERVICE_ROLE_KEY`
 
-Optional:
+The LinkedIn start route still expects:
 
-- `INSTAGRAM_SCOPES`
-- `INSTAGRAM_AUTH_URL`
-- `INSTAGRAM_TOKEN_URL`
-- `INSTAGRAM_GRAPH_BASE_URL`
-- `OPENAI_VISION_MODEL`
+- `LINKEDIN_CLIENT_ID`
+- `LINKEDIN_CLIENT_SECRET`
+- `LINKEDIN_REDIRECT_URI`
+- Optional: `LINKEDIN_SCOPES`
 
-## Meta setup
+## Important
 
-Add this exact redirect URI to the Instagram Login settings:
-
-`https://www.picplanrapp.com/api/oauth/instagram/callback`
-
-Request the Instagram permissions needed for basic account data, insights and content publishing. Keep the app in testing while using assigned test accounts. Public customer access depends on Meta approval and the app being moved to Live.
-
-## Supabase setup
-
-Run `supabase/schema.sql` in the Supabase SQL editor before deploying. The service-role key must only be stored in Vercel and must never be placed in browser code.
-
-## Important launch note
-
-This version provides public Instagram connection and analysis. A full paid launch still needs PicPlanr customer registration, subscription checks, privacy policy, account deletion process, terms, rate limiting and Meta App Review approval.
+This version includes the LinkedIn connection start route from the previous add-on, but full LinkedIn connection storage and publishing still require the matching callback route and LinkedIn product permissions.

@@ -30,3 +30,22 @@ export async function getInstagramConnection(id){
 export async function deleteInstagramConnection(id){
   return request(`social_connections?id=eq.${encodeURIComponent(id)}&provider=eq.instagram`,{method:'DELETE',headers:{Prefer:'return=minimal'}});
 }
+
+export async function saveBrandProfile(row){
+  const existing=await request(`brand_profiles?session_id=eq.${encodeURIComponent(row.session_id)}&limit=1`);
+  if(existing?.[0]?.id){
+    const updated=await request(`brand_profiles?id=eq.${encodeURIComponent(existing[0].id)}`,{
+      method:'PATCH',
+      body:{
+        account_type:row.account_type,
+        website:row.website,
+        business_name:row.business_name,
+        profile_data:row.profile_data,
+        updated_at:row.updated_at
+      },
+      headers:{Prefer:'return=representation'}
+    });
+    return updated?.[0]||null;
+  }
+  return request('brand_profiles',{method:'POST',body:row,headers:{Prefer:'return=representation'}}).then(x=>x?.[0]);
+}

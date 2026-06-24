@@ -52,3 +52,18 @@ alter table public.publish_attempts enable row level security;
 -- Add authenticated-user policies after Supabase Auth is connected.
 
 create index if not exists social_connections_provider_idx on public.social_connections(provider);
+
+create table if not exists public.brand_profiles (
+  id uuid primary key default gen_random_uuid(),
+  session_id uuid not null unique,
+  user_id uuid,
+  account_type text not null default 'Business' check (account_type in ('Business','Individual')),
+  website text,
+  business_name text,
+  profile_data jsonb not null default '{}'::jsonb,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.brand_profiles enable row level security;
+create index if not exists brand_profiles_session_idx on public.brand_profiles(session_id);
