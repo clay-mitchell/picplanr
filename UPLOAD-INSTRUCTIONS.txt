@@ -1,21 +1,37 @@
-PicPlanr Account Review Only Fix
+PICPLANR VERSION 35 CLEAN REBUILD
 
-Replace these two files in the ORIGINAL GitHub repository:
-- index.html
-- app-v32.js
+Upload these three files to the v35-clean-rebuild branch:
+- index.html (replace existing)
+- app-v35.js (new)
+- styles-v35.css (new)
 
-Do not replace any other files.
+Do not replace or delete:
+- api/
+- assets/
+- public/
+- supabase/
+- package.json
+- vercel.json
+- any environment variables
 
-What this fixes:
-- The large Account Strength score stays inside Account Review.
-- Upload Folder, Content Ideas and Smart Calendar no longer show the score section.
-- The top-right Account Strength score is replaced with "Workspace ready" outside Account Review.
-- Existing domain, API, social connection, Supabase and publishing files are untouched.
+The new index.html loads ONLY:
+- app-v35.js?v=3501
+- styles-v35.css?v=3501
 
-After upload:
-1. Wait for Vercel to show the new deployment as Ready.
-2. Open the latest deployment.
-3. Hard refresh:
-   Mac: Command + Shift + R
-   Windows: Ctrl + Shift + R
-4. Test Account Review, Upload Folder, Content Ideas and Smart Calendar.
+This means old app-v32.js, app.js, styles-v32.css, styles.css and
+review-page-fix.js cannot control Version 35, even if they remain in the repository.
+
+Testing:
+1. Make sure GitHub shows branch: v35-clean-rebuild.
+2. Upload the three files and commit.
+3. Open the Vercel Preview deployment for this branch.
+4. Do not promote it to Production yet.
+5. Check:
+   - Account Review: score visible
+   - Upload Folder: score absent
+   - Content Ideas: score absent
+   - Smart Calendar: score absent
+6. The browser tab should say "PicPlanr Version 35".
+7. The sidebar should say "Version 35 Clean".
+
+Only after those checks should the branch be merged into main.
