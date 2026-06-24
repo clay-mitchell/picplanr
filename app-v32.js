@@ -387,19 +387,31 @@ function renderAudit(a){
   state.audit=a;
   const score=Math.max(0,Math.min(100,Number(a.overall_score)||0));
   const breakdown=Array.isArray(a.breakdown)?a.breakdown:[];
-  const basis=esc(a.score_basis||'Onboarding information');
-  const confidence=esc(a.confidence||'Provisional');
+  const hasInstagramConnection=!!connectionState.instagram;
+  const hasInstagramScreenshot=!!state.profileScreenshots.instagram;
+  const isComplete=hasInstagramConnection;
+  const isEnhanced=!isComplete&&hasInstagramScreenshot;
+  const reviewLabel=isComplete?'CONNECTED INSTAGRAM DIAGNOSIS':isEnhanced?'SCREENSHOT-ASSISTED REVIEW':'PRELIMINARY PROFILE REVIEW';
+  const basis=isComplete?'Connected Instagram account and available live data':isEnhanced?'Website, onboarding information and uploaded Instagram screenshot':'Website and onboarding information only';
+  const confidence=isComplete?'Live account data':isEnhanced?'Improved evidence':'Limited evidence';
+  const heading=isComplete?(a.score_label||scoreTone(score)):isEnhanced?'Provisional account score':'Preliminary profile score';
+  const explanation=isComplete
+    ?(a.hook_message||'PicPlanr has reviewed the connected Instagram account and identified the clearest opportunities.')
+    :isEnhanced
+      ?'This score uses the information supplied plus the uploaded Instagram screenshot. It is still provisional because performance statistics and complete account data are unavailable.'
+      :'This is not a confirmed Instagram diagnosis. It is a cautious starting score based only on your website and onboarding answers; a typed Instagram handle cannot provide account data.';
   $('auditResult').className='account-strength-results';
   $('auditResult').innerHTML=`
-    <section class="strength-hero">
+    <section class="strength-hero ${isComplete?'live-review':'preliminary-review'}">
       <div class="score-ring" style="--score:${score}"><div><strong>${score}</strong><span>/100</span></div></div>
       <div class="strength-copy">
-        <small>PICPLANR ACCOUNT STRENGTH</small>
-        <h3>${esc(a.score_label||scoreTone(score))}</h3>
-        <p>${esc(a.hook_message||'PicPlanr has identified the clearest opportunities to strengthen this account.')}</p>
-        <div class="score-meta"><span>${basis}</span><span>${confidence} confidence</span></div>
+        <small>${reviewLabel}</small>
+        <h3>${esc(heading)}</h3>
+        <p>${esc(explanation)}</p>
+        <div class="review-trust-note"><strong>${isComplete?'Verified review basis':'Important limitation'}</strong><span>${esc(basis)}</span></div>
+        <div class="score-meta"><span>${esc(basis)}</span><span>${esc(confidence)}</span></div>
       </div>
-      <div class="next-best-action"><small>BEST NEXT MOVE</small><strong>${esc(a.next_action||'Connect a social account for a deeper review.')}</strong></div>
+      <div class="next-best-action"><small>BEST NEXT MOVE</small><strong>${esc(isComplete?(a.next_action||'Use the findings to improve the next content plan.'):isEnhanced?'Connect Instagram for a complete diagnosis with genuine account data.':'Connect Instagram or upload a current profile screenshot for a more useful review.')}</strong></div>
     </section>
     <section class="score-breakdown">
       ${breakdown.map(item=>{const v=Math.max(0,Math.min(100,Number(item.score)||0));return `<article class="score-factor"><div><strong>${esc(item.category||'Category')}</strong><span>${v}/100</span></div><div class="factor-track"><i style="width:${v}%"></i></div><p>${esc(item.reason||'')}</p></article>`}).join('')}
@@ -410,7 +422,7 @@ function renderAudit(a){
       <div class="audit-box"><h3>Recommended actions</h3><ul>${(a.actions||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
     </section>`;
 }
-$('runAudit').onclick=async()=>{const btn=$('runAudit');if(!state.profile){alert('Please analyse the account in Account setup first.');show('onboarding');return}showLoading('Calculating account strength','PicPlanr is reviewing positioning, content balance, consistency and growth opportunities.',btn);try{const screenshots=Object.entries(state.profileScreenshots).filter(([,dataUrl])=>dataUrl).map(([platform,dataUrl])=>({platform,dataUrl}));const data=await api('audit',{context:context(),profile:state.profile,screenshots});renderAudit(data.audit);$('statusPill').textContent=`Account strength ${data.audit.overall_score}/100`;}catch(e){alert(e.message)}finally{hideLoading(btn)}};
+$('runAudit').onclick=async()=>{const btn=$('runAudit');if(!state.profile){alert('Please analyse the account in Account setup first.');show('onboarding');return}const live=!!connectionState.instagram;showLoading(live?'Calculating connected Instagram strength':'Building a preliminary profile review',live?'PicPlanr is reviewing genuine connected account information and available performance data.':'PicPlanr is using your website, onboarding answers and any uploaded screenshots. A typed handle alone cannot provide Instagram data.',btn);try{const screenshots=Object.entries(state.profileScreenshots).filter(([,dataUrl])=>dataUrl).map(([platform,dataUrl])=>({platform,dataUrl}));const data=await api('audit',{context:context(),profile:state.profile,screenshots,review_mode:live?'connected_instagram':screenshots.some(x=>x.platform==='instagram')?'screenshot_assisted':'preliminary'});renderAudit(data.audit);$('statusPill').textContent=live?`Instagram diagnosis ${data.audit.overall_score}/100`:`Preliminary review ${data.audit.overall_score}/100`;}catch(e){alert(e.message)}finally{hideLoading(btn)}};
 $('chooseFolder').onclick=()=>$('folderInput').click();$('chooseFiles').onclick=e=>{e.stopPropagation();$('fileInput').click()};$('drop').onclick=()=>$('fileInput').click();$('folderInput').onchange=e=>loadFiles(e.target.files);$('fileInput').onchange=e=>loadFiles(e.target.files);$('drop').ondragover=e=>e.preventDefault();$('drop').ondrop=e=>{e.preventDefault();loadFiles(e.dataTransfer.files)};
 function loadFiles(list){state.files=Array.from(list).filter(f=>f.type.startsWith('image/')).slice(0,50);$('previewGrid').innerHTML='';state.files.forEach(f=>{const u=URL.createObjectURL(f),d=document.createElement('div');d.className='preview';d.innerHTML=`<img src="${u}"><span>${esc(f.name)}</span>`;$('previewGrid').appendChild(d)});$('analyseFolder').classList.toggle('hidden',!state.files.length);$('statusPill').textContent=`${state.files.length} images selected`}
 async function compress(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const originalWidth=img.width,originalHeight=img.height,orientation=originalHeight>originalWidth?'portrait':originalWidth>originalHeight?'landscape':'square';const max=1400,s=Math.min(1,max/Math.max(originalWidth,originalHeight)),c=document.createElement('canvas');c.width=Math.round(originalWidth*s);c.height=Math.round(originalHeight*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);resolve({dataUrl:c.toDataURL('image/jpeg',.72),width:originalWidth,height:originalHeight,orientation})};img.onerror=reject;img.src=url})}

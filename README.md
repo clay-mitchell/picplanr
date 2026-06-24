@@ -1,3 +1,17 @@
+# PicPlanr Version 33.1 Combined Add-on
+
+This update includes the Version 33 website brand analysis and the previously prepared social connection work.
+
+## Version 33.1 review correction
+
+- Keeps the full Account Strength panel only inside Account Review
+- Fixes the page structure that allowed the diagnosis to appear on Upload Folder and other pages
+- Labels handle-only analysis as a Preliminary Profile Review
+- Explains that a typed Instagram handle does not provide genuine account data
+- Uses Screenshot-Assisted Review when a current Instagram screenshot is uploaded
+- Uses Connected Instagram Diagnosis only after Instagram is genuinely connected
+- Leaves domain, Vercel, LinkedIn, Instagram, TikTok and publishing settings unchanged
+
 # PicPlanr Version 33 Add-on
 
 This update safely combines the existing Version 32 project, the LinkedIn connection start route that has not yet been uploaded to GitHub, and the new website brand-analysis experience.
