@@ -253,8 +253,19 @@ function hideLoading(button){
 }
 const state={accountType:'Business',profile:null,brandProfile:null,files:[],images:[],groups:[],approved:new Set(),storyIdeas:[],approvedStories:new Set(),profileScreenshots:{instagram:null,tiktok:null},audit:null};
 const titles={onboarding:'Account setup',connections:'Connected accounts',audit:'Account review',upload:'Upload folder',posts:'Content ideas',calendar:'Smart calendar'};
-function show(step){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));$(step).classList.add('active');document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.step===step));$('title').textContent=titles[step]}
-document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.step));document.querySelectorAll('.account-choice').forEach(b=>b.onclick=()=>{state.accountType=b.dataset.type;document.querySelectorAll('.account-choice').forEach(x=>x.classList.toggle('selected',x===b));$('goal').innerHTML=state.accountType==='Business'?'<option>Increase enquiries</option><option>Build trust</option><option>Increase sales</option><option>Promote partnerships</option>':'<option>Grow engagement</option><option>Grow followers</option><option>Build a personal brand</option><option>Secure brand partnerships</option><option>Share consistently</option>'});
+function show(step){
+  document.querySelectorAll('.view').forEach(v=>{
+    const active=v.id===step;
+    v.classList.toggle('active',active);
+    v.hidden=!active;
+    v.setAttribute('aria-hidden',active?'false':'true');
+  });
+  document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.step===step));
+  $('title').textContent=titles[step];
+  window.scrollTo({top:0,behavior:'instant'});
+}
+document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.step));
+show(document.querySelector('.nav.active')?.dataset.step||'onboarding');document.querySelectorAll('.account-choice').forEach(b=>b.onclick=()=>{state.accountType=b.dataset.type;document.querySelectorAll('.account-choice').forEach(x=>x.classList.toggle('selected',x===b));$('goal').innerHTML=state.accountType==='Business'?'<option>Increase enquiries</option><option>Build trust</option><option>Increase sales</option><option>Promote partnerships</option>':'<option>Grow engagement</option><option>Grow followers</option><option>Build a personal brand</option><option>Secure brand partnerships</option><option>Share consistently</option>'});
 function context(){return{accountType:state.accountType,name:$('accountName').value.trim(),industry:$('industry').value.trim(),platform:$('platform').value,goal:$('goal').value,instagram:$('instagram').value.trim(),linkedin:$('linkedin').value.trim(),tiktok:$('tiktok').value.trim(),website:$('website').value.trim(),competitors:$('competitors').value.trim(),brandProfile:state.brandProfile}}
 function normaliseHandle(value){
   const handle=String(value||'').trim();
@@ -385,6 +396,8 @@ function renderProfile(){if(state.brandProfile)return renderBrandProfile();const
 function scoreTone(score){if(score>=80)return 'Excellent';if(score>=65)return 'Strong';if(score>=50)return 'Developing';return 'Needs attention'}
 function renderAudit(a){
   state.audit=a;
+  const auditView=$('audit'),auditResult=$('auditResult');
+  if(auditView&&auditResult&&auditResult.parentElement!==auditView) auditView.appendChild(auditResult);
   const score=Math.max(0,Math.min(100,Number(a.overall_score)||0));
   const breakdown=Array.isArray(a.breakdown)?a.breakdown:[];
   const hasInstagramConnection=!!connectionState.instagram;
@@ -400,8 +413,8 @@ function renderAudit(a){
     :isEnhanced
       ?'This score uses the information supplied plus the uploaded Instagram screenshot. It is still provisional because performance statistics and complete account data are unavailable.'
       :'This is not a confirmed Instagram diagnosis. It is a cautious starting score based only on your website and onboarding answers; a typed Instagram handle cannot provide account data.';
-  $('auditResult').className='account-strength-results';
-  $('auditResult').innerHTML=`
+  auditResult.className='account-strength-results';
+  auditResult.innerHTML=`
     <section class="strength-hero ${isComplete?'live-review':'preliminary-review'}">
       <div class="score-ring" style="--score:${score}"><div><strong>${score}</strong><span>/100</span></div></div>
       <div class="strength-copy">

@@ -974,3 +974,8 @@ button.is-loading::before{
 .review-trust-note strong{font-size:12px;color:#ffd18a}.review-trust-note span{font-size:12px;line-height:1.45;color:#d8c6a6}
 .strength-hero.live-review .review-trust-note{border-color:#2d6a56;background:#112a22}.strength-hero.live-review .review-trust-note strong{color:#8ee7c5}.strength-hero.live-review .review-trust-note span{color:#b8dccf}
 .strength-hero.preliminary-review .score-ring{filter:saturate(.72)}
+
+/* Version 33.2 — keep each workspace panel isolated */
+.view:not(.active){display:none!important}
+.view.active{display:block!important}
+#audit:not(.active),#audit:not(.active) *{display:none!important}

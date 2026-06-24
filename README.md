@@ -64,3 +64,9 @@ The LinkedIn start route still expects:
 ## Important
 
 This version includes the LinkedIn connection start route from the previous add-on, but full LinkedIn connection storage and publishing still require the matching callback route and LinkedIn product permissions.
+
+## Version 33.2 page-isolation fix
+
+- The full Account Strength review is now forcibly contained inside Account Review.
+- Other workspace pages hide the review at both JavaScript and CSS levels.
+- Asset version numbers were changed to prevent an older cached stylesheet or script being reused.
