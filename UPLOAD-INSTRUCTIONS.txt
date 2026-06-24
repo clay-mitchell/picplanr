@@ -1,0 +1,17 @@
+PicPlanr Version 33.5 — Account Review structural fix
+
+Only replace the index.html file in the main level of the GitHub repository.
+
+What this fixes:
+- Keeps auditResult inside <section id="audit" class="view">
+- Stops the Account Strength review appearing on Upload Folder, Content Ideas and Smart Calendar
+- Leaves JavaScript, styling, social connections, publishing, domain settings and database files unchanged
+- Updates browser cache references from v=30 to v=35
+
+After upload:
+1. Wait for Vercel to show the deployment as Ready.
+2. Open the new deployment.
+3. Hard refresh:
+   Mac: Command + Shift + R
+   Windows: Ctrl + Shift + R
+4. Test Account Review, Upload Folder, Content Ideas and Smart Calendar.
