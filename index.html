@@ -1,4 +1,4 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v32.css?v=35"></head><body>
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr V2 Test</title><link rel="stylesheet" href="styles-v32.css?v=30"></head><body>
 <div class="app"><aside><div class="brand brand-logo"><img src="assets/picplanr-logo.png" alt="PicPlanr logo"></div><button class="nav active" data-step="onboarding">1. Account setup</button><button class="nav" data-step="connections">2. Connected accounts</button><button class="nav" data-step="audit">3. Account review</button><button class="nav" data-step="upload">4. Upload folder</button><button class="nav" data-step="posts">5. Content ideas</button><button class="nav" data-step="calendar">6. Smart calendar</button><div class="side-note"><strong>Version 32</strong><span>Account Strength Score, smarter reviews, folder analysis, grouped posts and natural caption choices.</span></div></aside>
 <main><header><div class="header-title-wrap"><img class="header-logo" src="assets/picplanr-logo.png" alt="PicPlanr logo"><div><small>PICPLANR WORKSPACE</small><h1 id="title">Account setup</h1></div></div><div class="pill" id="statusPill">Not started</div></header>
 <section id="onboarding" class="view active"><div class="hero"><div><small>STEP 1</small><h2>Teach PicPlanr who is speaking</h2><p>The AI uses this profile to shape its tone, content strategy and recommendations.</p></div></div>
@@ -104,11 +104,10 @@
   </div>
   <div class="truthful-review-note"><strong>What PicPlanr can review now</strong><span>Only the information entered during onboarding.</span></div>
   <div class="truthful-review-note live-note"><strong>What PicPlanr can review after connection</strong><span>Real profile image, biography, recent content, statistics, visual consistency and performance.</span></div>
-</section>
+</section></section>
 
   <div id="auditResult" class="empty">Complete account setup, then run the review.</div>
 </section>
-
 <section id="upload" class="view"><div class="hero"><div><small>STEP 3</small><h2>Upload images or videos</h2><p>PicPlanr analyses images for post planning and can now carry approved videos into TikTok scheduling.</p></div><button class="primary" id="chooseFolder">Choose folder</button></div><input id="folderInput" type="file" webkitdirectory directory multiple accept="image/*,video/mp4,video/quicktime" hidden><input id="fileInput" type="file" multiple accept="image/*,video/mp4,video/quicktime" hidden><div class="drop" id="drop"><strong>Drop a folder, images or videos here</strong><span>Images: JPG, PNG or WebP · Videos: MP4 or MOV</span><button id="chooseFiles">Choose files instead</button></div><div class="progress-wrap hidden" id="progressWrap"><div><span id="progressText">Preparing…</span><span id="progressCount">0 / 0</span></div><div class="progress"><i id="progressBar"></i></div></div><div id="previewGrid" class="preview-grid"></div><button class="primary hidden" id="analyseFolder">Analyse and create post groups</button></section>
 
 <section id="posts" class="view">
@@ -213,4 +212,4 @@
     <span id="loadingMessage">PicPlanr is processing your request.</span>
   </div>
 </div>
-<script src="app-v32.js?v=35"></script><script src="review-page-fix.js?v=34"></script></body></html>
+<script src="app-v32.js?v=30"></script></body></html>
