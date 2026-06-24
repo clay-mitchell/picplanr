@@ -254,14 +254,27 @@ function hideLoading(button){
 const state={accountType:'Business',profile:null,brandProfile:null,files:[],images:[],groups:[],approved:new Set(),storyIdeas:[],approvedStories:new Set(),profileScreenshots:{instagram:null,tiktok:null},audit:null};
 const titles={onboarding:'Account setup',connections:'Connected accounts',audit:'Account review',upload:'Upload folder',posts:'Content ideas',calendar:'Smart calendar'};
 function show(step){
+  document.body.classList.toggle('account-review-open',step==='audit');
   document.querySelectorAll('.view').forEach(v=>{
     const active=v.id===step;
     v.classList.toggle('active',active);
     v.hidden=!active;
+    v.style.setProperty('display',active?'block':'none','important');
     v.setAttribute('aria-hidden',active?'false':'true');
   });
+  const auditResult=$('auditResult');
+  if(auditResult){
+    const onReview=step==='audit';
+    auditResult.hidden=!onReview;
+    auditResult.style.setProperty('display',onReview?(auditResult.classList.contains('account-strength-results')?'grid':'block'):'none','important');
+  }
   document.querySelectorAll('.nav').forEach(b=>b.classList.toggle('active',b.dataset.step===step));
   $('title').textContent=titles[step];
+  const pill=$('statusPill');
+  if(pill){
+    if(step==='audit' && pill.dataset.reviewScore) pill.textContent=pill.dataset.reviewScore;
+    else if(step!=='audit' && pill.dataset.reviewScore) pill.textContent=state.brandProfile?'Brand profile ready':'Workspace ready';
+  }
   window.scrollTo({top:0,behavior:'instant'});
 }
 document.querySelectorAll('.nav').forEach(b=>b.onclick=()=>show(b.dataset.step));
@@ -414,6 +427,9 @@ function renderAudit(a){
       ?'This score uses the information supplied plus the uploaded Instagram screenshot. It is still provisional because performance statistics and complete account data are unavailable.'
       :'This is not a confirmed Instagram diagnosis. It is a cautious starting score based only on your website and onboarding answers; a typed Instagram handle cannot provide account data.';
   auditResult.className='account-strength-results';
+  const reviewIsOpen=$('audit')?.classList.contains('active');
+  auditResult.hidden=!reviewIsOpen;
+  auditResult.style.setProperty('display',reviewIsOpen?'grid':'none','important');
   auditResult.innerHTML=`
     <section class="strength-hero ${isComplete?'live-review':'preliminary-review'}">
       <div class="score-ring" style="--score:${score}"><div><strong>${score}</strong><span>/100</span></div></div>
@@ -435,7 +451,7 @@ function renderAudit(a){
       <div class="audit-box"><h3>Recommended actions</h3><ul>${(a.actions||[]).map(x=>`<li>${esc(x)}</li>`).join('')}</ul></div>
     </section>`;
 }
-$('runAudit').onclick=async()=>{const btn=$('runAudit');if(!state.profile){alert('Please analyse the account in Account setup first.');show('onboarding');return}const live=!!connectionState.instagram;showLoading(live?'Calculating connected Instagram strength':'Building a preliminary profile review',live?'PicPlanr is reviewing genuine connected account information and available performance data.':'PicPlanr is using your website, onboarding answers and any uploaded screenshots. A typed handle alone cannot provide Instagram data.',btn);try{const screenshots=Object.entries(state.profileScreenshots).filter(([,dataUrl])=>dataUrl).map(([platform,dataUrl])=>({platform,dataUrl}));const data=await api('audit',{context:context(),profile:state.profile,screenshots,review_mode:live?'connected_instagram':screenshots.some(x=>x.platform==='instagram')?'screenshot_assisted':'preliminary'});renderAudit(data.audit);$('statusPill').textContent=live?`Instagram diagnosis ${data.audit.overall_score}/100`:`Preliminary review ${data.audit.overall_score}/100`;}catch(e){alert(e.message)}finally{hideLoading(btn)}};
+$('runAudit').onclick=async()=>{const btn=$('runAudit');if(!state.profile){alert('Please analyse the account in Account setup first.');show('onboarding');return}const live=!!connectionState.instagram;showLoading(live?'Calculating connected Instagram strength':'Building a preliminary profile review',live?'PicPlanr is reviewing genuine connected account information and available performance data.':'PicPlanr is using your website, onboarding answers and any uploaded screenshots. A typed handle alone cannot provide Instagram data.',btn);try{const screenshots=Object.entries(state.profileScreenshots).filter(([,dataUrl])=>dataUrl).map(([platform,dataUrl])=>({platform,dataUrl}));const data=await api('audit',{context:context(),profile:state.profile,screenshots,review_mode:live?'connected_instagram':screenshots.some(x=>x.platform==='instagram')?'screenshot_assisted':'preliminary'});renderAudit(data.audit);$('statusPill').dataset.reviewScore=live?`Instagram diagnosis ${data.audit.overall_score}/100`:`Preliminary review ${data.audit.overall_score}/100`; $('statusPill').textContent=$('statusPill').dataset.reviewScore;}catch(e){alert(e.message)}finally{hideLoading(btn)}};
 $('chooseFolder').onclick=()=>$('folderInput').click();$('chooseFiles').onclick=e=>{e.stopPropagation();$('fileInput').click()};$('drop').onclick=()=>$('fileInput').click();$('folderInput').onchange=e=>loadFiles(e.target.files);$('fileInput').onchange=e=>loadFiles(e.target.files);$('drop').ondragover=e=>e.preventDefault();$('drop').ondrop=e=>{e.preventDefault();loadFiles(e.dataTransfer.files)};
 function loadFiles(list){state.files=Array.from(list).filter(f=>f.type.startsWith('image/')).slice(0,50);$('previewGrid').innerHTML='';state.files.forEach(f=>{const u=URL.createObjectURL(f),d=document.createElement('div');d.className='preview';d.innerHTML=`<img src="${u}"><span>${esc(f.name)}</span>`;$('previewGrid').appendChild(d)});$('analyseFolder').classList.toggle('hidden',!state.files.length);$('statusPill').textContent=`${state.files.length} images selected`}
 async function compress(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const originalWidth=img.width,originalHeight=img.height,orientation=originalHeight>originalWidth?'portrait':originalWidth>originalHeight?'landscape':'square';const max=1400,s=Math.min(1,max/Math.max(originalWidth,originalHeight)),c=document.createElement('canvas');c.width=Math.round(originalWidth*s);c.height=Math.round(originalHeight*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);resolve({dataUrl:c.toDataURL('image/jpeg',.72),width:originalWidth,height:originalHeight,orientation})};img.onerror=reject;img.src=url})}
@@ -1305,7 +1321,7 @@ async function runLiveInstagramAnalysis(){
     if(data.profile?.username){$('instagram').value='@'+data.profile.username;}
     renderAudit(data.audit);
     show('audit');
-    $('statusPill').textContent=`Account strength ${data.audit.overall_score}/100`;
+    $('statusPill').dataset.reviewScore=`Account strength ${data.audit.overall_score}/100`; $('statusPill').textContent=$('statusPill').dataset.reviewScore;
   }catch(e){alert(e.message)}finally{hideLoading(button)}
 }
 

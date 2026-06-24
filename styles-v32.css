@@ -979,3 +979,11 @@ button.is-loading::before{
 .view:not(.active){display:none!important}
 .view.active{display:block!important}
 #audit:not(.active),#audit:not(.active) *{display:none!important}
+
+
+/* Version 33.3 — hard isolation for the account review */
+main > .view { display:none !important; }
+main > .view.active { display:block !important; }
+main > #audit:not(.active) { display:none !important; visibility:hidden !important; }
+main > #audit:not(.active) #auditResult { display:none !important; visibility:hidden !important; }
+body:not(.account-review-open) #auditResult { display:none !important; }

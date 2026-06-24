@@ -70,3 +70,10 @@ This version includes the LinkedIn connection start route from the previous add-
 - The full Account Strength review is now forcibly contained inside Account Review.
 - Other workspace pages hide the review at both JavaScript and CSS levels.
 - Asset version numbers were changed to prevent an older cached stylesheet or script being reused.
+
+
+## Version 33.3 page isolation fix
+
+- Account Strength panel is rendered only on Account Review.
+- Review score is removed from the global header on all other workspace pages.
+- CSS and JavaScript asset versions are cache-busted to 33.3.
