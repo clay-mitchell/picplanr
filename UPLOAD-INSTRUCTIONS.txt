@@ -1,27 +1,20 @@
-PicPlanr Version 33.6 — Account Review page isolation
+PicPlanr Version 33.7 — clean Account Review page fix
 
-Upload and replace:
-1. index.html
-2. review-page-fix.js
-
-Place both files at the main level of the GitHub repository, beside app-v32.js.
-
-Do not delete or replace:
+Replace these two files at the main level of GitHub:
+- index.html
 - app-v32.js
-- styles-v32.css
-- API folders
-- social connection files
-- Supabase files
-- domain settings
 
-This fix:
-- forces only one workspace page to display at a time
-- keeps auditResult physically inside the Account Review section
-- hides the full Account Strength review everywhere except Account Review
-- resets the top-right Account Strength label on other pages
-- protects against older scripts moving or revealing the review again
+Do not upload review-page-fix.js. Delete review-page-fix.js from GitHub if it exists.
 
-After uploading:
-1. Wait for Vercel to show Ready.
-2. Open the latest .vercel.app deployment first.
-3. Hard refresh with Command + Shift + R on Mac or Ctrl + Shift + R on Windows.
+This rebuild:
+- physically places auditResult inside the Account Review section
+- removes the previous patch script
+- rewrites page navigation so only one page can display at a time
+- hides the score and top-right Account Strength label outside Account Review
+
+After upload:
+1. Commit the two replacements.
+2. Delete review-page-fix.js if present.
+3. Wait for Vercel to show Ready.
+4. Open the latest .vercel.app deployment.
+5. Hard refresh with Command + Shift + R on Mac or Ctrl + Shift + R on Windows.
