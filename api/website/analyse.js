@@ -7,7 +7,7 @@ const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MAX_PAGES = 8;
 const MAX_TOTAL_TEXT = 56000;
 const MAX_PAGE_BYTES = 450000;
-const FETCH_TIMEOUT_MS = 12000;
+const FETCH_TIMEOUT_MS = 8000;
 
 function normaliseUrl(value) {
   const raw = String(value || '').trim();
@@ -210,15 +210,29 @@ async function fetchPage(inputUrl, redirects = 0) {
 async function collectWebsite(startUrl) {
   const first = await fetchPage(startUrl);
   const links = discoverLinks(first.html, first.url);
+
+  // Load useful internal pages at the same time instead of one after another.
+  // Slow or unavailable pages are skipped so PicPlanr can still return an analysis.
+  const results = await Promise.allSettled(
+    links.map(item => fetchPage(item.url))
+  );
+
   const pages = [first];
-  for (const item of links) {
-    try {
-      pages.push(await fetchPage(item.url));
-    } catch (error) {
-      console.warn('Skipped website page:', item.url, error.message);
+
+  results.forEach((result, index) => {
+    if (result.status === 'fulfilled') {
+      pages.push(result.value);
+    } else {
+      console.warn(
+        'Skipped website page:',
+        links[index]?.url,
+        result.reason?.message || 'Page could not be loaded.'
+      );
     }
-  }
+  });
+
   const seen = new Set();
+
   return pages.filter(page => {
     if (seen.has(page.url.href)) return false;
     seen.add(page.url.href);
@@ -356,6 +370,10 @@ export default async function handler(req, res) {
   try {
     const website = normaliseUrl(req.body?.website);
     const pages = await collectWebsite(website);
+
+    if (!pages.length) {
+      throw new Error('PicPlanr could not read this website. Please check the address and try again.');
+    }
     const usefulText = pages.map(page => page.text).join(' ').replace(/\s/g, '');
     if (usefulText.length < 400) {
       throw new Error('We could not read enough useful information from this website. Try another page or enter the details manually.');

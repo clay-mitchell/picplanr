@@ -1,16 +1,22 @@
-PICPLANR VERSION 37 — DEEP WEBSITE ANALYSIS
+PICPLANR VERSION 37 — WEBSITE ANALYSIS TIMEOUT FIX
 
-Upload:
-1. index.html
-2. api/website/analyse.js
+Upload the contents of this ZIP into the root of the current PicPlanr GitHub repository.
 
-The included supabase/schema.sql is only needed if brand_profiles has not
-already been created.
+Files:
+1. api/website/analyse.js
+   Replace the current file with the included analysis fix.
 
-This upgrade preserves Instagram and publishing files.
+2. vercel.json
+   Replace the current top-level vercel.json.
 
-After deployment:
-- confirm the sidebar says Version 37
-- enter a website on Account setup
-- click Analyse account
-- confirm PicPlanr lists the pages it explored
+What this update changes:
+- Website analysis can run for up to 300 seconds.
+- Other API functions can run for up to 60 seconds.
+- Internal website pages are loaded in parallel.
+- Slow or broken pages are skipped instead of failing the full analysis.
+- Each individual page has an 8-second loading limit.
+
+After upload:
+1. Commit to the main branch.
+2. Wait for the Vercel deployment to show Ready.
+3. Test the Account Setup page with a website address.
