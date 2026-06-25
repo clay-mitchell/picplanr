@@ -4,6 +4,49 @@ import {exchangeCode,getProfile} from '../../_lib/instagram.js';
 import {encryptSecret} from '../../_lib/crypto.js';
 import {saveInstagramConnection} from '../../_lib/supabase.js';
 
+function stateSecret(){
+  return process.env.TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
+}
+
+function verifySignedState(value){
+  if(typeof value!=='string'||!value.includes('.')){
+    throw new Error('Instagram connection security check failed. Please try again.');
+  }
+
+  const [encoded,providedSignature]=value.split('.');
+  if(!encoded||!providedSignature){
+    throw new Error('Instagram connection security check failed. Please try again.');
+  }
+
+  const expectedSignature=crypto
+    .createHmac('sha256',stateSecret())
+    .update(encoded)
+    .digest('base64url');
+
+  const provided=Buffer.from(providedSignature);
+  const expected=Buffer.from(expectedSignature);
+
+  if(provided.length!==expected.length||!crypto.timingSafeEqual(provided,expected)){
+    throw new Error('Instagram connection security check failed. Please try again.');
+  }
+
+  let payload;
+  try{
+    payload=JSON.parse(Buffer.from(encoded,'base64url').toString('utf8'));
+  }catch{
+    throw new Error('Instagram connection security check failed. Please try again.');
+  }
+
+  const age=Date.now()-Number(payload.issuedAt||0);
+  if(!payload.issuedAt||age<0||age>15*60*1000){
+    throw new Error('Instagram connection expired. Please reconnect Instagram.');
+  }
+
+  return {
+    returnTo:safeReturnPath(payload.returnTo||'/?instagram=connected')
+  };
+}
+
 function appOrigin(req){
   const proto=String(req.headers['x-forwarded-proto']||'https').split(',')[0].trim();
   const host=String(req.headers['x-forwarded-host']||req.headers.host||'').split(',')[0].trim();
@@ -15,7 +58,8 @@ function popupResponse(res,{origin,returnTo,status,message=''}) {
     ? {type:'picplanr-instagram-connected'}
     : {type:'picplanr-instagram-error',message};
 
-  const fallbackUrl=`${origin}${returnTo}${returnTo.includes('?')?'&':'?'}instagram_status=${status}${message?`&message=${encodeURIComponent(message)}`:''}`;
+  const separator=returnTo.includes('?')?'&':'?';
+  const fallbackUrl=`${origin}${returnTo}${separator}instagram_status=${status}${message?`&message=${encodeURIComponent(message)}`:''}`;
 
   res.setHeader('Content-Type','text/html; charset=utf-8');
   return res.status(200).send(`<!doctype html>
@@ -59,20 +103,27 @@ function popupResponse(res,{origin,returnTo,status,message=''}) {
 
 export default async function handler(req,res){
   const cookies=parseCookies(req);
-  const returnTo=safeReturnPath(cookies.pp_ig_return||'/?instagram=connected');
   const origin=appOrigin(req);
+  let returnTo=safeReturnPath(cookies.pp_ig_return||'/?instagram=connected');
 
   try{
-    if(req.query?.error)throw new Error(req.query.error_description||req.query.error);
-    if(!req.query?.code)throw new Error('Instagram did not return an authorisation code.');
-    if(!req.query?.state||req.query.state!==cookies.pp_ig_state){
-      throw new Error('Instagram connection security check failed. Please try again.');
+    if(req.query?.error){
+      throw new Error(req.query.error_description||req.query.error);
     }
+
+    if(!req.query?.code){
+      throw new Error('Instagram did not return an authorisation code.');
+    }
+
+    const verified=verifySignedState(String(req.query?.state||''));
+    returnTo=verified.returnTo;
 
     const token=await exchangeCode(String(req.query.code));
     const profile=await getProfile(token.accessToken);
     const id=crypto.randomUUID();
-    const expiresAt=new Date(Date.now()+(Number(token.expiresIn)||3600)*1000).toISOString();
+    const expiresAt=new Date(
+      Date.now()+(Number(token.expiresIn)||3600)*1000
+    ).toISOString();
 
     await saveInstagramConnection({
       id,
@@ -111,7 +162,7 @@ export default async function handler(req,res){
       origin,
       returnTo:'/',
       status:'error',
-      message:e.message
+      message:e.message||'Instagram could not be connected.'
     });
   }
 }
