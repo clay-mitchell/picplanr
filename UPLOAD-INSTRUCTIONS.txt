@@ -1,20 +1,21 @@
-PICPLANR VERSION 36.4 — INSTAGRAM RETURN FLOW
+PICPLANR COMPLETE SUPABASE FIX
 
-Upload both files to the v35-clean-rebuild branch:
+Replace this exact file in GitHub:
 
-1. index.html
-   Replace the top-level index.html.
+api/_lib/supabase.js
 
-2. api/oauth/instagram/callback.js
-   Open api > oauth > instagram and replace callback.js.
+This version:
+- keeps the Instagram connection functions
+- restores saveBrandProfile
+- safely removes /rest/v1 from SUPABASE_URL
+- validates the Supabase project address
+- preserves all existing database behaviour
 
-What changes:
-- Instagram opens in a connection popup.
-- After approval, the popup returns to PicPlanr and closes automatically.
-- PicPlanr refreshes the connected Instagram status.
-- PicPlanr opens Account Review and starts the live Instagram analysis.
-- If the popup is blocked, the normal full-page redirect still works.
+Vercel SUPABASE_URL must remain:
+https://fusystawqgxuaybghaeb.supabase.co
 
-Important:
-META_REDIRECT_URI in Vercel must still exactly match:
-https://YOUR-PICPLANR-DOMAIN/api/oauth/instagram/callback
+After upload:
+1. Commit to main.
+2. Wait for a new Production deployment.
+3. Test PicPlanr loads normally.
+4. Start a fresh Instagram connection.
