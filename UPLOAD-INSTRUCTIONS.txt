@@ -1,20 +1,21 @@
-PICPLANR VERSION 36.2 — NATURAL CAPTIONS
+PICPLANR VERSION 36.3 — RELIABLE GROUPING
 
-Upload both items to the v35-clean-rebuild branch:
+Upload both files to the v35-clean-rebuild branch:
 
 1. index.html
    Replace the existing top-level index.html.
 
 2. api/picplanr.js
-   Open the api folder and replace the existing picplanr.js.
+   Open the api folder and replace picplanr.js.
 
-What changes:
-- Story captions no longer narrate the photograph.
-- Captions are shorter, warmer and more conversational.
-- Labels are now Natural, Conversation and Next step.
-- Business calls to action are useful without sounding like adverts.
-- Local backup captions follow the same natural style.
+What this fixes:
+- Images are grouped in batches of 8 instead of one large request.
+- One failed grouping batch no longer stops the whole folder.
+- Ungrouped images are recovered as safe single-post ideas.
+- Error messages now show the actual server problem.
+- Natural Story caption labels are consistent in the API prompt.
 
-Important:
-Previously generated ideas will not rewrite themselves.
-After the update is deployed, upload the folder again and run the analysis again.
+After deployment:
+1. Confirm the sidebar says Version 36.3.
+2. Upload the same folder again.
+3. Run Analyse and create post groups.
