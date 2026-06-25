@@ -1,21 +1,23 @@
-PicPlanr Account Review Only Fix
+PICPLANR VERSION 36 — SINGLE-FILE STABLE BUILD
 
-Replace these two files in the ORIGINAL GitHub repository:
+Upload only:
 - index.html
-- app-v32.js
 
-Do not replace any other files.
+Upload it to the v35-clean-rebuild branch and replace the existing index.html.
 
-What this fixes:
-- The large Account Strength score stays inside Account Review.
-- Upload Folder, Content Ideas and Smart Calendar no longer show the score section.
-- The top-right Account Strength score is replaced with "Workspace ready" outside Account Review.
-- Existing domain, API, social connection, Supabase and publishing files are untouched.
+Do not replace or delete API folders, package.json, vercel.json, Supabase files,
+environment variables or social connection files.
 
-After upload:
-1. Wait for Vercel to show the new deployment as Ready.
-2. Open the latest deployment.
-3. Hard refresh:
-   Mac: Command + Shift + R
-   Windows: Ctrl + Shift + R
-4. Test Account Review, Upload Folder, Content Ideas and Smart Calendar.
+This file contains:
+- all front-end styling
+- all front-end JavaScript
+- the PicPlanr logo
+- the Account Review score isolation fix
+
+Testing:
+1. Wait for a new Vercel Preview deployment.
+2. Open the Preview deployment for v35-clean-rebuild.
+3. Confirm the sidebar says Version 36.
+4. Account Review should show the score.
+5. Upload Folder, Content Ideas and Smart Calendar should not show the score.
+6. Only merge to main after the Preview is correct.
