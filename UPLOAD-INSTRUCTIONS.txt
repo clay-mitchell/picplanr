@@ -1,13 +1,20 @@
-PICPLANR VERSION 36.1 — INPUT FIX
+PICPLANR VERSION 36.2 — NATURAL CAPTIONS
 
-Upload only index.html to the v35-clean-rebuild branch.
-Replace the existing index.html.
+Upload both items to the v35-clean-rebuild branch:
 
-This update removes the continuous page watcher that could lock the browser
-and prevent typing in form fields.
+1. index.html
+   Replace the existing top-level index.html.
 
-After upload:
-1. Wait for the new Vercel Preview deployment.
-2. Confirm the sidebar says Version 36.1.
-3. Test typing in Name, Industry, Instagram handle and Website.
-4. Test that Account Strength appears only on Account Review.
+2. api/picplanr.js
+   Open the api folder and replace the existing picplanr.js.
+
+What changes:
+- Story captions no longer narrate the photograph.
+- Captions are shorter, warmer and more conversational.
+- Labels are now Natural, Conversation and Next step.
+- Business calls to action are useful without sounding like adverts.
+- Local backup captions follow the same natural style.
+
+Important:
+Previously generated ideas will not rewrite themselves.
+After the update is deployed, upload the folder again and run the analysis again.

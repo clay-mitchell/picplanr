@@ -11,12 +11,12 @@ if(action==='validate'){if(!group)return res.status(400).json({error:'Validation
 Caption writing rules:
 1. Do not describe the image sentence by sentence.
 2. Do not begin with phrases such as "A closer look at", "This image shows", "Featuring", "Here we see" or "The photo captures".
-3. Use the image only as context for a natural social post.
-4. The Natural option should sound like something the client would casually post.
+3. Use the image only as context for a natural social post. Never turn the visual analysis into a literal caption.
+4. The Natural option should sound like something the client would casually post, with warmth, personality or a clear point of view.
 5. The Engagement option should ask one easy, relevant question.
 6. The Goal-led option should connect naturally to the account goal without sounding like an advert.
-7. Mention no more than one visible detail unless essential.
-8. Keep each caption between 4 and 22 words.
+7. Mention no more than one visible detail unless essential. It is acceptable to mention no visible details when a mood-led line sounds more natural.
+8. Keep each caption between 3 and 18 words.
 9. Avoid generic artificial intelligence wording such as showcase, elevate, unforgettable, stunning, ambience, versatile, ideal setting, unique touch and perfect backdrop.
 10. Use British English. Do not use em dashes or en dashes.
  Correct every unsupported claim. Never remove all caption text. If a proposed caption is inaccurate, rewrite it into a safe accurate caption rather than returning an empty value. The title, reason and captions must be true for every image in the group. Never infer pet-friendly policy from a visible dog. Never claim the client provides styling, planning, catering or another service unless explicitly stated in context. Never identify an object more specifically than the image supports. If the images do not form a coherent group, set approved_for_display=false. Captions must sound natural, must not be image descriptions, and must use only verified facts plus explicit account context. Write all user-facing copy in British English. Use spellings such as colour, organise, personalised and centre. Never use em dashes, en dashes or spaced hyphens in captions. Use commas, full stops or separate sentences instead.  Write all user-facing copy in British English. Use spellings such as colour, organise, personalised and centre. Never use em dashes, en dashes or spaced hyphens in captions. Use commas, full stops or separate sentences instead. `,urls);return res.json(v)}
@@ -26,31 +26,55 @@ Every text must be non-empty, natural British English and accurate to the visibl
 Caption writing rules:
 1. Do not describe the image sentence by sentence.
 2. Do not begin with phrases such as "A closer look at", "This image shows", "Featuring", "Here we see" or "The photo captures".
-3. Use the image only as context for a natural social post.
-4. The Natural option should sound like something the client would casually post.
+3. Use the image only as context for a natural social post. Never turn the visual analysis into a literal caption.
+4. The Natural option should sound like something the client would casually post, with warmth, personality or a clear point of view.
 5. The Engagement option should ask one easy, relevant question.
 6. The Goal-led option should connect naturally to the account goal without sounding like an advert.
-7. Mention no more than one visible detail unless essential.
-8. Keep each caption between 4 and 22 words.
+7. Mention no more than one visible detail unless essential. It is acceptable to mention no visible details when a mood-led line sounds more natural.
+8. Keep each caption between 3 and 18 words.
 9. Avoid generic artificial intelligence wording such as showcase, elevate, unforgettable, stunning, ambience, versatile, ideal setting, unique touch and perfect backdrop.
 10. Use British English. Do not use em dashes or en dashes.
  Do not invent services, policies, offers, dates, people, relationships, events or locations. Do not use em dashes or American spelling.`,[image.dataUrl]);return res.json(p)}
 if(action==='story_image'){if(!image?.dataUrl)return res.status(400).json({error:'Story image is missing.'});const s=await json(`You are PicPlanr's strict Instagram Story image editor. Analyse this one original portrait image directly. Accuracy is more important than creativity. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile||{})}. Earlier evidence: ${JSON.stringify(image.analysis||{})}. First identify the single main visual subject. The Story title, description, frame instructions and all text options must focus on that main subject. Do not shift focus to background décor, venue features, services or policies unless they are clearly the main subject. Example rule: if a dog wearing formal clothing is the main subject, write about the dog and its outfit. Do not turn it into a venue décor, pet-friendly policy or event-planning Story. Never invent a name, event, relationship, service, offer, date, availability or customer action. Return JSON with story object containing: image_index, primary_subject, title, purpose, description, best_time, frames array of exactly 3 short instructions, and text_options using this exact structure:
 [{"label":"Quick update","text":"short phrase"},{"label":"Engagement","text":"short question"},{"label":"Call to action","text":"short next step"}].
-Every text value must be a non-empty string. Each option must be a short natural British English phrase, maximum 12 words. Quick update should state a simple visible truth. Engagement should ask a question directly related to the visible main subject. Call to action should use a safe generic action such as reply, react, follow or view more. Do not use em dashes, en dashes, American spelling or marketing clichés. If the image is ambiguous, use only the safest clearly visible main subject and still return three short, non-empty text options. Do not return an empty text_options array.`,[image.dataUrl]);return res.json(s)}
-if(action==='stories'){const s=await json(`You are PicPlanr's Instagram Story strategist. Create practical Story updates only from the supplied portrait-image analyses. Stories are not feed captions. They should be short, current, conversational and useful for keeping customers or followers informed. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Portrait image analyses: ${JSON.stringify(images)}. Create 1-8 Story ideas. Use each image at most once unless there are very few portrait images. Never invent facts, dates, offers, events, availability, products or outcomes. Use only details present in the image analysis and supplied account context. Each Story must return: image_index, title, purpose, description, best_time, frames array of exactly 3 short instructions, and text_options array of exactly 3 objects. The three text option labels must be Quick update, Engagement, and Call to action. Each text must be a short phrase suitable as an Instagram Story overlay, ideally under 12 words and never more than 18 words. Write all user-facing copy in British English. Use spellings such as colour, organise, personalised and centre. Never use em dashes, en dashes or spaced hyphens in captions. Use commas, full stops or separate sentences instead.  Quick update should keep customers informed. Engagement should ask a natural question. Call to action should give one simple next step. Return JSON object with stories array.`);return res.json(s)}
+Every text value must be a non-empty string. Each option must sound like something a real person or business would naturally post on Instagram, maximum 12 words.
+
+Do not narrate the photograph. Never write literal lines such as "two people posing together", "a woman and man standing indoors", "a look at the venue", or "reply or react to this Story".
+
+Use the image as inspiration, not as a sentence to describe. Prefer mood, personality, audience relevance or a light business purpose.
+
+The three labels must be Natural, Conversation and Next step.
+Natural should feel casual, warm and ready to post.
+Conversation should ask one easy, human question.
+Next step should suggest one relevant action without sounding salesy.
+
+Good examples:
+Natural: "A moment worth sharing 🤍"
+Conversation: "Who’s your plus one?"
+Next step: "Planning something special? Get in touch."
+
+Do not use em dashes, en dashes, American spelling, clichés or generic artificial intelligence wording. If the image is ambiguous, use only the safest clearly visible main subject and still return three short, non-empty text options. Do not return an empty text_options array.`,[image.dataUrl]);return res.json(s)}
+if(action==='stories'){const s=await json(`You are PicPlanr's Instagram Story strategist. Create practical Story updates only from the supplied portrait-image analyses. Stories are not feed captions. They should be short, current, conversational and useful for keeping customers or followers informed. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Portrait image analyses: ${JSON.stringify(images)}. Create 1-8 Story ideas. Use each image at most once unless there are very few portrait images. Never invent facts, dates, offers, events, availability, products or outcomes. Use only details present in the image analysis and supplied account context. Each Story must return: image_index, title, purpose, description, best_time, frames array of exactly 3 short instructions, and text_options array of exactly 3 objects. The three text option labels must be Natural, Conversation and Next step. Each text must be a short phrase suitable as an Instagram Story overlay, ideally under 10 words and never more than 14 words.
+
+Do not describe the image literally. Avoid captions such as "two people posing", "a room with tables", "a photo in front of a curtain", or "reply or react to this Story". The image analysis is evidence, not finished copy.
+
+Natural should feel warm, casual and ready to publish.
+Conversation should ask one easy question people may genuinely answer.
+Next step should suggest one useful action connected to the account goal, without sounding like an advertisement.
+
+Use the account's tone and business context where supplied. Write all user-facing copy in British English. Use spellings such as colour, organise, personalised and centre. Never use em dashes, en dashes or spaced hyphens in captions. Use commas, full stops or separate sentences instead.  Quick update should keep customers informed. Engagement should ask a natural question. Call to action should give one simple next step. Return JSON object with stories array.`);return res.json(s)}
 if(action==='group'){const g=await json(`You are PicPlanr's conservative content planner. Group images using the stable image_id values exactly as supplied. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Evidence-only image analyses: ${JSON.stringify(images)}. Rules: use only confirmed evidence. Never use an image in more than one group. Never mix images just because they share a broad business category. Group only when subjects, setting, event, visual sequence or theme clearly match. Do not infer pet-friendly policies, event styling services, planning services, products, dates, relationships, occasions or capabilities unless explicitly supplied in context. Every supplied image_id must appear in exactly one group. Never omit an image. If an image does not match another, create a conservative Single post for it. Create 1-50 groups. For each group return: title, image_ids array using exact supplied IDs. The title must be a short content angle, not a literal image description.  format (Single post or Carousel), objective, group_reason, schedule with day, time and reason, and captions array of exactly 3 objects using this exact structure:
     [{"label":"Natural","text":"caption text"},{"label":"Engagement","text":"caption text"},{"label":"Goal-led","text":"caption text"}].
     Every text value must be a non-empty string. 
 Caption writing rules:
 1. Do not describe the image sentence by sentence.
 2. Do not begin with phrases such as "A closer look at", "This image shows", "Featuring", "Here we see" or "The photo captures".
-3. Use the image only as context for a natural social post.
-4. The Natural option should sound like something the client would casually post.
+3. Use the image only as context for a natural social post. Never turn the visual analysis into a literal caption.
+4. The Natural option should sound like something the client would casually post, with warmth, personality or a clear point of view.
 5. The Engagement option should ask one easy, relevant question.
 6. The Goal-led option should connect naturally to the account goal without sounding like an advert.
-7. Mention no more than one visible detail unless essential.
-8. Keep each caption between 4 and 22 words.
+7. Mention no more than one visible detail unless essential. It is acceptable to mention no visible details when a mood-led line sounds more natural.
+8. Keep each caption between 3 and 18 words.
 9. Avoid generic artificial intelligence wording such as showcase, elevate, unforgettable, stunning, ambience, versatile, ideal setting, unique touch and perfect backdrop.
 10. Use British English. Do not use em dashes or en dashes.
  Captions must not list everything visible. Captions must not claim the business offers a service unless that service appears in context. Goal-led captions may use a generic action such as enquire, visit the website or follow, but must not invent offers or availability. Return JSON object with groups array.`);return res.json(g)}return res.status(400).json({error:'Unknown action.'})}catch(e){console.error(e);let m=e.message||'AI request failed.';if(e.status===401)m='The OpenAI API key is invalid.';if(e.status===429)m='The OpenAI account has reached a billing or rate limit.';return res.status(e.status&&e.status<600?e.status:500).json({error:m})}}
