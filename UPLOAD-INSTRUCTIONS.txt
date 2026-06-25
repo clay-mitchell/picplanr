@@ -1,21 +1,20 @@
-PICPLANR VERSION 36.3 — RELIABLE GROUPING
+PICPLANR VERSION 36.4 — INSTAGRAM RETURN FLOW
 
 Upload both files to the v35-clean-rebuild branch:
 
 1. index.html
-   Replace the existing top-level index.html.
+   Replace the top-level index.html.
 
-2. api/picplanr.js
-   Open the api folder and replace picplanr.js.
+2. api/oauth/instagram/callback.js
+   Open api > oauth > instagram and replace callback.js.
 
-What this fixes:
-- Images are grouped in batches of 8 instead of one large request.
-- One failed grouping batch no longer stops the whole folder.
-- Ungrouped images are recovered as safe single-post ideas.
-- Error messages now show the actual server problem.
-- Natural Story caption labels are consistent in the API prompt.
+What changes:
+- Instagram opens in a connection popup.
+- After approval, the popup returns to PicPlanr and closes automatically.
+- PicPlanr refreshes the connected Instagram status.
+- PicPlanr opens Account Review and starts the live Instagram analysis.
+- If the popup is blocked, the normal full-page redirect still works.
 
-After deployment:
-1. Confirm the sidebar says Version 36.3.
-2. Upload the same folder again.
-3. Run Analyse and create post groups.
+Important:
+META_REDIRECT_URI in Vercel must still exactly match:
+https://YOUR-PICPLANR-DOMAIN/api/oauth/instagram/callback
