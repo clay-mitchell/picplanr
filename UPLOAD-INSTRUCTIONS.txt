@@ -1,21 +1,16 @@
-PICPLANR COMPLETE SUPABASE FIX
+PICPLANR VERSION 37 — DEEP WEBSITE ANALYSIS
 
-Replace this exact file in GitHub:
+Upload:
+1. index.html
+2. api/website/analyse.js
 
-api/_lib/supabase.js
+The included supabase/schema.sql is only needed if brand_profiles has not
+already been created.
 
-This version:
-- keeps the Instagram connection functions
-- restores saveBrandProfile
-- safely removes /rest/v1 from SUPABASE_URL
-- validates the Supabase project address
-- preserves all existing database behaviour
+This upgrade preserves Instagram and publishing files.
 
-Vercel SUPABASE_URL must remain:
-https://fusystawqgxuaybghaeb.supabase.co
-
-After upload:
-1. Commit to main.
-2. Wait for a new Production deployment.
-3. Test PicPlanr loads normally.
-4. Start a fresh Instagram connection.
+After deployment:
+- confirm the sidebar says Version 37
+- enter a website on Account setup
+- click Analyse account
+- confirm PicPlanr lists the pages it explored

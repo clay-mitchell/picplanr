@@ -1,12 +1,13 @@
 import dns from 'node:dns/promises';
 import net from 'node:net';
 import OpenAI from 'openai';
+import {saveBrandProfile} from '../_lib/supabase.js';
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
-const MAX_PAGES = 6;
-const MAX_TOTAL_TEXT = 42000;
+const MAX_PAGES = 8;
+const MAX_TOTAL_TEXT = 56000;
 const MAX_PAGE_BYTES = 450000;
-const FETCH_TIMEOUT_MS = 10000;
+const FETCH_TIMEOUT_MS = 12000;
 
 function normaliseUrl(value) {
   const raw = String(value || '').trim();
@@ -149,7 +150,10 @@ function pagePriority(pathAndLabel) {
   if (/pricing|package|plan/.test(value)) return 7;
   if (/case-study|portfolio|work|gallery/.test(value)) return 6;
   if (/contact|location|visit/.test(value)) return 5;
-  if (/faq|frequently/.test(value)) return 4;
+  if (/faq|frequently/.test(value)) return 5;
+  if (/testimonial|review|success-stor/.test(value)) return 6;
+  if (/book|enquir|quote|consultation/.test(value)) return 5;
+  if (/blog|news|insight/.test(value)) return 3;
   return 0;
 }
 
@@ -391,6 +395,10 @@ Requirements:
 - Weaknesses must distinguish missing evidence from definite faults.
 - Search visibility advice must be limited to on-page signals visible in the supplied HTML. Do not claim rankings, traffic, speed or technical crawl data.
 - Conversion advice should review clarity, trust, calls to action and likely customer journey.
+- Every weakness must include a specific improvement that refers to a visible page, heading, missing detail or customer step.
+- Clearly separate confirmed facts from reasonable opportunities.
+- Analyse whether the website makes the next action obvious on both the homepage and service pages.
+- Review whether key customer groups have distinct journeys or are forced through generic messaging.
 - Return 3 to 5 audience segments, 3 to 5 strengths, 3 to 5 weaknesses, exactly 5 content pillars, exactly 3 quick wins and exactly 3 first content ideas.
 - quick_wins effort must be one of: Quick, Moderate, Larger task.
 - Keep every item practical and concise.
@@ -418,7 +426,31 @@ Requirements:
       brand_profile: analysis
     };
 
-    return res.status(200).json({ analysis, brand_profile: analysis, profile });
+    const sessionId=String(req.body?.sessionId||'').trim();
+    let saved=false;
+
+    if(sessionId){
+      try{
+        await saveBrandProfile({
+          session_id:sessionId,
+          account_type:supplied.accountType==='Individual'?'Individual':'Business',
+          website:website.href,
+          business_name:analysis.business_name||supplied.name||'',
+          profile_data:analysis,
+          updated_at:new Date().toISOString()
+        });
+        saved=true;
+      }catch(saveError){
+        console.warn('Website analysis could not be saved:',saveError.message);
+      }
+    }
+
+    return res.status(200).json({
+      analysis,
+      brand_profile:analysis,
+      profile,
+      saved
+    });
   } catch (error) {
     console.error(error);
     const message = error?.name === 'AbortError'
