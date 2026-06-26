@@ -1,19 +1,30 @@
-PICPLANR VERSION 37.1 — MULTIPLE UPLOAD FIX
+PICPLANR VERSION 37.2 — NATURAL BUSINESS CAPTIONS
 
-Replace the current top-level index.html with the included index.html.
+Upload the contents of this ZIP into the root of the current PicPlanr GitHub repository.
 
-Changes:
-- Select multiple files in one action.
-- Add more files in later selections without replacing earlier files.
-- Upload a complete folder.
-- Drag and drop multiple files.
-- Duplicate files are ignored.
-- Images and MP4/MOV videos are retained.
-- Individual files can be removed before analysis.
-- Maximum selection increased to 100 files.
+Replace:
+1. index.html
+2. api/picplanr.js
+
+What this update changes:
+- Keeps Version 37.1 multiple-file uploading.
+- Uses website analysis and available Instagram analysis to guide the business tone.
+- Creates three deliberately different caption options:
+  Engaging
+  Informative
+  Enquiry focused
+- Informative captions can include useful verified business details.
+- Enquiry focused captions can end with the website when relevant.
+- The website is only added for Business accounts with a supplied website.
+- The website is not forced into every caption.
+- Individual accounts never receive an automatic website line.
+- Captions avoid dashes and common artificial-intelligence marketing phrases.
+- Captions use British English and more natural sentence structures.
+- Existing image accuracy rules remain in place.
 
 After upload:
 1. Commit to the main branch.
-2. Wait for Vercel to show Ready.
-3. Confirm the sidebar says Version 37.1.
-4. Test by selecting several images, then click Add more files.
+2. Wait for the Vercel deployment to show Ready.
+3. Confirm the sidebar says Version 37.2.
+4. Analyse a Business account with a website.
+5. Upload several images and compare the three caption styles.
