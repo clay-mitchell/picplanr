@@ -1,9 +1,10 @@
 {
-  "name": "picplanr-v33-brand-analysis",
-  "version": "3.3.0",
+  "name": "picplanr-public-instagram-v32",
+  "version": "3.7.4",
   "private": true,
   "type": "module",
   "dependencies": {
-    "openai": "^5.0.0"
+    "openai": "^5.0.0",
+    "@supabase/supabase-js": "^2.0.0"
   }
 }

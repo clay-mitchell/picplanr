@@ -1,27 +1,39 @@
-PICPLANR VERSION 37.3 — RESILIENT IMAGE ANALYSIS
+PICPLANR VERSION 37.4 — 40 DAY MEDIA RETENTION
 
-Upload this ZIP into the root of the current PicPlanr GitHub repository.
+Upload the ZIP contents into the root of the current PicPlanr GitHub repository.
 
 Replace:
 1. index.html
-2. api/picplanr.js
+2. package.json
+3. vercel.json
 
-What this version changes:
-- Automatically retries temporary OpenAI and network limits.
-- Uses gradually longer pauses between retries.
-- Paces large uploads instead of sending sudden request bursts.
-- Uses a lower-cost first image-understanding pass.
-- Keeps successfully processed images if another request is delayed.
-- Retains an image safely for later review if its first analysis cannot finish.
-- Keeps draft content ideas when the final accuracy check is temporarily delayed.
-- Avoids showing OpenAI billing, rate-limit and technical error messages to clients.
-- Shows calm progress messages inside PicPlanr.
-- Allows the user to continue analysis without reselecting files.
-- Keeps Version 37.2 natural business captions and website logic.
+Add:
+4. api/media/register.js
+5. api/cron/cleanup-media.js
+6. supabase/media-retention.sql
 
-After upload:
-1. Commit to main.
-2. Wait for Vercel to show Ready.
-3. Confirm the sidebar says Version 37.3.
-4. Test with 8 to 15 images.
-5. Allow the queue to continue if it briefly pauses.
+SUPABASE SETUP
+1. Open Supabase SQL Editor.
+2. Run supabase/media-retention.sql.
+3. Create a private Storage bucket named:
+   picplanr-media
+
+VERCEL SETUP
+Add a new environment variable:
+CRON_SECRET
+
+Use a long random value with at least 16 characters.
+Apply it to Production and Preview.
+
+RETENTION RULES
+Original video footage: 40 days
+Temporary exports: 7 days
+Captions, schedules, thumbnails and post history remain saved.
+
+IMPORTANT
+The cleanup system deletes files that have been registered in media_assets.
+The existing browser uploader still analyses files locally. When permanent
+cloud video upload is connected, it must call api/media/register.js after a
+successful Supabase Storage upload.
+
+The cleanup job runs daily at 04:15 UTC.
