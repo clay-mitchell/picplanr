@@ -1,6 +1,60 @@
 import OpenAI from 'openai';
 const client=new OpenAI({apiKey:process.env.OPENAI_API_KEY});
-const json=async(prompt,images=[])=>{const content=[{type:'input_text',text:prompt},...images.map(url=>({type:'input_image',image_url:url,detail:'high'}))];const r=await client.responses.create({model:process.env.OPENAI_VISION_MODEL||'gpt-4.1',input:[{role:'user',content}],text:{format:{type:'json_object'}}});return JSON.parse(r.output_text)};
+
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+
+const isTemporaryOpenAIError=error=>{
+  const status=Number(error?.status||0);
+  const code=String(error?.code||error?.error?.code||'').toLowerCase();
+  if(code==='insufficient_quota'||code==='billing_hard_limit_reached')return false;
+  return status===429||status===408||status===409||status>=500;
+};
+
+const json=async(prompt,images=[],imageDetail='high')=>{
+  const content=[
+    {type:'input_text',text:prompt},
+    ...images.map(url=>({
+      type:'input_image',
+      image_url:url,
+      detail:imageDetail
+    }))
+  ];
+
+  let lastError;
+
+  for(let attempt=0;attempt<5;attempt++){
+    try{
+      const r=await client.responses.create({
+        model:process.env.OPENAI_VISION_MODEL||'gpt-4.1',
+        input:[{role:'user',content}],
+        text:{format:{type:'json_object'}}
+      });
+
+      return JSON.parse(r.output_text);
+    }catch(error){
+      lastError=error;
+
+      if(!isTemporaryOpenAIError(error)||attempt===4){
+        throw error;
+      }
+
+      const retryAfterSeconds=Number(
+        error?.headers?.['retry-after']||
+        error?.headers?.get?.('retry-after')||
+        0
+      );
+
+      const delay=retryAfterSeconds>0
+        ? retryAfterSeconds*1000
+        : Math.min(20000,1500*(2**attempt))+Math.floor(Math.random()*700);
+
+      console.warn(`OpenAI request paused before retry ${attempt+2} of 5.`);
+      await wait(delay);
+    }
+  }
+
+  throw lastError;
+};
 const captionPolicy=(context={},profile={})=>`
 CAPTION VOICE AND STRUCTURE RULES
 
@@ -63,7 +117,7 @@ Saved profile: ${JSON.stringify(profile||{})}
 export default async function handler(req,res){if(req.method!=='POST')return res.status(405).json({error:'Method not allowed.'});if(!process.env.OPENAI_API_KEY)return res.status(500).json({error:'OPENAI_API_KEY is missing.'});try{const {action,context,profile,image,images,group,screenshots}=req.body||{};
 if(action==='profile'){const p=await json(`You are PicPlanr creating an initial account understanding from onboarding details only. Use British English. Do not infer an industry, niche, service, audience, competitor strategy or brand personality that was not explicitly supplied. Context: ${JSON.stringify(context)}. Return JSON with summary string, voice_traits array of 4 strings, content_direction string, writing_rules string, confidence_note string, and needs_more_information boolean. The summary must describe only supplied facts. If information is incomplete, say so clearly. Do not use em dashes or American spelling.`);return res.json({profile:p})}
 if(action==='audit'){const shotList=Array.isArray(screenshots)?screenshots.filter(x=>x&&x.dataUrl):[];const shotMeta=shotList.map(x=>({platform:x.platform}));const a=await json(`You are PicPlanr's Account Strength analyst. Score the account fairly from 0 to 100 using only the supplied onboarding details and any supplied profile screenshots. Context: ${JSON.stringify(context)}. Profile: ${JSON.stringify(profile||{})}. Supplied screenshot platforms: ${JSON.stringify(shotMeta)}. A typed handle alone is not evidence that you viewed a live page. When no screenshot is supplied, the score is provisional and must not exceed 65. When screenshots are supplied, inspect only what is visibly legible and do not invent follower counts, engagement, posting frequency, recent content or performance. Score these seven categories: Profile clarity, Visual consistency, Content balance, Trust and proof, Video readiness, Posting consistency, Conversion readiness. For categories that cannot be verified, give a cautious score and clearly say what is missing. Return JSON with overall_score integer, score_label string, hook_message string, score_basis string, confidence string, next_action string, breakdown array of exactly 7 objects with category, score integer and reason, plus strengths, improvements and actions, each an array of exactly 3 short practical strings. The overall score should broadly reflect the seven category scores. Use British English. Do not use em dashes, en dashes or American spelling.`,shotList.map(x=>x.dataUrl));return res.json({audit:a})}
-if(action==='image'){const a=await json(`You are PicPlanr's evidence-only image examiner. Accuracy is more important than creativity. Analyse exactly one image. Account context is background only and must never override what is actually visible. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Return JSON with: literal_summary (one neutral sentence describing only clearly visible content), confirmed_subjects array of objects with name and confidence (high/medium only), confirmed_setting string, confirmed_actions array, readable_text array containing only text that is genuinely legible, marketing_uses array of safe possible uses, grouping_keywords array, overall_confidence (high/medium/low), prohibited_inferences array, and unsuitable_for_caption boolean. Rules: do not infer an event type, relationship, pet-friendly policy, service, product, location, date, occasion, emotion, ownership or business capability unless directly visible or explicitly supplied in context. A visible dog proves only that a dog is visible; it does not prove the venue is pet-friendly. A wedding dress may suggest formal clothing but does not prove a wedding unless additional clear evidence exists. Never convert uncertain objects into specific items. If text is unclear, omit it.`,[image.dataUrl]);return res.json({analysis:a})}
+if(action==='image'){const a=await json(`You are PicPlanr's evidence-only image examiner. Accuracy is more important than creativity. Analyse exactly one image. Account context is background only and must never override what is actually visible. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Return JSON with: literal_summary (one neutral sentence describing only clearly visible content), confirmed_subjects array of objects with name and confidence (high/medium only), confirmed_setting string, confirmed_actions array, readable_text array containing only text that is genuinely legible, marketing_uses array of safe possible uses, grouping_keywords array, overall_confidence (high/medium/low), prohibited_inferences array, and unsuitable_for_caption boolean. Rules: do not infer an event type, relationship, pet-friendly policy, service, product, location, date, occasion, emotion, ownership or business capability unless directly visible or explicitly supplied in context. A visible dog proves only that a dog is visible; it does not prove the venue is pet-friendly. A wedding dress may suggest formal clothing but does not prove a wedding unless additional clear evidence exists. Never convert uncertain objects into specific items. If text is unclear, omit it.`,[image.dataUrl],'low');return res.json({analysis:a})}
 if(action==='validate'){if(!group)return res.status(400).json({error:'Validation group is missing.'});const urls=(images||[]).map(x=>x.dataUrl);const evidence=(images||[]).map(x=>({image_id:x.image_id,analysis:x.analysis}));const v=await json(`You are PicPlanr's final accuracy auditor. Compare the proposed content group against the actual original images. Context: ${JSON.stringify(context)}. Voice profile: ${JSON.stringify(profile)}. Proposed group: ${JSON.stringify(group)}. Earlier evidence: ${JSON.stringify(evidence)}. ${captionPolicy(context,profile)} Return JSON with group object containing: approved_for_display boolean, accuracy_status (checked or review), accuracy_notes array, title, format, objective, group_reason, schedule with day/time/reason, and captions array of exactly 3 objects using this exact structure:
     [{"label":"Engaging","text":"caption text"},{"label":"Informative","text":"caption text"},{"label":"Enquiry focused","text":"caption text"}].
     Every text value must be a non-empty string. 
@@ -100,4 +154,35 @@ Additional accuracy rules:
 4. Mention visible details naturally rather than listing everything in the image.
 5. Never invent services, policies, offers, dates, availability, people, relationships, events, locations or results.
 6. Use natural British English throughout.
- Captions must not list everything visible. Captions must not claim the business offers a service unless that service appears in context. Enquiry focused captions may use a relevant action such as enquire, book, view more or visit the website, but must not invent offers or availability. Return JSON object with groups array.`);return res.json(g)}return res.status(400).json({error:'Unknown action.'})}catch(e){console.error(e);let m=e.message||'AI request failed.';if(e.status===401)m='The OpenAI API key is invalid.';if(e.status===429)m='The OpenAI account has reached a billing or rate limit.';return res.status(e.status&&e.status<600?e.status:500).json({error:m})}}
+ Captions must not list everything visible. Captions must not claim the business offers a service unless that service appears in context. Enquiry focused captions may use a relevant action such as enquire, book, view more or visit the website, but must not invent offers or availability. Return JSON object with groups array.`);return res.json(g)}return res.status(400).json({error:'Unknown action.'})}catch(e){
+  console.error(e);
+
+  const status=Number(e?.status||500);
+  const code=String(e?.code||e?.error?.code||'').toLowerCase();
+
+  if(status===401){
+    return res.status(503).json({
+      error:'PicPlanr is temporarily unavailable. Please try again shortly.',
+      retryable:false
+    });
+  }
+
+  if(code==='insufficient_quota'||code==='billing_hard_limit_reached'){
+    return res.status(503).json({
+      error:'PicPlanr is temporarily unable to complete this analysis. Your files remain selected.',
+      retryable:false
+    });
+  }
+
+  if(status===429||status===408||status===409||status>=500){
+    return res.status(503).json({
+      error:'PicPlanr is still processing a high volume of content. It will retry automatically.',
+      retryable:true
+    });
+  }
+
+  return res.status(status<600?status:500).json({
+    error:'PicPlanr could not complete this step. Your files remain selected.',
+    retryable:false
+  });
+}}

@@ -1,30 +1,27 @@
-PICPLANR VERSION 37.2 — NATURAL BUSINESS CAPTIONS
+PICPLANR VERSION 37.3 — RESILIENT IMAGE ANALYSIS
 
-Upload the contents of this ZIP into the root of the current PicPlanr GitHub repository.
+Upload this ZIP into the root of the current PicPlanr GitHub repository.
 
 Replace:
 1. index.html
 2. api/picplanr.js
 
-What this update changes:
-- Keeps Version 37.1 multiple-file uploading.
-- Uses website analysis and available Instagram analysis to guide the business tone.
-- Creates three deliberately different caption options:
-  Engaging
-  Informative
-  Enquiry focused
-- Informative captions can include useful verified business details.
-- Enquiry focused captions can end with the website when relevant.
-- The website is only added for Business accounts with a supplied website.
-- The website is not forced into every caption.
-- Individual accounts never receive an automatic website line.
-- Captions avoid dashes and common artificial-intelligence marketing phrases.
-- Captions use British English and more natural sentence structures.
-- Existing image accuracy rules remain in place.
+What this version changes:
+- Automatically retries temporary OpenAI and network limits.
+- Uses gradually longer pauses between retries.
+- Paces large uploads instead of sending sudden request bursts.
+- Uses a lower-cost first image-understanding pass.
+- Keeps successfully processed images if another request is delayed.
+- Retains an image safely for later review if its first analysis cannot finish.
+- Keeps draft content ideas when the final accuracy check is temporarily delayed.
+- Avoids showing OpenAI billing, rate-limit and technical error messages to clients.
+- Shows calm progress messages inside PicPlanr.
+- Allows the user to continue analysis without reselecting files.
+- Keeps Version 37.2 natural business captions and website logic.
 
 After upload:
-1. Commit to the main branch.
-2. Wait for the Vercel deployment to show Ready.
-3. Confirm the sidebar says Version 37.2.
-4. Analyse a Business account with a website.
-5. Upload several images and compare the three caption styles.
+1. Commit to main.
+2. Wait for Vercel to show Ready.
+3. Confirm the sidebar says Version 37.3.
+4. Test with 8 to 15 images.
+5. Allow the queue to continue if it briefly pauses.
