@@ -1,0 +1,2 @@
+import {parseCookies} from '../../_lib/http.js';import {connection,configured} from '../../_lib/google-calendar.js';
+export default async function handler(req,res){const id=parseCookies(req).pp_google_connection;let c=null;try{if(id)c=await connection(id)}catch{}return res.status(200).json({configured:configured(),connected:Boolean(c),email:c?.google_email||null,reminderMinutes:c?.reminder_minutes||1440})}

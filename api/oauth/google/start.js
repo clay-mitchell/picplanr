@@ -1,0 +1,2 @@
+import {cookie,randomToken} from '../../_lib/http.js';import {authUrl,configured} from '../../_lib/google-calendar.js';
+export default async function handler(req,res){if(!configured())return res.status(503).json({error:'Google Calendar needs to be configured in Vercel first.'});const state=randomToken(24);res.setHeader('Set-Cookie',[cookie('pp_google_state',state,{maxAge:600}),cookie('pp_google_return','/?view=calendar',{maxAge:600})]);return res.status(200).json({url:authUrl(state)})}

@@ -1,39 +1,27 @@
-PICPLANR VERSION 37.4 — 40 DAY MEDIA RETENTION
+PICPLANR VERSION 37.5 — GOOGLE CALENDAR
 
-Upload the ZIP contents into the root of the current PicPlanr GitHub repository.
+Upload the ZIP contents into the root of the GitHub repository.
 
-Replace:
-1. index.html
-2. package.json
-3. vercel.json
+Run supabase/google-calendar.sql in Supabase SQL Editor.
 
-Add:
-4. api/media/register.js
-5. api/cron/cleanup-media.js
-6. supabase/media-retention.sql
+In Google Cloud:
+1. Enable Google Calendar API.
+2. Configure the OAuth consent screen.
+3. Create Web application OAuth credentials.
+4. Add this authorised redirect URI:
+https://www.picplanrapp.com/api/oauth/google/callback
 
-SUPABASE SETUP
-1. Open Supabase SQL Editor.
-2. Run supabase/media-retention.sql.
-3. Create a private Storage bucket named:
-   picplanr-media
+Add these Vercel variables:
+GOOGLE_CLIENT_ID
+GOOGLE_CLIENT_SECRET
+GOOGLE_REDIRECT_URI=https://www.picplanrapp.com/api/oauth/google/callback
 
-VERCEL SETUP
-Add a new environment variable:
-CRON_SECRET
+Keep TOKEN_ENCRYPTION_KEY.
 
-Use a long random value with at least 16 characters.
-Apply it to Production and Preview.
-
-RETENTION RULES
-Original video footage: 40 days
-Temporary exports: 7 days
-Captions, schedules, thumbnails and post history remain saved.
-
-IMPORTANT
-The cleanup system deletes files that have been registered in media_assets.
-The existing browser uploader still analyses files locally. When permanent
-cloud video upload is connected, it must call api/media/register.js after a
-successful Supabase Storage upload.
-
-The cleanup job runs daily at 04:15 UTC.
+This version:
+• connects Google Calendar
+• syncs scheduled posts
+• adds a 24 hour popup reminder
+• links back to PicPlanr
+• lets clients edit caption, date and time in PicPlanr
+• updates the same Google event after edits
