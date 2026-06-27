@@ -1,27 +1,33 @@
-PICPLANR VERSION 37.5 — GOOGLE CALENDAR
+PICPLANR VERSION 37.6 — SECURE CUSTOMER LOGIN
 
-Upload the ZIP contents into the root of the GitHub repository.
+Upload the ZIP contents into the root of the current GitHub repository.
 
-Run supabase/google-calendar.sql in Supabase SQL Editor.
+Run:
+supabase/secure-login.sql
 
-In Google Cloud:
-1. Enable Google Calendar API.
-2. Configure the OAuth consent screen.
-3. Create Web application OAuth credentials.
-4. Add this authorised redirect URI:
-https://www.picplanrapp.com/api/oauth/google/callback
+Supabase settings:
+Authentication → URL Configuration
+Site URL: https://www.picplanrapp.com
+Redirect URL: https://www.picplanrapp.com/
 
-Add these Vercel variables:
-GOOGLE_CLIENT_ID
-GOOGLE_CLIENT_SECRET
-GOOGLE_REDIRECT_URI=https://www.picplanrapp.com/api/oauth/google/callback
+Authentication → Providers → Email
+Keep Email enabled.
+Keep Confirm email enabled.
 
-Keep TOKEN_ENCRYPTION_KEY.
+Vercel:
+Add SUPABASE_ANON_KEY using the anon public key from Supabase Project Settings → API.
 
-This version:
-• connects Google Calendar
-• syncs scheduled posts
-• adds a 24 hour popup reminder
-• links back to PicPlanr
-• lets clients edit caption, date and time in PicPlanr
-• updates the same Google event after edits
+Keep SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+
+This version adds:
+• email signup
+• email verification
+• login
+• persistent sessions
+• forgot password
+• password update
+• logout
+• protected app while signed out
+• own-profile Row Level Security foundation
+
+This completes secure login only. Separate workspaces and full customer data separation are the next item.
