@@ -1,36 +1,11 @@
-PICPLANR VERSION 37.8 — CROSS-DEVICE PASSWORD RESET
+PICPLANR VERSION 37.9 — CUSTOMER WORKSPACES
 
-FIXED
-• Removes the PKCE code-verifier requirement from customer password resets.
-• Reset emails can now be opened on a phone, laptop or different browser.
-• Recovery links show the two new-password fields.
-• Expired links show a clear customer message.
-• Successful changes sign the user out and return them to login.
-• Raw authentication objects are replaced with readable messages.
+1. Upload all ZIP contents to the root of the existing GitHub repository.
+2. In Supabase SQL Editor, run supabase/customer-workspaces.sql once.
+3. Redeploy PicPlanr.
+4. Log out and back in.
+5. Confirm the WORKSPACE badge appears on desktop.
+6. In Supabase Table Editor, confirm one row exists in workspaces for each test user.
+7. Confirm workspace_members links each user as owner.
 
-UPLOAD
-Upload all ZIP contents to the root of the existing PicPlanr GitHub repository.
-
-SUPABASE
-No new SQL is required.
-
-Confirm these URLs remain allowed in:
-Authentication → URL Configuration
-
-Site URL:
-https://www.picplanrapp.com
-
-Redirect URL:
-https://www.picplanrapp.com/
-
-Optional exact recovery redirect:
-https://www.picplanrapp.com/?mode=reset-password
-
-TEST
-1. Redeploy Version 37.8.
-2. Request a fresh reset email. Do not reuse an older reset link.
-3. Open it on a different device or browser.
-4. Confirm two new-password fields appear.
-5. Set the new password.
-6. Confirm the login screen returns with a success message.
-7. Log in with the new password.
+This completes Number 2 only. Number 3 will attach files, captions and schedules to workspace_id and enforce full customer data separation.
