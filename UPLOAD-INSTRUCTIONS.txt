@@ -1,33 +1,40 @@
-PICPLANR VERSION 37.6 — SECURE CUSTOMER LOGIN
+PICPLANR VERSION 37.7 — PASSWORD RESET FIX
 
-Upload the ZIP contents into the root of the current GitHub repository.
+WHAT THIS FIXES
+• Password reset links now open a dedicated new-password screen.
+• Recovery sessions can no longer be mistaken for a normal login session.
+• The reset URL uses:
+  https://www.picplanrapp.com/?mode=reset-password
+• After the password changes, the user is securely signed out and returned to login.
+• Raw {} authentication errors are replaced with readable customer messages.
 
-Run:
-supabase/secure-login.sql
+UPLOAD
+Upload all ZIP contents to the root of the current PicPlanr GitHub repository.
 
-Supabase settings:
-Authentication → URL Configuration
-Site URL: https://www.picplanrapp.com
-Redirect URL: https://www.picplanrapp.com/
+SUPABASE
+No new SQL is required if secure-login.sql was already run.
 
-Authentication → Providers → Email
-Keep Email enabled.
-Keep Confirm email enabled.
+Confirm this Redirect URL is allowed:
+https://www.picplanrapp.com/
 
-Vercel:
-Add SUPABASE_ANON_KEY using the anon public key from Supabase Project Settings → API.
+Also add this exact Redirect URL if Supabase allows it:
+https://www.picplanrapp.com/?mode=reset-password
 
-Keep SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY.
+VERCEL
+No new environment variables are required.
+Keep:
+SUPABASE_URL
+SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
 
-This version adds:
-• email signup
-• email verification
-• login
-• persistent sessions
-• forgot password
-• password update
-• logout
-• protected app while signed out
-• own-profile Row Level Security foundation
-
-This completes secure login only. Separate workspaces and full customer data separation are the next item.
+TEST
+1. Redeploy the latest version.
+2. Open PicPlanr.
+3. Click Forgot your password?
+4. Enter a confirmed test account email.
+5. Open the newest reset email.
+6. Click the reset link.
+7. Confirm PicPlanr shows two new-password fields.
+8. Enter and confirm a new password.
+9. Confirm it returns to login with a success message.
+10. Log in using the new password.
