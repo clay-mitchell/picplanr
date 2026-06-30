@@ -1,40 +1,36 @@
-PICPLANR VERSION 37.7 — PASSWORD RESET FIX
+PICPLANR VERSION 37.8 — CROSS-DEVICE PASSWORD RESET
 
-WHAT THIS FIXES
-• Password reset links now open a dedicated new-password screen.
-• Recovery sessions can no longer be mistaken for a normal login session.
-• The reset URL uses:
-  https://www.picplanrapp.com/?mode=reset-password
-• After the password changes, the user is securely signed out and returned to login.
-• Raw {} authentication errors are replaced with readable customer messages.
+FIXED
+• Removes the PKCE code-verifier requirement from customer password resets.
+• Reset emails can now be opened on a phone, laptop or different browser.
+• Recovery links show the two new-password fields.
+• Expired links show a clear customer message.
+• Successful changes sign the user out and return them to login.
+• Raw authentication objects are replaced with readable messages.
 
 UPLOAD
-Upload all ZIP contents to the root of the current PicPlanr GitHub repository.
+Upload all ZIP contents to the root of the existing PicPlanr GitHub repository.
 
 SUPABASE
-No new SQL is required if secure-login.sql was already run.
+No new SQL is required.
 
-Confirm this Redirect URL is allowed:
+Confirm these URLs remain allowed in:
+Authentication → URL Configuration
+
+Site URL:
+https://www.picplanrapp.com
+
+Redirect URL:
 https://www.picplanrapp.com/
 
-Also add this exact Redirect URL if Supabase allows it:
+Optional exact recovery redirect:
 https://www.picplanrapp.com/?mode=reset-password
 
-VERCEL
-No new environment variables are required.
-Keep:
-SUPABASE_URL
-SUPABASE_ANON_KEY
-SUPABASE_SERVICE_ROLE_KEY
-
 TEST
-1. Redeploy the latest version.
-2. Open PicPlanr.
-3. Click Forgot your password?
-4. Enter a confirmed test account email.
-5. Open the newest reset email.
-6. Click the reset link.
-7. Confirm PicPlanr shows two new-password fields.
-8. Enter and confirm a new password.
-9. Confirm it returns to login with a success message.
-10. Log in using the new password.
+1. Redeploy Version 37.8.
+2. Request a fresh reset email. Do not reuse an older reset link.
+3. Open it on a different device or browser.
+4. Confirm two new-password fields appear.
+5. Set the new password.
+6. Confirm the login screen returns with a success message.
+7. Log in with the new password.
