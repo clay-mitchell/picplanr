@@ -1,59 +1,28 @@
-PICPLANR VERSION 40.2 — PAID STARTER, BUSINESS AND PRO
+PICPLANR VERSION 40.5 — SAVED ACCOUNT VOICE
 
-WHAT IS INCLUDED
+WHAT THIS FIX DOES
 
-• Starter, Business and Pro plans
-• Starter includes 250 image analyses each month
-• Stripe Checkout for Business and Pro
-• Stripe customer billing portal
-• Stripe webhook subscription updates
-• Workspace-level monthly usage records
-• Server-side limits for image analysis, website analysis, caption regeneration and scheduled posts
-• Dashboard usage progress bars
-• Warnings and upgrade prompts
-• Database fields for connected-account and team-member limits
-• Starter is no longer unlimited
+• Saves the client's account voice, onboarding answers and website analysis.
+• Restores them automatically whenever the workspace loads.
+• Lets image analysis continue without repeating page one.
+• Does not consume another website analysis merely to reuse saved information.
+• Uses browser storage as a fallback and Supabase as the permanent workspace record.
+• Restores the account voice on another device after login.
+• Converts an older saved website analysis into a usable account voice automatically.
 
-FILES TO UPLOAD
+FILES TO REPLACE
 
-Upload every file in this ZIP to the matching location in GitHub.
+index.html
+api/account/profile.js
 
-RUN THIS SQL
+SQL TO RUN ONCE
 
-supabase/subscriptions-and-usage.sql
+supabase/account-voice-memory.sql
 
-VERCEL PRODUCTION ENVIRONMENT VARIABLES
+The existing website analysis already completed on this browser can be restored
+without running the website analysis again. After deployment and running the SQL,
+refresh PicPlanr, upload an image and continue.
 
-STRIPE_SECRET_KEY
-STRIPE_WEBHOOK_SECRET
-STRIPE_PRICE_STARTER
-STRIPE_PRICE_BUSINESS
-STRIPE_PRICE_PRO
-PICPLANR_APP_URL=https://picplanrapp.com
-
-STRIPE SETUP
-
-1. Create a Business monthly price for £49.
-2. Create a Pro monthly price for £99.
-3. Copy their price IDs into the Vercel variables above.
-4. Create a Stripe webhook endpoint:
-   https://picplanrapp.com/api/billing/webhook
-5. Subscribe it to:
-   checkout.session.completed
-   customer.subscription.created
-   customer.subscription.updated
-   customer.subscription.deleted
-6. Copy its signing secret into STRIPE_WEBHOOK_SECRET.
-7. Enable the Stripe customer portal.
-
-IMPORTANT
-
-This deployment deliberately leaves Instagram alone.
-Do not upload the abandoned Version 39 Instagram files over this deployment.
-
-Connected account and team member limits are defined and visible.
-Their individual routes should call assertAndConsumeUsage when those features are
-re-enabled. The currently active image, website, caption and schedule routes are
-already enforced.
-
-Starter now opens Stripe Checkout like Business and Pro.
+A future separate button can be added for customers who deliberately want to
+refresh their website analysis. Reusing the saved voice does not count as a new
+website analysis.

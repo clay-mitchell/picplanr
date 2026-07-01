@@ -1066,7 +1066,7 @@ body[data-page="audit"] .account-strength-results{
 @media(max-width:1100px){.usage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:780px){.plans-grid,.usage-grid{grid-template-columns:1fr}.billing-plan-banner{align-items:flex-start;flex-direction:column}}
 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v40-4-ai-usage-auth-fix" data-page="onboarding">
+</head><body data-build="picplanr-v40-5-account-memory" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -1914,6 +1914,179 @@ async function analyseWebsite(payload){
   return body;
 }
 
+
+function profileFromWebsiteAnalysis(analysis){
+  if(!analysis)return null;
+
+  const traits=Array.isArray(analysis.brand_personality)
+    ?analysis.brand_personality
+    :[];
+
+  const pillars=Array.isArray(analysis.content_pillars)
+    ?analysis.content_pillars.map(item=>item?.title).filter(Boolean)
+    :[];
+
+  return {
+    summary:analysis.brand_summary||analysis.analysis_headline||'Saved account voice',
+    voice_traits:traits,
+    content_direction:pillars.length
+      ?`Focus on ${pillars.join(', ')}.`
+      :(analysis.market_position||'Create content that supports the account goal.'),
+    writing_rules:analysis.tone_of_voice||
+      'Write naturally in the saved brand voice and avoid generic wording.',
+    confidence_note:'Restored from the saved website and account analysis.',
+    saved_from_website:true
+  };
+}
+
+function currentAccountMemory(){
+  return {
+    account_type:state.accountType,
+    context:context(),
+    profile:state.profile,
+    website_analysis:state.websiteAnalysis
+  };
+}
+
+function applyAccountMemory(memory){
+  if(!memory)return false;
+
+  const savedContext=memory.context||{};
+  state.accountType=memory.account_type||savedContext.accountType||state.accountType;
+  state.websiteAnalysis=memory.website_analysis||null;
+  state.profile=memory.profile||profileFromWebsiteAnalysis(state.websiteAnalysis);
+
+  const values={
+    accountName:savedContext.name,
+    industry:savedContext.industry,
+    platform:savedContext.platform,
+    goal:savedContext.goal,
+    instagram:savedContext.instagram,
+    linkedin:savedContext.linkedin,
+    tiktok:savedContext.tiktok,
+    website:savedContext.website,
+    competitors:Array.isArray(savedContext.competitors)
+      ?savedContext.competitors.join(', ')
+      :savedContext.competitors
+  };
+
+  Object.entries(values).forEach(([id,value])=>{
+    const element=$(id);
+    if(element&&value!==undefined&&value!==null&&String(value).trim()!==''){
+      element.value=String(value);
+    }
+  });
+
+  document.querySelectorAll('.account-choice').forEach(button=>{
+    button.classList.toggle('selected',button.dataset.type===state.accountType);
+  });
+
+  if(state.websiteAnalysis){
+    renderWebsiteAnalysis(state.websiteAnalysis);
+  }else if(state.profile){
+    renderProfile();
+  }
+
+  if(state.profile){
+    $('statusPill').textContent='Saved account voice ready';
+    $('buildProfile').textContent='Account voice saved';
+  }
+
+  renderProfileReference();
+  return Boolean(state.profile);
+}
+
+async function saveAccountMemory(){
+  if(!state.profile||!currentWorkspace)return;
+
+  const memory=currentAccountMemory();
+
+  try{
+    localStorage.setItem(
+      workspaceStorageKey('picplanrAccountMemory'),
+      JSON.stringify(memory)
+    );
+    if(state.websiteAnalysis){
+      localStorage.setItem(
+        workspaceStorageKey('picplanrWebsiteAnalysis'),
+        JSON.stringify(state.websiteAnalysis)
+      );
+    }
+  }catch{}
+
+  try{
+    const response=await authenticatedFetch('/api/account/profile',{
+      method:'PUT',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify(memory)
+    });
+
+    if(!response.ok){
+      const data=await response.json().catch(()=>({}));
+      throw new Error(data.error||'Saved account voice could not be updated.');
+    }
+  }catch(error){
+    console.warn('Account voice saved locally but not yet synced:',error);
+  }
+}
+
+async function loadAccountMemory(){
+  let localMemory=null;
+
+  try{
+    localMemory=JSON.parse(
+      localStorage.getItem(
+        workspaceStorageKey('picplanrAccountMemory')
+      )||'null'
+    );
+
+    if(!localMemory){
+      const savedWebsiteAnalysis=JSON.parse(
+        localStorage.getItem(
+          workspaceStorageKey('picplanrWebsiteAnalysis')
+        )||'null'
+      );
+
+      if(savedWebsiteAnalysis){
+        localMemory={
+          account_type:state.accountType,
+          context:context(),
+          profile:profileFromWebsiteAnalysis(savedWebsiteAnalysis),
+          website_analysis:savedWebsiteAnalysis
+        };
+      }
+    }
+  }catch{}
+
+  if(localMemory){
+    applyAccountMemory(localMemory);
+  }
+
+  try{
+    const response=await authenticatedFetch('/api/account/profile',{
+      method:'GET',
+      cache:'no-store'
+    });
+
+    const data=await response.json().catch(()=>({}));
+
+    if(response.ok&&data.memory){
+      applyAccountMemory(data.memory);
+      try{
+        localStorage.setItem(
+          workspaceStorageKey('picplanrAccountMemory'),
+          JSON.stringify(data.memory)
+        );
+      }catch{}
+      return true;
+    }
+  }catch(error){
+    console.warn('Saved account voice could not be loaded from the server:',error);
+  }
+
+  return Boolean(state.profile);
+}
+
 function getPicPlanrSessionId(){
   const key=workspaceStorageKey('picplanrSessionId');
   let value='';
@@ -1928,6 +2101,22 @@ function getPicPlanrSessionId(){
 $('buildProfile').onclick=async()=>{
   const btn=$('buildProfile');
   const ctx=context();
+
+  if(state.profile){
+    await saveAccountMemory();
+
+    if(state.websiteAnalysis){
+      renderWebsiteAnalysis(state.websiteAnalysis);
+    }else{
+      renderProfile();
+    }
+
+    renderProfileReference();
+    $('statusPill').textContent='Saved account voice ready';
+    alert('Your saved account voice is ready. You can continue to upload content without analysing the website again.');
+    return;
+  }
+
   const missing=[];
 
   if(!ctx.name)missing.push('name');
@@ -1992,6 +2181,7 @@ $('buildProfile').onclick=async()=>{
       $('statusPill').textContent='Initial profile ready';
     }
 
+    await saveAccountMemory();
     renderProfileReference();
   }catch(e){
     alert(e.message);
@@ -2263,7 +2453,11 @@ function renderSelectedFiles(){
 async function compress(file){return new Promise((resolve,reject)=>{const img=new Image(),url=URL.createObjectURL(file);img.onload=()=>{const originalWidth=img.width,originalHeight=img.height,orientation=originalHeight>originalWidth?'portrait':originalWidth>originalHeight?'landscape':'square';const max=1400,s=Math.min(1,max/Math.max(originalWidth,originalHeight)),c=document.createElement('canvas');c.width=Math.round(originalWidth*s);c.height=Math.round(originalHeight*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(url);resolve({dataUrl:c.toDataURL('image/jpeg',.72),width:originalWidth,height:originalHeight,orientation})};img.onerror=reject;img.src=url})}
 $('analyseFolder').onclick=async()=>{
   if(!state.profile){
-    alert('Please create the account voice profile first.');
+    await loadAccountMemory();
+  }
+
+  if(!state.profile){
+    alert('PicPlanr could not find a saved account voice. Complete account setup once, then it will be remembered for future uploads.');
     show('onboarding');
     return;
   }
@@ -3511,22 +3705,8 @@ try{
 }catch{}
 
 
-window.addEventListener('picplanr:workspace-ready',()=>{
-  try{
-    const saved=JSON.parse(
-      localStorage.getItem(
-        workspaceStorageKey('picplanrWebsiteAnalysis')
-      )||'null'
-    );
-
-    state.websiteAnalysis=saved||null;
-
-    if(state.websiteAnalysis){
-      renderWebsiteAnalysis(state.websiteAnalysis);
-    }
-  }catch{
-    state.websiteAnalysis=null;
-  }
+window.addEventListener('picplanr:workspace-ready',async()=>{
+  await loadAccountMemory();
 });
 
 console.info('[PicPlanr] Version 40.0 workspace data separation loaded');
