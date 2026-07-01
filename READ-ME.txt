@@ -1,33 +1,25 @@
-PICPLANR VERSION 39 — STABLE INSTAGRAM CONNECTION
+PICPLANR STRIPE CHECKOUT DIAGNOSTIC
 
-Replace these exact files in GitHub:
+Replace only:
 
-index.html
-api/oauth/instagram/start.js
-api/oauth/instagram/callback.js
-api/instagram/status.js
-api/instagram/disconnect.js
-api/_lib/supabase.js
+api/billing/checkout.js
 
-This version removes the conflicting domain redirect and makes the complete
-Instagram flow use the signed-in PicPlanr user and workspace.
+This file does not change plans, prices or billing behaviour. It makes PicPlanr
+show the exact safe reason checkout is failing, such as:
 
-It also fixes the database field names to match the secure-social-ownership.sql
-schema already supplied for Version 38.1.
+• Missing Vercel secret key
+• Missing Stripe Price ID
+• Test/live mode mismatch
+• Missing Supabase subscription table
+• Invalid customer or price
+• Stripe account setup restriction
 
-Keep these Vercel Production values:
+After replacing the file:
 
-PICPLANR_APP_URL=https://picplanrapp.com
-META_REDIRECT_URI=https://picplanrapp.com/api/oauth/instagram/callback
-
-Meta Valid OAuth Redirect URI:
-
-https://picplanrapp.com/api/oauth/instagram/callback
-
-After uploading:
-1. Commit all six files together in one commit.
+1. Commit it.
 2. Wait for the Production deployment.
-3. Open https://picplanrapp.com
-4. Log out once, then log back in.
-5. Connect Instagram.
-6. Do not upload any older Instagram or index files afterward.
+3. Click Choose Starter once.
+4. Send a screenshot of the new message.
+
+Do not change Stripe, Supabase or Vercel again until the new message identifies
+the exact failure.
