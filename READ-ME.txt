@@ -1,19 +1,13 @@
-PICPLANR CANONICAL DOMAIN FIX
+PICPLANR FINAL DOMAIN FIX
 
-Replace these files in GitHub:
-api/oauth/instagram/start.js
-api/oauth/instagram/callback.js
+Replace the root index.html file in GitHub with the index.html in this ZIP.
 
-Then add this Vercel environment variable:
-PICPLANR_APP_URL=https://www.picplanrapp.com
+This forces every PicPlanr page opened on a .vercel.app address to redirect
+immediately to https://www.picplanrapp.com while preserving the path and query.
 
-Confirm this existing Vercel variable:
-META_REDIRECT_URI=https://www.picplanrapp.com/api/oauth/instagram/callback
-
-In Meta, the valid OAuth redirect URI must be:
-https://www.picplanrapp.com/api/oauth/instagram/callback
-
-Redeploy after saving the environment variables.
-Always open PicPlanr using:
-https://www.picplanrapp.com
-Do not use a project-....vercel.app preview address.
+After replacing:
+1. Commit the change.
+2. Wait for the Production deployment.
+3. Open https://www.picplanrapp.com
+4. Log in.
+5. Test Connect Instagram again.
