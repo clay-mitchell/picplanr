@@ -1,24 +1,17 @@
-PICPLANR APEX DOMAIN FIX
+PICPLANR SOCIAL CONNECTION AUTH FIX
 
-This fixes the login glitch caused by switching between:
-- https://picplanrapp.com
-- https://www.picplanrapp.com
-- Vercel preview addresses
+Replace only the root index.html file in GitHub.
 
-Replace these exact files in GitHub:
-1. index.html
-2. api/oauth/instagram/start.js
-3. api/oauth/instagram/callback.js
+The previous index.html was calling the Instagram connection endpoint without
+sending the signed-in user's Supabase access token. The server therefore could
+not identify the customer's workspace and reported that the connection was not
+configured.
 
-Then set these Vercel Production environment variables:
+After replacing:
+1. Commit the change.
+2. Wait for the Production deployment.
+3. Open https://picplanrapp.com
+4. Log in.
+5. Click Connect Instagram.
 
-PICPLANR_APP_URL=https://picplanrapp.com
-META_REDIRECT_URI=https://picplanrapp.com/api/oauth/instagram/callback
-
-In Meta Business Login settings, add this exact OAuth redirect URI:
-https://picplanrapp.com/api/oauth/instagram/callback
-
-Remove the www version and any vercel.app versions from the Instagram OAuth redirect list.
-
-Redeploy Production, then always open:
-https://picplanrapp.com
+No Meta or Vercel setting needs to be changed for this specific repair.

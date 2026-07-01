@@ -1054,7 +1054,7 @@ body[data-page="audit"] .account-strength-results{
 
 .workspace-badge{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #2d3e61;border-radius:13px;background:#0a1222}.workspace-badge.hidden{display:none}.workspace-dot{width:9px;height:9px;border-radius:50%;background:#65e0af;box-shadow:0 0 0 4px rgba(101,224,175,.12)}.workspace-badge>div{display:flex;flex-direction:column;min-width:0}.workspace-badge small{color:#71809f;font-size:8px;font-weight:900;letter-spacing:.12em}.workspace-badge strong{max-width:170px;overflow:hidden;color:#dbe4f5;font-size:11px;text-overflow:ellipsis;white-space:nowrap}@media(max-width:760px){.workspace-badge{display:none!important}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v38-apex-domain-fix" data-page="onboarding">
+</head><body data-build="picplanr-v38-social-auth-header-fix" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -3217,11 +3217,42 @@ function updateConnectionUI(data){
 }
 async function beginConnection(provider){
   try{
-    const returnTo=`${location.pathname}?connected_provider=${encodeURIComponent(provider)}`;
-    const r=await fetch(`/api/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`);
-    const data=await r.json();
+    if(!authClient){
+      throw new Error('PicPlanr authentication is still loading. Please wait a moment and try again.');
+    }
 
-    if(!r.ok)throw new Error(data.message||`${provider} connection is not configured yet.`);
+    const {data:{session},error:sessionError}=await authClient.auth.getSession();
+
+    if(sessionError){
+      throw sessionError;
+    }
+
+    if(!session?.access_token){
+      throw new Error('Your PicPlanr login has expired. Please log out and log back in.');
+    }
+
+    const returnTo=`${location.pathname}?connected_provider=${encodeURIComponent(provider)}`;
+
+    const r=await fetch(
+      `/api/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`,
+      {
+        headers:{
+          Authorization:`Bearer ${session.access_token}`
+        }
+      }
+    );
+
+    let data={};
+
+    try{
+      data=await r.json();
+    }catch{
+      throw new Error(`PicPlanr could not start the ${provider} connection. The server returned an invalid response.`);
+    }
+
+    if(!r.ok){
+      throw new Error(data.message||data.error||`${provider} connection could not be started.`);
+    }
 
     if(data.url){
       const width=620;
