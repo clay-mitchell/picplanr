@@ -1,23 +1,19 @@
-PICPLANR VERSION 40.8 — CAPTION USAGE FIX
+PICPLANR VERSION 40.9 — DEDICATED WEBSITE ANALYSIS PAGE
 
-Replace these files:
+Replace:
 
 index.html
-api/picplanr.js
-api/_lib/plans.js
 
 WHAT CHANGED
 
-• Automatic caption creation no longer uses a separate caption regeneration allowance.
-• Accuracy checking is included in the normal image processing flow.
-• The misleading Caption regenerations card has been removed.
-• The main usage card now reads Images and captions processed.
-• Every analysed image includes its three caption options within the same allowance.
-• Starter includes 250 images with captions.
-• Business includes 750 images with captions.
-• Pro includes 2,000 images with captions.
+• Website analysis is now its own main navigation page.
+• It appears directly after Account setup as Step 2.
+• The full report is no longer hidden at the bottom of page one.
+• Existing saved website reports load automatically on the new page.
+• Viewing a saved report does not consume another website analysis.
+• After a new website analysis, PicPlanr opens the report page automatically.
+• The page includes clear routes to edit account details, continue to connected
+  accounts or upload content.
+• All later workflow steps have been renumbered.
 
-No Stripe or Supabase changes are required.
-
-Old caption_regeneration usage records can remain in Supabase. The updated plan
-definitions ignore them, so they will no longer appear on the dashboard.
+No Supabase, Stripe or Vercel environment changes are required.
