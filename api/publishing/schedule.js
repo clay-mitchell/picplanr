@@ -1,2 +1,64 @@
-async function saveToSupabase(posts){const url=String(process.env.SUPABASE_URL||'').replace(/\/rest\/v1\/?$/,'').replace(/\/$/,'');const key=process.env.SUPABASE_SERVICE_ROLE_KEY;const rows=posts.map(p=>({local_id:p.local_id,platform:p.platform,title:p.title,caption:p.caption,scheduled_for:p.scheduled_for,media_url:p.media_url,status:'scheduled',post_format:p.post_format,media_type:p.media_type||'image',google_calendar_event_id:p.google_calendar_event_id||null,google_calendar_sync_status:p.google_calendar_sync_status||'not_synced',google_last_synced_at:p.google_calendar_event_id?new Date().toISOString():null,reminder_minutes:Number(p.reminder_minutes)||1440,updated_at:new Date().toISOString()}));const r=await fetch(`${url}/rest/v1/scheduled_posts?on_conflict=local_id`,{method:'POST',headers:{'Content-Type':'application/json',apikey:key,Authorization:`Bearer ${key}`,Prefer:'resolution=merge-duplicates,return=representation'},body:JSON.stringify(rows)});if(!r.ok)throw new Error(await r.text());return r.json()}
-export default async function handler(req,res){if(req.method!=='POST')return res.status(405).json({error:'Method not allowed.'});const posts=req.body?.posts;if(!Array.isArray(posts)||!posts.length)return res.status(400).json({error:'No scheduled posts supplied.'});if(!(process.env.SUPABASE_URL&&process.env.SUPABASE_SERVICE_ROLE_KEY))return res.status(200).json({saved:posts.length,testMode:true,message:`${posts.length} posts accepted in safe test mode.`});try{const saved=await saveToSupabase(posts);return res.status(200).json({saved:saved.length,testMode:false,message:`${saved.length} posts saved to the publishing queue.`})}catch(e){console.error(e);return res.status(500).json({error:'Could not save the publishing queue.'})}}
+import {requireWorkspace,sendWorkspaceError} from '../_lib/authenticated-workspace.js';
+
+const clean=value=>String(value||'').trim();
+
+export default async function handler(req,res){
+  if(req.method!=='POST'){
+    res.setHeader('Allow','POST');
+    return res.status(405).json({error:'Method not allowed.'});
+  }
+
+  try{
+    const {supabase,user,workspace}=await requireWorkspace(req);
+    const posts=req.body?.posts;
+
+    if(!Array.isArray(posts)||!posts.length){
+      return res.status(400).json({error:'No scheduled posts supplied.'});
+    }
+
+    const rows=posts.map(post=>({
+      workspace_id:workspace.id,
+      user_id:user.id,
+      local_id:clean(post.local_id),
+      platform:clean(post.platform),
+      title:clean(post.title)||null,
+      caption:clean(post.caption),
+      scheduled_for:post.scheduled_for,
+      media_url:clean(post.media_url)||null,
+      status:'scheduled',
+      post_format:clean(post.post_format)||null,
+      media_type:clean(post.media_type)||'image',
+      google_calendar_event_id:clean(post.google_calendar_event_id)||null,
+      google_calendar_sync_status:post.google_calendar_event_id
+        ?'synced'
+        :'not_synced',
+      reminder_minutes:Number(post.reminder_minutes)||1440,
+      updated_at:new Date().toISOString()
+    }));
+
+    if(rows.some(row=>!row.local_id||!row.platform||!row.caption||!row.scheduled_for)){
+      return res.status(400).json({
+        error:'Each scheduled post needs an ID, platform, caption and date.'
+      });
+    }
+
+    const {data,error}=await supabase
+      .from('scheduled_posts')
+      .upsert(rows,{onConflict:'workspace_id,local_id'})
+      .select('id,workspace_id,local_id,status,scheduled_for');
+
+    if(error)throw error;
+
+    return res.status(200).json({
+      saved:data?.length||0,
+      testMode:false,
+      message:`${data?.length||0} posts saved securely to your workspace.`
+    });
+  }catch(error){
+    return sendWorkspaceError(
+      res,
+      error,
+      'PicPlanr could not save your publishing queue.'
+    );
+  }
+}

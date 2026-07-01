@@ -1,11 +1,41 @@
-PICPLANR VERSION 37.9 — CUSTOMER WORKSPACES
+PICPLANR VERSION 38.0 — STRICT CUSTOMER DATA SEPARATION
 
-1. Upload all ZIP contents to the root of the existing GitHub repository.
-2. In Supabase SQL Editor, run supabase/customer-workspaces.sql once.
-3. Redeploy PicPlanr.
-4. Log out and back in.
-5. Confirm the WORKSPACE badge appears on desktop.
-6. In Supabase Table Editor, confirm one row exists in workspaces for each test user.
-7. Confirm workspace_members links each user as owner.
+NUMBER 3
+One customer cannot access another customer's files, captions or schedules.
 
-This completes Number 2 only. Number 3 will attach files, captions and schedules to workspace_id and enforce full customer data separation.
+WHAT THIS VERSION SECURES
+• Media records are linked to workspace_id.
+• Scheduled posts are linked to workspace_id.
+• Content ideas and captions have secure workspace tables.
+• Supabase Row Level Security blocks cross-workspace access.
+• Storage files must use workspace-id/filename paths.
+• Server APIs verify the signed-in Supabase user.
+• The server derives workspace_id and user_id itself.
+• Website analysis and session data are separated by workspace in the browser.
+• Scheduled-post local IDs are unique inside each workspace, not across all users.
+
+IMPORTANT SECURITY CHANGE
+The media and publishing APIs now require a valid Supabase access token.
+They no longer accept a trusted user_id or workspace_id from the browser.
+
+SETUP
+1. Upload all ZIP contents to the root of the GitHub repository.
+2. Open Supabase SQL Editor.
+3. Run:
+   supabase/workspace-data-separation.sql
+4. Redeploy PicPlanr.
+5. Log out and log back in.
+
+EXPECTED SQL RESULT
+Success. No rows returned
+
+TEST WITH TWO ACCOUNTS
+1. User A logs in and saves a scheduled post.
+2. User B logs in and must not see or update User A's post.
+3. In Supabase, confirm each row has the correct workspace_id.
+4. Try querying another workspace while authenticated as a normal user.
+5. Supabase should return zero rows or deny the request.
+
+NOTE
+Google Calendar and social connection ownership are completed in the next
+checklist items because their OAuth callbacks need separate authentication work.
