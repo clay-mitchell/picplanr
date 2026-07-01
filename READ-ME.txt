@@ -1,25 +1,15 @@
-PICPLANR STRIPE CHECKOUT DIAGNOSTIC
+PICPLANR VERSION 40.3 — WEBSITE ANALYSIS LOGIN FIX
 
-Replace only:
+Replace only the root index.html file in GitHub.
 
-api/billing/checkout.js
+The website analysis button was calling the protected server endpoint without
+sending the signed-in Supabase access token. The server therefore correctly
+responded with "Sign in to continue" even though the customer was logged in.
 
-This file does not change plans, prices or billing behaviour. It makes PicPlanr
-show the exact safe reason checkout is failing, such as:
-
-• Missing Vercel secret key
-• Missing Stripe Price ID
-• Test/live mode mismatch
-• Missing Supabase subscription table
-• Invalid customer or price
-• Stripe account setup restriction
-
-After replacing the file:
-
-1. Commit it.
+After replacing:
+1. Commit index.html.
 2. Wait for the Production deployment.
-3. Click Choose Starter once.
-4. Send a screenshot of the new message.
+3. Refresh PicPlanr.
+4. Complete page one again.
 
-Do not change Stripe, Supabase or Vercel again until the new message identifies
-the exact failure.
+No Stripe, Supabase or Vercel settings need to be changed.
