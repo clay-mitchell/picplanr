@@ -1,11 +1,30 @@
-PICPLANR VERSION 41 — WEBSITE LOGO EXPERIENCE
+PICPLANR VERSION 41.1 — WORKING WEBSITE LOGO
 
 Replace:
 
 index.html
-api/website/analyse.js
 api/website/brand-asset.js
 
-PicPlanr now finds the client logo from the website and displays it in the website analysis hero. Existing saved reports can fetch the logo without consuming another website analysis. If no reliable logo is available, the business initials remain as a polished fallback.
+This version fixes the previous logo attempt.
+
+It searches the client website for:
+
+• Structured logo data
+• Header and brand logo images
+• Website metadata
+• Apple touch icons
+• Favicons
+• Social preview images only as a final fallback
+
+The server downloads the selected image and sends it back to PicPlanr as an
+embedded image. This avoids browser hotlink restrictions and broken external
+image URLs.
+
+Existing saved website reports can load the logo without consuming another
+website analysis. Once found, the logo is saved into the workspace account
+memory.
+
+If no usable logo is available, PicPlanr keeps the professional initials
+fallback.
 
 No SQL, Stripe or Vercel environment changes are required.
