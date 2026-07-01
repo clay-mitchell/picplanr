@@ -1,17 +1,33 @@
-PICPLANR SOCIAL CONNECTION AUTH FIX
+PICPLANR VERSION 39 — STABLE INSTAGRAM CONNECTION
 
-Replace only the root index.html file in GitHub.
+Replace these exact files in GitHub:
 
-The previous index.html was calling the Instagram connection endpoint without
-sending the signed-in user's Supabase access token. The server therefore could
-not identify the customer's workspace and reported that the connection was not
-configured.
+index.html
+api/oauth/instagram/start.js
+api/oauth/instagram/callback.js
+api/instagram/status.js
+api/instagram/disconnect.js
+api/_lib/supabase.js
 
-After replacing:
-1. Commit the change.
+This version removes the conflicting domain redirect and makes the complete
+Instagram flow use the signed-in PicPlanr user and workspace.
+
+It also fixes the database field names to match the secure-social-ownership.sql
+schema already supplied for Version 38.1.
+
+Keep these Vercel Production values:
+
+PICPLANR_APP_URL=https://picplanrapp.com
+META_REDIRECT_URI=https://picplanrapp.com/api/oauth/instagram/callback
+
+Meta Valid OAuth Redirect URI:
+
+https://picplanrapp.com/api/oauth/instagram/callback
+
+After uploading:
+1. Commit all six files together in one commit.
 2. Wait for the Production deployment.
 3. Open https://picplanrapp.com
-4. Log in.
-5. Click Connect Instagram.
-
-No Meta or Vercel setting needs to be changed for this specific repair.
+4. Log out once, then log back in.
+5. Connect Instagram.
+6. Do not upload any older Instagram or index files afterward.

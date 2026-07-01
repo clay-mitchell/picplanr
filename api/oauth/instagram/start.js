@@ -3,18 +3,24 @@ import {cookie,safeReturnPath} from '../../_lib/http.js';
 import {instagramAuthorisationUrl} from '../../_lib/instagram.js';
 import {requireWorkspace,sendWorkspaceError} from '../../_lib/authenticated-workspace.js';
 
-function stateSecret(){
-  return process.env.TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
-}
-
-function canonicalOrigin(){
-  const configured=process.env.PICPLANR_APP_URL||process.env.APP_URL||'https://picplanrapp.com';
+function appOrigin(){
+  const value=process.env.PICPLANR_APP_URL||'https://picplanrapp.com';
 
   try{
-    return new URL(configured).origin;
+    return new URL(value).origin;
   }catch{
     return 'https://picplanrapp.com';
   }
+}
+
+function stateSecret(){
+  const secret=process.env.TOKEN_ENCRYPTION_KEY||process.env.META_APP_SECRET;
+
+  if(!secret){
+    throw new Error('Instagram security settings are missing in Vercel.');
+  }
+
+  return secret;
 }
 
 function signState(payload){
@@ -36,21 +42,13 @@ export default async function handler(req,res){
   try{
     if(!(process.env.META_APP_ID&&process.env.META_APP_SECRET&&process.env.META_REDIRECT_URI)){
       return res.status(503).json({
-        configured:false,
-        message:'Instagram Login is not fully configured in Vercel.'
-      });
-    }
-
-    if(!(process.env.SUPABASE_URL&&process.env.SUPABASE_SERVICE_ROLE_KEY&&process.env.TOKEN_ENCRYPTION_KEY)){
-      return res.status(503).json({
-        configured:false,
-        message:'Secure connection storage is not fully configured.'
+        message:'Instagram is not fully configured in Vercel.'
       });
     }
 
     const context=await requireWorkspace(req);
-    const returnTo=safeReturnPath(req.query?.returnTo||'/?instagram=connected');
-    const origin=canonicalOrigin();
+    const returnTo=safeReturnPath(req.query?.returnTo||'/?view=connections');
+    const origin=appOrigin();
 
     const state=signState({
       nonce:crypto.randomBytes(24).toString('hex'),

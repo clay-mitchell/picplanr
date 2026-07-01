@@ -1,24 +1,4 @@
 <!doctype html><html lang="en"><head>
-<script>
-(function () {
-  try {
-    const canonicalOrigin = 'https://picplanrapp.com';
-    const host = window.location.hostname;
-
-    if (host.endsWith('.vercel.app') || host === 'www.picplanrapp.com') {
-      const target =
-        canonicalOrigin +
-        window.location.pathname +
-        window.location.search +
-        window.location.hash;
-
-      window.location.replace(target);
-    }
-  } catch (error) {
-    console.error('PicPlanr canonical redirect failed:', error);
-  }
-})();
-</script>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PicPlanr Version 38.0</title><style>
 *{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 0,#241154,#070b14 38%);color:#f6f7ff;font-family:Inter,Arial,sans-serif}.app{display:grid;grid-template-columns:260px 1fr;min-height:100vh}aside{padding:28px 20px;border-right:1px solid #222a41;background:rgba(8,12,23,.92);display:flex;flex-direction:column;gap:9px}.brand{display:flex;align-items:center;gap:12px;font-size:25px;font-weight:800;margin-bottom:26px}.mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(135deg,#ff4e8c,#844dff,#37a4ff)}.nav{border:0;background:transparent;color:#aab3c8;text-align:left;padding:14px;border-radius:12px;font-size:15px}.nav.active,.nav:hover{background:#211846;color:white}.side-note{margin-top:auto;background:#10172a;border:1px solid #27314c;border-radius:16px;padding:16px}.side-note span{display:block;color:#8f9ab2;font-size:13px;line-height:1.45;margin-top:7px}main{padding:30px 36px;max-width:1500px;width:100%}header{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}header small,.hero small{letter-spacing:.13em;color:#8d97ae;font-weight:700}h1{margin:5px 0 0;font-size:32px}.pill{background:#151d31;border:1px solid #2b3654;padding:9px 13px;border-radius:999px;color:#aeb7ca}.view{display:none}.view.active{display:block}.hero{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;background:linear-gradient(120deg,#11192c,#15172c);border:1px solid #252f4b;border-radius:20px;padding:24px;margin-bottom:20px}.hero h2{font-size:29px;margin:7px 0}.hero p{margin:0;color:#9da7bd;max-width:760px;line-height:1.5}.choice-grid,.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px}.account-choice{padding:22px;border:1px solid #28334f;background:#0f1628;color:white;border-radius:16px;text-align:left}.account-choice strong,.account-choice span{display:block}.account-choice span{color:#929db5;margin-top:7px}.account-choice.selected{border-color:#8d5cff;background:linear-gradient(120deg,#261d50,#14182d)}label{display:block;background:#10172a;border:1px solid #242f49;border-radius:14px;padding:14px;color:#b9c1d3}.wide{grid-column:1/-1}input,select,textarea{width:100%;margin-top:8px;border:1px solid #2a3655;background:#090f1d;color:white;border-radius:10px;padding:12px;font:inherit}textarea{min-height:100px;resize:vertical}.primary,.secondary,.drop button{border:0;border-radius:12px;padding:13px 17px;font-weight:700;cursor:pointer}.primary{background:linear-gradient(100deg,#8d4dff,#5a36e8);color:white}.secondary,.drop button{background:#172039;color:white;border:1px solid #2d3958}.result,.empty,.calendar{background:#10172a;border:1px solid #27314c;border-radius:18px;padding:22px;margin-top:18px}.hidden{display:none!important}.result h3{margin-top:0}.tags{display:flex;gap:8px;flex-wrap:wrap}.tag{background:#221d47;color:#c6b6ff;border-radius:999px;padding:7px 10px;font-size:12px}.drop{min-height:220px;border:2px dashed #354265;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(111,76,255,.06)}.drop span{color:#8f99b1}.progress-wrap{margin:18px 0}.progress-wrap>div:first-child{display:flex;justify-content:space-between;color:#aab3c7}.progress{height:10px;background:#202941;border-radius:999px;overflow:hidden;margin-top:9px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#8e4fff,#34a5ff)}.preview-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin:18px 0}.preview{background:#10172a;border:1px solid #25304b;border-radius:13px;padding:8px}.preview img{width:100%;height:120px;object-fit:cover;border-radius:9px}.preview span{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#a4aec2;font-size:12px;margin-top:7px}.group-card{background:#10172a;border:1px solid #27314c;border-radius:20px;padding:18px;margin-bottom:18px}.group-top{display:grid;grid-template-columns:230px 1fr;gap:20px}.collage{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.collage img{width:100%;height:105px;object-fit:cover;border-radius:10px}.group-meta{display:flex;gap:8px;flex-wrap:wrap}.caption-options{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:17px}.caption-option{border:1px solid #2b3653;background:#0b1120;border-radius:14px;padding:14px;cursor:pointer}.caption-option.selected{border-color:#8c59ff;background:#171536}.caption-option strong{display:block;margin-bottom:9px}.caption-option p{color:#c4cada;line-height:1.5;white-space:pre-wrap}.reason{color:#929db3;font-size:13px;margin-top:12px}.calendar{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.slot{background:#0c1323;border:1px solid #28334f;border-radius:15px;padding:16px}.slot small,.slot span{color:#8f99af}.slot h3{margin:8px 0}.audit-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}.audit-box{background:#0c1323;border:1px solid #293450;border-radius:14px;padding:16px}.audit-box h3{margin-top:0}.audit-box li{margin:8px 0;color:#bec6d7}@media(max-width:1000px){.app{grid-template-columns:1fr}aside{display:none}.preview-grid{grid-template-columns:repeat(3,1fr)}.caption-options,.audit-grid,.calendar{grid-template-columns:1fr}.group-top{grid-template-columns:1fr}}@media(max-width:650px){main{padding:18px}.choice-grid,.form-grid{grid-template-columns:1fr}.wide{grid-column:auto}.preview-grid{grid-template-columns:repeat(2,1fr)}}
 
@@ -1054,7 +1034,7 @@ body[data-page="audit"] .account-strength-results{
 
 .workspace-badge{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #2d3e61;border-radius:13px;background:#0a1222}.workspace-badge.hidden{display:none}.workspace-dot{width:9px;height:9px;border-radius:50%;background:#65e0af;box-shadow:0 0 0 4px rgba(101,224,175,.12)}.workspace-badge>div{display:flex;flex-direction:column;min-width:0}.workspace-badge small{color:#71809f;font-size:8px;font-weight:900;letter-spacing:.12em}.workspace-badge strong{max-width:170px;overflow:hidden;color:#dbe4f5;font-size:11px;text-overflow:ellipsis;white-space:nowrap}@media(max-width:760px){.workspace-badge{display:none!important}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v38-social-auth-header-fix" data-page="onboarding">
+</head><body data-build="picplanr-v39-stable-instagram-flow" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -3215,202 +3195,261 @@ function updateConnectionUI(data){
     ?'<strong>Publishing foundation ready</strong><span>Connect an approved social account, then save the calendar to the publishing queue.</span>'
     :'<strong>Safe test mode</strong><span>The queue and status flow can be tested now. Real publishing activates after Supabase, storage and platform credentials are added.</span>';
 }
+async function socialAuthHeaders(){
+  if(!authClient){
+    throw new Error('PicPlanr authentication is still loading. Please wait a moment.');
+  }
+
+  const {data:{session},error}=await authClient.auth.getSession();
+
+  if(error)throw error;
+
+  if(!session?.access_token){
+    throw new Error('Your PicPlanr login has expired. Log out and log back in.');
+  }
+
+  return {
+    Authorization:`Bearer ${session.access_token}`
+  };
+}
+
 async function beginConnection(provider){
   try{
-    if(!authClient){
-      throw new Error('PicPlanr authentication is still loading. Please wait a moment and try again.');
-    }
+    const headers=await socialAuthHeaders();
+    const returnTo='/?view=connections';
 
-    const {data:{session},error:sessionError}=await authClient.auth.getSession();
-
-    if(sessionError){
-      throw sessionError;
-    }
-
-    if(!session?.access_token){
-      throw new Error('Your PicPlanr login has expired. Please log out and log back in.');
-    }
-
-    const returnTo=`${location.pathname}?connected_provider=${encodeURIComponent(provider)}`;
-
-    const r=await fetch(
+    const response=await fetch(
       `/api/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`,
-      {
-        headers:{
-          Authorization:`Bearer ${session.access_token}`
-        }
-      }
+      {method:'GET',headers}
     );
 
-    let data={};
+    const data=await response.json().catch(()=>({}));
 
-    try{
-      data=await r.json();
-    }catch{
-      throw new Error(`PicPlanr could not start the ${provider} connection. The server returned an invalid response.`);
-    }
-
-    if(!r.ok){
-      throw new Error(data.message||data.error||`${provider} connection could not be started.`);
-    }
-
-    if(data.url){
-      const width=620;
-      const height=760;
-      const left=Math.max(0,window.screenX+(window.outerWidth-width)/2);
-      const top=Math.max(0,window.screenY+(window.outerHeight-height)/2);
-
-      const popup=window.open(
-        data.url,
-        `picplanr-${provider}-connect`,
-        `popup=yes,width=${width},height=${height},left=${left},top=${top}`
+    if(!response.ok){
+      throw new Error(
+        data.message||
+        data.error||
+        `${provider} connection could not be started.`
       );
-
-      if(!popup){
-        window.location.href=data.url;
-        return;
-      }
-
-      popup.focus();
-      return;
     }
 
-    throw new Error(data.message||`${provider} connection is not configured yet.`);
-  }catch(e){
-    alert(e.message||'Connection setup is not available yet.');
+    if(!data.url){
+      throw new Error(`${provider} did not return a login address.`);
+    }
+
+    const width=620;
+    const height=760;
+    const left=Math.max(0,window.screenX+(window.outerWidth-width)/2);
+    const top=Math.max(0,window.screenY+(window.outerHeight-height)/2);
+
+    const popup=window.open(
+      data.url,
+      `picplanr-${provider}-connect`,
+      `popup=yes,width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    if(!popup){
+      throw new Error('Your browser blocked the Instagram window. Allow popups for PicPlanr and try again.');
+    }
+
+    popup.focus();
+  }catch(error){
+    alert(error.message||'Connection setup is unavailable.');
   }
 }
+
 $('connectInstagram').onclick=()=>beginConnection('instagram');
 $('connectLinkedIn').onclick=()=>beginConnection('linkedin');
 $('connectTikTok').onclick=()=>beginConnection('tiktok');
 
-async function savePublishingQueue(){
-  if(!scheduledPosts.length){alert('Build the schedule first.');return}
-  const payload=scheduledPosts.map(p=>({
-    local_id:p.id,
-    platform:String(p.platform||'').toLowerCase(),
-    title:p.title,
-    caption:p.caption,
-    scheduled_for:p.date.toISOString(),
-    media_url:p.image,
-    status:'scheduled',
-    post_format:p.format,
-    media_type:(p.format==='video'||p.format==='reel'||String(p.platform).toLowerCase()==='tiktok')?'video':'image',
-    google_calendar_event_id:p.googleEventId||null,
-    google_calendar_sync_status:p.googleEventId?'synced':'not_synced',
-    reminder_minutes:1440
-  }));
-  try{
-    const r=await authenticatedFetch('/api/publishing/schedule',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({posts:payload})});
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'Could not save publishing queue.');
-    scheduledPosts.forEach(p=>p.publishStatus='Scheduled');
-    alert(data.message||'Posts saved to the publishing queue.');
-    renderWeek();renderMonth();
-  }catch(e){alert(e.message)}
+function setInstagramDisconnected(){
+  connectionState.instagram=false;
+
+  if($('instagramStatus')){
+    $('instagramStatus').textContent='Not connected';
+  }
+
+  if($('connectInstagram')){
+    $('connectInstagram').textContent='Connect Instagram';
+    $('connectInstagram').onclick=()=>beginConnection('instagram');
+  }
+
+  if($('connectionSummary')){
+    $('connectionSummary').textContent='No accounts connected';
+  }
+
+  const reviewButton=$('connectInstagramFromReview');
+  if(reviewButton){
+    reviewButton.textContent='Connect Instagram';
+    reviewButton.onclick=()=>beginConnection('instagram');
+  }
 }
-if($('savePublishingQueue'))$('savePublishingQueue').onclick=async()=>{const btn=$('savePublishingQueue');showLoading('Saving publishing queue','PicPlanr is preparing approved content for scheduled publishing.',btn);try{await savePublishingQueue()}finally{hideLoading(btn)}};
 
-// Add publishing state to modal.
-const originalOpenPost=openPost;
-openPost=function(id){
-  originalOpenPost(id);
-  if(activePost&&$('modalPublishStatus'))$('modalPublishStatus').textContent=activePost.publishStatus||'Draft';
-};
-loadPublishingStatus();
-refreshGoogleCalendarStatus();
+function setInstagramConnected(data){
+  connectionState.instagram=true;
 
-if($('refreshProfilePreview'))$('refreshProfilePreview').onclick=renderProfileReference;
+  if($('instagramStatus')){
+    $('instagramStatus').textContent=
+      `Connected as @${data.username||'Instagram'}`;
+  }
 
-renderProfileReference();
+  if($('connectInstagram')){
+    $('connectInstagram').textContent='Disconnect Instagram';
+    $('connectInstagram').onclick=disconnectInstagram;
+  }
 
-if($('goToConnections'))$('goToConnections').onclick=()=>show('connections');
+  if($('connectionSummary')){
+    $('connectionSummary').textContent='1 account connected';
+  }
 
-document.querySelectorAll('.social-preview-tab').forEach(tab=>{
-  tab.addEventListener('click',()=>activateSocialPreview(tab.dataset.preview));
-});
+  if($('statusPill')){
+    $('statusPill').textContent='Instagram connected';
+  }
 
-function previewUploadedScreenshot(input,wrapId,imageId,platform){const file=input.files?.[0];if(!file)return;const reader=new FileReader();reader.onload=()=>{const dataUrl=reader.result;$(imageId).src=dataUrl;$(wrapId).classList.remove('hidden');state.profileScreenshots[platform]=dataUrl;$('statusPill').textContent=`${platform==='instagram'?'Instagram':'TikTok'} screenshot ready for scoring`;};reader.readAsDataURL(file)}
-if($('connectInstagramFromReview'))$('connectInstagramFromReview').onclick=()=>show('connections');
-if($('connectTikTokFromReview'))$('connectTikTokFromReview').onclick=()=>show('connections');
-if($('uploadInstagramScreenshot'))$('uploadInstagramScreenshot').onclick=()=>$('instagramScreenshotInput').click();
-if($('instagramScreenshotInput'))$('instagramScreenshotInput').onchange=()=>previewUploadedScreenshot($('instagramScreenshotInput'),'instagramScreenshotPreviewWrap','instagramScreenshotPreview','instagram');
-if($('uploadTikTokScreenshot'))$('uploadTikTokScreenshot').onclick=()=>$('tiktokScreenshotInput').click();
-if($('tiktokScreenshotInput'))$('tiktokScreenshotInput').onchange=()=>previewUploadedScreenshot($('tiktokScreenshotInput'),'tiktokScreenshotPreviewWrap','tiktokScreenshotPreview','tiktok');
+  const reviewButton=$('connectInstagramFromReview');
+  if(reviewButton){
+    reviewButton.textContent='Run live Instagram analysis';
+    reviewButton.onclick=runLiveInstagramAnalysis;
+  }
+}
 
-// Version 32 public Instagram connection and live account analysis
-async function refreshInstagramConnection(){
+async function refreshInstagramConnection({quiet=true}={}){
   try{
-    const r=await fetch('/api/instagram/status');
-    const data=await r.json();
-    if(data.connected){
-      connectionState.instagram=true;
-      if($('instagramStatus'))$('instagramStatus').textContent=`Connected as @${data.username||'Instagram'}`;
-      if($('connectInstagram')){$('connectInstagram').textContent='Disconnect Instagram';$('connectInstagram').onclick=disconnectInstagram;}
-      if($('connectionSummary'))$('connectionSummary').textContent='1 account connected';
-      if($('statusPill'))$('statusPill').textContent='Instagram connected';
-      const reviewButton=$('connectInstagramFromReview');
-      if(reviewButton){reviewButton.textContent='Run live Instagram analysis';reviewButton.onclick=runLiveInstagramAnalysis;}
+    const headers=await socialAuthHeaders();
+    const response=await fetch('/api/instagram/status',{
+      method:'GET',
+      headers,
+      cache:'no-store'
+    });
+
+    const data=await response.json().catch(()=>({}));
+
+    if(!response.ok){
+      throw new Error(
+        data.message||
+        data.error||
+        'Instagram status could not be checked.'
+      );
     }
-  }catch(e){console.warn(e)}
+
+    if(data.connected){
+      setInstagramConnected(data);
+      return true;
+    }
+
+    setInstagramDisconnected();
+    return false;
+  }catch(error){
+    if(!quiet){
+      alert(error.message||'Instagram status could not be checked.');
+    }
+    return false;
+  }
 }
 
 async function disconnectInstagram(){
   if(!confirm('Disconnect this Instagram account from PicPlanr?'))return;
-  const r=await fetch('/api/instagram/disconnect',{method:'POST'});
-  if(r.ok)location.reload();
+
+  try{
+    const headers=await socialAuthHeaders();
+    const response=await fetch('/api/instagram/disconnect',{
+      method:'POST',
+      headers
+    });
+
+    const data=await response.json().catch(()=>({}));
+
+    if(!response.ok){
+      throw new Error(data.message||data.error||'Instagram could not be disconnected.');
+    }
+
+    setInstagramDisconnected();
+  }catch(error){
+    alert(error.message||'Instagram could not be disconnected.');
+  }
 }
 
 async function runLiveInstagramAnalysis(){
   const button=$('connectInstagramFromReview');
-  showLoading('Reviewing live Instagram account','PicPlanr is checking recent posts, content mix, consistency and available performance data.',button);
+  showLoading(
+    'Reviewing live Instagram account',
+    'PicPlanr is checking recent posts, content mix, consistency and available performance data.',
+    button
+  );
+
   try{
-    const r=await fetch('/api/instagram/analyse',{method:'POST'});
-    const data=await r.json();
-    if(!r.ok)throw new Error(data.error||'Instagram analysis failed.');
+    const headers=await socialAuthHeaders();
+    const response=await fetch('/api/instagram/analyse',{
+      method:'POST',
+      headers
+    });
+
+    const data=await response.json().catch(()=>({}));
+
+    if(!response.ok){
+      throw new Error(data.error||data.message||'Instagram analysis failed.');
+    }
+
     state.audit=data.audit;
-    if(data.profile?.username){$('instagram').value='@'+data.profile.username;}
+
+    if(data.profile?.username){
+      $('instagram').value='@'+data.profile.username;
+    }
+
     renderAudit(data.audit);
     show('audit');
-    if(document.body.dataset.page==='audit')$('statusPill').textContent=`Account strength ${data.audit.overall_score}/100`;
-  }catch(e){alert(e.message)}finally{hideLoading(button)}
+
+    if(document.body.dataset.page==='audit'){
+      $('statusPill').textContent=
+        `Account strength ${data.audit.overall_score}/100`;
+    }
+  }catch(error){
+    alert(error.message||'Instagram analysis failed.');
+  }finally{
+    hideLoading(button);
+  }
 }
 
 async function completeInstagramConnection(){
-  await refreshInstagramConnection();
-  show('audit');
+  // The callback saves first, then posts the message. Poll briefly to allow the
+  // database read to become visible before declaring the connection failed.
+  for(let attempt=0;attempt<8;attempt+=1){
+    const connected=await refreshInstagramConnection({quiet:true});
 
-  setTimeout(()=>{
-    const button=$('connectInstagramFromReview');
-    if(button && button.textContent.includes('Run live Instagram analysis')){
-      runLiveInstagramAnalysis();
+    if(connected){
+      show('connections');
+      return;
     }
-  },300);
+
+    await new Promise(resolve=>setTimeout(resolve,500));
+  }
+
+  alert('Instagram returned to PicPlanr, but the account was not saved. Please try connecting once more.');
 }
 
 window.addEventListener('message',event=>{
-  if(event.origin!==location.origin)return;
+  if(event.origin!==window.location.origin)return;
 
   if(event.data?.type==='picplanr-instagram-connected'){
     completeInstagramConnection();
-  }
-
-  if(event.data?.type==='picplanr-instagram-error'){
+  }else if(event.data?.type==='picplanr-instagram-error'){
     alert(event.data.message||'Instagram could not be connected.');
   }
 });
 
+window.addEventListener('picplanr:workspace-ready',()=>{
+  refreshInstagramConnection({quiet:true});
+});
+
 const params=new URLSearchParams(location.search);
 
-if(params.get('instagram_status')==='connected' || params.get('connected_provider')==='instagram'){
+if(params.get('instagram_status')==='connected'){
   history.replaceState({},'',location.pathname);
-  setTimeout(completeInstagramConnection,150);
+  setTimeout(completeInstagramConnection,200);
 }else if(params.get('instagram_status')==='error'){
   alert(params.get('message')||'Instagram could not be connected.');
   history.replaceState({},'',location.pathname);
 }
-
-refreshInstagramConnection();
 
 try{
   const savedWebsiteAnalysis=JSON.parse(
