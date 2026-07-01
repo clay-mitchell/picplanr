@@ -1,19 +1,11 @@
-PICPLANR VERSION 40.9 — DEDICATED WEBSITE ANALYSIS PAGE
+PICPLANR VERSION 41 — WEBSITE LOGO EXPERIENCE
 
 Replace:
 
 index.html
+api/website/analyse.js
+api/website/brand-asset.js
 
-WHAT CHANGED
+PicPlanr now finds the client logo from the website and displays it in the website analysis hero. Existing saved reports can fetch the logo without consuming another website analysis. If no reliable logo is available, the business initials remain as a polished fallback.
 
-• Website analysis is now its own main navigation page.
-• It appears directly after Account setup as Step 2.
-• The full report is no longer hidden at the bottom of page one.
-• Existing saved website reports load automatically on the new page.
-• Viewing a saved report does not consume another website analysis.
-• After a new website analysis, PicPlanr opens the report page automatically.
-• The page includes clear routes to edit account details, continue to connected
-  accounts or upload content.
-• All later workflow steps have been renumbered.
-
-No Supabase, Stripe or Vercel environment changes are required.
+No SQL, Stripe or Vercel environment changes are required.

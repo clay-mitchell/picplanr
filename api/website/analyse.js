@@ -127,6 +127,37 @@ function extractSocialLinks(html, base) {
   return social;
 }
 
+
+function absoluteAssetUrl(value, base) {
+  if (!value) return '';
+  try {
+    const url = new URL(decodeEntities(String(value)).replace(/&amp;/g, '&').trim(), base);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch { return ''; }
+}
+function attributeValue(tag, attribute) {
+  const pattern = new RegExp(`${attribute}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i');
+  const match = String(tag || '').match(pattern);
+  return match ? (match[1] || match[2] || match[3] || '') : '';
+}
+function bestWebsiteLogo(html, base) {
+  const candidates=[];
+  const add=(value,score,source)=>{const url=absoluteAssetUrl(value,base);if(url)candidates.push({url,score,source})};
+  add(extractMeta(html,'og:logo'),95,'website metadata');
+  add(extractMeta(html,'logo'),90,'website metadata');
+  for(const tag of html.match(/<img\\b[^>]*>/gi)||[]){
+    const src=attributeValue(tag,'src')||attributeValue(tag,'data-src')||attributeValue(tag,'data-lazy-src');
+    const evidence=[attributeValue(tag,'alt'),attributeValue(tag,'class'),attributeValue(tag,'id'),src].join(' ').toLowerCase();
+    let score=0;if(evidence.includes('logo'))score+=75;if(evidence.includes('brand'))score+=25;if(String(src).toLowerCase().endsWith('.svg'))score+=8;if(score)add(src,score,'page image');
+  }
+  for(const tag of html.match(/<link\\b[^>]*>/gi)||[]){
+    const rel=attributeValue(tag,'rel').toLowerCase();const href=attributeValue(tag,'href');
+    if(rel.includes('apple-touch-icon'))add(href,65,'site icon');else if(rel.includes('icon'))add(href,50,'site icon');
+  }
+  add(extractMeta(html,'og:image'),35,'social preview image');
+  return candidates.sort((a,b)=>b.score-a.score)[0]||null;
+}
+
 function technicalSignals(html) {
   const images = [...html.matchAll(/<img\b[^>]*>/gi)].map(match => match[0]);
   const missingAlt = images.filter(tag => !/\balt\s*=\s*["'][^"']+["']/i.test(tag)).length;
@@ -246,6 +277,7 @@ async function collectWebsite(startUrl) {
     headings: [...extractTagText(page.html, 'h1'), ...extractTagText(page.html, 'h2')].slice(0, 20),
     actions: extractButtons(page.html).slice(0, 20),
     social_links: extractSocialLinks(page.html, page.url),
+    logo: bestWebsiteLogo(page.html, page.url),
     technical: technicalSignals(page.html),
     text: stripHtml(page.html).slice(0, 11000)
   }));
@@ -438,6 +470,9 @@ Requirements:
     analysis.source_pages = pages.map(page => ({ url: page.url, title: page.title }));
     analysis.pages_read = pages.length;
     analysis.discovered_social_links = discoveredSocial;
+    const discoveredLogo=pages.map(page=>page.logo).filter(Boolean).sort((a,b)=>Number(b.score||0)-Number(a.score||0))[0]||null;
+    analysis.logo_url=discoveredLogo?.url||'';
+    analysis.logo_source=discoveredLogo?.source||'';
 
     const profile = {
       summary: analysis.brand_summary,
