@@ -21,3 +21,9 @@ venue — available now becomes venue, available now
 This applies to feed captions, caption regenerations and Story text.
 
 No Supabase, Stripe or Vercel environment changes are required.
+
+
+VERSION 40.7 UPDATE
+- Added a bottom approval button on the Content ideas page.
+- Clicking "Approve selected and continue" approves the current selected captions and takes the client straight to Smart calendar.
+- The original top "Approve all selected" button still remains.
