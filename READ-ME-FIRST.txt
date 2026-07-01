@@ -1,4 +1,4 @@
-PICPLANR VERSION 40.1 — SUBSCRIPTIONS WITHOUT VIDEO LIMITS
+PICPLANR VERSION 40.2 — PAID STARTER, BUSINESS AND PRO
 
 WHAT IS INCLUDED
 
@@ -26,6 +26,7 @@ VERCEL PRODUCTION ENVIRONMENT VARIABLES
 
 STRIPE_SECRET_KEY
 STRIPE_WEBHOOK_SECRET
+STRIPE_PRICE_STARTER
 STRIPE_PRICE_BUSINESS
 STRIPE_PRICE_PRO
 PICPLANR_APP_URL=https://picplanrapp.com
@@ -54,3 +55,5 @@ Connected account and team member limits are defined and visible.
 Their individual routes should call assertAndConsumeUsage when those features are
 re-enabled. The currently active image, website, caption and schedule routes are
 already enforced.
+
+Starter now opens Stripe Checkout like Business and Pro.

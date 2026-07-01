@@ -18,8 +18,8 @@ export default async function handler(req,res){
     const {supabase,user,workspace}=await requireWorkspace(req);
     const requested=String(req.body?.plan||'').toLowerCase();
 
-    if(!PLANS[requested]||requested==='starter'){
-      return res.status(400).json({error:'Choose the Business or Pro plan.'});
+    if(!PLANS[requested]){
+      return res.status(400).json({error:'Choose a valid PicPlanr plan.'});
     }
 
     const priceId=process.env[planPriceEnvironmentKey(requested)];
