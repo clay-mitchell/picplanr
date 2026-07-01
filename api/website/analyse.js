@@ -2,6 +2,8 @@ import dns from 'node:dns/promises';
 import net from 'node:net';
 import OpenAI from 'openai';
 import {saveBrandProfile} from '../_lib/supabase.js';
+import {requireWorkspace,sendWorkspaceError} from '../_lib/authenticated-workspace.js';
+import {assertAndConsumeUsage,sendBillingError} from '../_lib/billing.js';
 
 const client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MAX_PAGES = 8;
@@ -368,6 +370,8 @@ export default async function handler(req, res) {
   if (!process.env.OPENAI_API_KEY) return res.status(500).json({ error: 'OPENAI_API_KEY is missing.' });
 
   try {
+    const {supabase,workspace}=await requireWorkspace(req);
+    await assertAndConsumeUsage({supabase,workspaceId:workspace.id,metric:'website_analyses',quantity:1});
     const website = normaliseUrl(req.body?.website);
     const pages = await collectWebsite(website);
 
@@ -471,6 +475,8 @@ Requirements:
     });
   } catch (error) {
     console.error(error);
+    if(error?.statusCode===402)return sendBillingError(res,error);
+    if(error?.statusCode===401)return sendWorkspaceError(res,error,'Sign in to analyse a website.');
     const message = error?.name === 'AbortError'
       ? 'The website took too long to respond. Please try again.'
       : (error?.message || 'Website analysis failed.');

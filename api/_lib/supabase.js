@@ -69,18 +69,11 @@ async function request(path,{method='GET',body,headers={}}={}){
 }
 
 export async function saveInstagramConnection(row){
-  const conflict='workspace_id,provider,provider_account_id';
-
-  return request(
-    `social_connections?on_conflict=${encodeURIComponent(conflict)}`,
-    {
-      method:'POST',
-      body:row,
-      headers:{
-        Prefer:'resolution=merge-duplicates,return=representation'
-      }
-    }
-  ).then(result=>result?.[0]||null);
+  return request('social_connections',{
+    method:'POST',
+    body:row,
+    headers:{Prefer:'return=representation'}
+  }).then(x=>x?.[0]);
 }
 
 export async function getInstagramConnection(id){

@@ -1,4 +1,5 @@
 import {requireWorkspace,sendWorkspaceError} from '../_lib/authenticated-workspace.js';
+import {assertAndConsumeUsage,sendBillingError} from '../_lib/billing.js';
 
 const clean=value=>String(value||'').trim();
 
@@ -15,6 +16,8 @@ export default async function handler(req,res){
     if(!Array.isArray(posts)||!posts.length){
       return res.status(400).json({error:'No scheduled posts supplied.'});
     }
+
+    await assertAndConsumeUsage({supabase,workspaceId:workspace.id,metric:'scheduled_posts',quantity:posts.length});
 
     const rows=posts.map(post=>({
       workspace_id:workspace.id,
@@ -55,6 +58,7 @@ export default async function handler(req,res){
       message:`${data?.length||0} posts saved securely to your workspace.`
     });
   }catch(error){
+    if(error?.statusCode===402)return sendBillingError(res,error);
     return sendWorkspaceError(
       res,
       error,

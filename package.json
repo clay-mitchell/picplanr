@@ -1,10 +1,11 @@
 {
-  "name": "picplanr-public-instagram-v32",
-  "version": "3.7.4",
+  "name": "picplanr-v40-subscriptions",
+  "version": "4.0.0",
   "private": true,
   "type": "module",
   "dependencies": {
     "openai": "^5.0.0",
-    "@supabase/supabase-js": "^2.0.0"
+    "@supabase/supabase-js": "^2.0.0",
+    "stripe": "^18.0.0"
   }
 }
