@@ -7,10 +7,14 @@ function stateSecret(){
   return process.env.TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
 }
 
-function requestOrigin(req){
-  const proto=String(req.headers['x-forwarded-proto']||'https').split(',')[0].trim();
-  const host=String(req.headers['x-forwarded-host']||req.headers.host||'').split(',')[0].trim();
-  return `${proto}://${host}`;
+function canonicalOrigin(){
+  const configured=process.env.PICPLANR_APP_URL||process.env.APP_URL||'https://www.picplanrapp.com';
+
+  try{
+    return new URL(configured).origin;
+  }catch{
+    return 'https://www.picplanrapp.com';
+  }
 }
 
 function signState(payload){
@@ -46,7 +50,7 @@ export default async function handler(req,res){
 
     const context=await requireWorkspace(req);
     const returnTo=safeReturnPath(req.query?.returnTo||'/?instagram=connected');
-    const origin=requestOrigin(req);
+    const origin=canonicalOrigin();
 
     const state=signState({
       nonce:crypto.randomBytes(24).toString('hex'),

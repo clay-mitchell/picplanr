@@ -1,0 +1,19 @@
+PICPLANR CANONICAL DOMAIN FIX
+
+Replace these files in GitHub:
+api/oauth/instagram/start.js
+api/oauth/instagram/callback.js
+
+Then add this Vercel environment variable:
+PICPLANR_APP_URL=https://www.picplanrapp.com
+
+Confirm this existing Vercel variable:
+META_REDIRECT_URI=https://www.picplanrapp.com/api/oauth/instagram/callback
+
+In Meta, the valid OAuth redirect URI must be:
+https://www.picplanrapp.com/api/oauth/instagram/callback
+
+Redeploy after saving the environment variables.
+Always open PicPlanr using:
+https://www.picplanrapp.com
+Do not use a project-....vercel.app preview address.
