@@ -1,41 +1,48 @@
-PICPLANR VERSION 38.0 — STRICT CUSTOMER DATA SEPARATION
+PICPLANR VERSION 38.1 — SECURE SOCIAL OWNERSHIP
 
-NUMBER 3
-One customer cannot access another customer's files, captions or schedules.
+NUMBER 4 FOUNDATION
+Connected Instagram, LinkedIn and TikTok accounts belong to the correct
+authenticated user and workspace.
 
-WHAT THIS VERSION SECURES
-• Media records are linked to workspace_id.
-• Scheduled posts are linked to workspace_id.
-• Content ideas and captions have secure workspace tables.
-• Supabase Row Level Security blocks cross-workspace access.
-• Storage files must use workspace-id/filename paths.
-• Server APIs verify the signed-in Supabase user.
-• The server derives workspace_id and user_id itself.
-• Website analysis and session data are separated by workspace in the browser.
-• Scheduled-post local IDs are unique inside each workspace, not across all users.
+WHAT IS SECURED
+• Every social connection stores workspace_id and user_id.
+• A verified provider account ID is required.
+• Access and refresh tokens are encrypted with TOKEN_ENCRYPTION_KEY.
+• Customers cannot create fake connection rows from the browser.
+• Connection status is loaded through an authenticated server route.
+• Disconnect requests are limited to the signed-in owner and workspace.
+• OAuth state values expire after 10 minutes and are single-use.
+• The server ignores browser-supplied user_id and workspace_id values.
 
-IMPORTANT SECURITY CHANGE
-The media and publishing APIs now require a valid Supabase access token.
-They no longer accept a trusted user_id or workspace_id from the browser.
+IMPORTANT
+Instagram, LinkedIn and TikTok are not advertised as live by this version.
+Their OAuth authorisation URLs and callbacks will be installed only after
+each platform application is approved.
 
 SETUP
-1. Upload all ZIP contents to the root of the GitHub repository.
-2. Open Supabase SQL Editor.
-3. Run:
-   supabase/workspace-data-separation.sql
-4. Redeploy PicPlanr.
-5. Log out and log back in.
+1. Upload all ZIP contents to the GitHub repository.
+2. Run supabase/secure-social-ownership.sql in Supabase SQL Editor.
+3. Redeploy PicPlanr.
+4. Log out and log back in.
 
 EXPECTED SQL RESULT
 Success. No rows returned
 
-TEST WITH TWO ACCOUNTS
-1. User A logs in and saves a scheduled post.
-2. User B logs in and must not see or update User A's post.
-3. In Supabase, confirm each row has the correct workspace_id.
-4. Try querying another workspace while authenticated as a normal user.
-5. Supabase should return zero rows or deny the request.
+TEST
+1. Log in as Account A and open Connections.
+2. All unapproved platforms should clearly say Not connected.
+3. Clicking Connect should explain that platform approval is still required.
+4. Log in as Account B.
+5. Account B must not see any Account A connection records.
+6. In Supabase, social_connections should be protected by Row Level Security.
 
-NOTE
-Google Calendar and social connection ownership are completed in the next
-checklist items because their OAuth callbacks need separate authentication work.
+KEEP IN VERCEL
+TOKEN_ENCRYPTION_KEY
+SUPABASE_URL
+SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+
+DO NOT ENABLE THESE UNTIL THEIR APPROVED CALLBACKS ARE INSTALLED
+INSTAGRAM_OAUTH_ENABLED
+LINKEDIN_OAUTH_ENABLED
+TIKTOK_OAUTH_ENABLED
