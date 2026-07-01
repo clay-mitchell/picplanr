@@ -1,4 +1,4 @@
-PICPLANR VERSION 40 — SUBSCRIPTIONS AND USAGE LIMITS
+PICPLANR VERSION 40.1 — SUBSCRIPTIONS WITHOUT VIDEO LIMITS
 
 WHAT IS INCLUDED
 
@@ -11,7 +11,7 @@ WHAT IS INCLUDED
 • Server-side limits for image analysis, website analysis, caption regeneration and scheduled posts
 • Dashboard usage progress bars
 • Warnings and upgrade prompts
-• Database fields for connected-account, video, storage and team-member limits
+• Database fields for connected-account and team-member limits
 • Starter is no longer unlimited
 
 FILES TO UPLOAD
@@ -50,7 +50,7 @@ IMPORTANT
 This deployment deliberately leaves Instagram alone.
 Do not upload the abandoned Version 39 Instagram files over this deployment.
 
-Video storage, connected account and team member limits are defined and visible.
-Their individual create/upload routes should call assertAndConsumeUsage when those
-features are re-enabled. The currently active image, website, caption and schedule
-routes are already enforced.
+Connected account and team member limits are defined and visible.
+Their individual routes should call assertAndConsumeUsage when those features are
+re-enabled. The currently active image, website, caption and schedule routes are
+already enforced.

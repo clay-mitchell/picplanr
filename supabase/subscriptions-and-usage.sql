@@ -28,8 +28,6 @@ create table if not exists public.workspace_usage (
     'website_analyses',
     'scheduled_posts',
     'connected_accounts',
-    'video_uploads',
-    'video_storage_bytes',
     'team_members',
     'caption_regenerations'
   )),

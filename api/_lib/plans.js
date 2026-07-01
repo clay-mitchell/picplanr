@@ -12,8 +12,6 @@ export const PLANS={
       website_analyses:1,
       scheduled_posts:25,
       connected_accounts:1,
-      video_uploads:5,
-      video_storage_bytes:5*1024*1024*1024,
       team_members:1,
       caption_regenerations:3
     }
@@ -29,8 +27,6 @@ export const PLANS={
       website_analyses:5,
       scheduled_posts:100,
       connected_accounts:4,
-      video_uploads:30,
-      video_storage_bytes:25*1024*1024*1024,
       team_members:3,
       caption_regenerations:10
     }
@@ -46,8 +42,6 @@ export const PLANS={
       website_analyses:15,
       scheduled_posts:300,
       connected_accounts:10,
-      video_uploads:100,
-      video_storage_bytes:100*1024*1024*1024,
       team_members:10,
       caption_regenerations:25
     }

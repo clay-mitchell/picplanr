@@ -1066,7 +1066,7 @@ body[data-page="audit"] .account-strength-results{
 @media(max-width:1100px){.usage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:780px){.plans-grid,.usage-grid{grid-template-columns:1fr}.billing-plan-banner{align-items:flex-start;flex-direction:column}}
 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v40-subscriptions" data-page="onboarding">
+</head><body data-build="picplanr-v40-subscriptions-no-video" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -1151,8 +1151,7 @@ body[data-page="audit"] .account-strength-results{
         <li>1 website analysis</li>
         <li>25 scheduled posts</li>
         <li>1 connected account</li>
-        <li>5 video uploads and 5 GB storage</li>
-        <li>1 team member</li>
+                <li>1 team member</li>
       </ul>
       <button class="secondary" type="button" data-plan="starter">Current entry plan</button>
     </article>
@@ -1167,8 +1166,7 @@ body[data-page="audit"] .account-strength-results{
         <li>5 website analyses</li>
         <li>100 scheduled posts</li>
         <li>4 connected accounts</li>
-        <li>30 video uploads and 25 GB storage</li>
-        <li>3 team members</li>
+                <li>3 team members</li>
       </ul>
       <button class="primary choose-plan" type="button" data-plan="business">Choose Business</button>
     </article>
@@ -1182,8 +1180,7 @@ body[data-page="audit"] .account-strength-results{
         <li>15 website analyses</li>
         <li>300 scheduled posts</li>
         <li>10 connected accounts</li>
-        <li>100 video uploads and 100 GB storage</li>
-        <li>10 team members</li>
+                <li>10 team members</li>
       </ul>
       <button class="primary choose-plan" type="button" data-plan="pro">Choose Pro</button>
     </article>
@@ -3593,17 +3590,12 @@ const BILLING_LABELS={
   website_analyses:'Website analyses',
   scheduled_posts:'Scheduled posts',
   connected_accounts:'Connected accounts',
-  video_uploads:'Video uploads',
-  video_storage_bytes:'Video storage',
   team_members:'Team members',
   caption_regenerations:'Caption regenerations'
 };
 
 function billingValue(metric,value){
-  if(metric==='video_storage_bytes'){
-    return `${(Number(value||0)/(1024**3)).toFixed(1)} GB`;
-  }
-  return Number(value||0).toLocaleString('en-GB');
+return Number(value||0).toLocaleString('en-GB');
 }
 
 function renderBilling(data){

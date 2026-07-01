@@ -1,6 +1,6 @@
 {
-  "name": "picplanr-v40-subscriptions",
-  "version": "4.0.0",
+  "name": "picplanr-v40-subscriptions-no-video",
+  "version": "4.0.1",
   "private": true,
   "type": "module",
   "dependencies": {
