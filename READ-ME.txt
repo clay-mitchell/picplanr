@@ -1,29 +1,23 @@
-PICPLANR VERSION 40.6 — NO DASHES IN CAPTIONS
+PICPLANR VERSION 40.8 — CAPTION USAGE FIX
 
-Replace these two files:
+Replace these files:
 
 index.html
 api/picplanr.js
+api/_lib/plans.js
 
-This update applies the rule twice:
+WHAT CHANGED
 
-1. The artificial intelligence prompt is told never to use any dash or hyphen
-   character, including hyphenated compound words.
-2. The browser cleans any dash that still slips through before showing the
-   caption to the customer.
+• Automatic caption creation no longer uses a separate caption regeneration allowance.
+• Accuracy checking is included in the normal image processing flow.
+• The misleading Caption regenerations card has been removed.
+• The main usage card now reads Images and captions processed.
+• Every analysed image includes its three caption options within the same allowance.
+• Starter includes 250 images with captions.
+• Business includes 750 images with captions.
+• Pro includes 2,000 images with captions.
 
-Examples:
+No Stripe or Supabase changes are required.
 
-city-centre becomes city centre
-behind-the-scenes becomes behind the scenes
-venue — available now becomes venue, available now
-
-This applies to feed captions, caption regenerations and Story text.
-
-No Supabase, Stripe or Vercel environment changes are required.
-
-
-VERSION 40.7 UPDATE
-- Added a bottom approval button on the Content ideas page.
-- Clicking "Approve selected and continue" approves the current selected captions and takes the client straight to Smart calendar.
-- The original top "Approve all selected" button still remains.
+Old caption_regeneration usage records can remain in Supabase. The updated plan
+definitions ignore them, so they will no longer appear on the dashboard.

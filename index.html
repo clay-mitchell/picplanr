@@ -1066,7 +1066,7 @@ body[data-page="audit"] .account-strength-results{
 @media(max-width:1100px){.usage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:780px){.plans-grid,.usage-grid{grid-template-columns:1fr}.billing-plan-banner{align-items:flex-start;flex-direction:column}}
 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v40-7-approve-flow" data-page="onboarding">
+</head><body data-build="picplanr-v40-8-caption-usage-fix" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -1147,7 +1147,7 @@ body[data-page="audit"] .account-strength-results{
       <p>For individuals, creators and small businesses.</p>
       <div class="plan-price">£19 <span>per month</span></div>
       <ul>
-        <li>250 image analyses</li>
+        <li>250 images with captions</li>
         <li>1 website analysis</li>
         <li>25 scheduled posts</li>
         <li>1 connected account</li>
@@ -1162,7 +1162,7 @@ body[data-page="audit"] .account-strength-results{
       <p>For active businesses managing regular content.</p>
       <div class="plan-price">£49 <span>per month</span></div>
       <ul>
-        <li>750 image analyses</li>
+        <li>750 images with captions</li>
         <li>5 website analyses</li>
         <li>100 scheduled posts</li>
         <li>4 connected accounts</li>
@@ -1176,7 +1176,7 @@ body[data-page="audit"] .account-strength-results{
       <p>For agencies, larger brands and content teams.</p>
       <div class="plan-price">£99 <span>per month</span></div>
       <ul>
-        <li>2,000 image analyses</li>
+        <li>2,000 images with captions</li>
         <li>15 website analyses</li>
         <li>300 scheduled posts</li>
         <li>10 connected accounts</li>
@@ -1836,7 +1836,7 @@ async function api(action,payload,options={}){
       }
 
       if(r.ok){
-        if(action==='image'||action==='validate'){
+        if(action==='image'){
           setTimeout(()=>loadBillingUsage(false),250);
         }
         return body;
@@ -3784,12 +3784,11 @@ console.info('[PicPlanr] Version 40.0 workspace data separation loaded');
 
 
 const BILLING_LABELS={
-  image_analyses:'Images analysed',
+  image_analyses:'Images and captions processed',
   website_analyses:'Website analyses',
   scheduled_posts:'Scheduled posts',
   connected_accounts:'Connected accounts',
   team_members:'Team members',
-  caption_regenerations:'Caption regenerations'
 };
 
 function billingValue(metric,value){

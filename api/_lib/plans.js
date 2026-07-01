@@ -13,7 +13,6 @@ export const PLANS={
       scheduled_posts:25,
       connected_accounts:1,
       team_members:1,
-      caption_regenerations:3
     }
   },
   business:{
@@ -28,7 +27,6 @@ export const PLANS={
       scheduled_posts:100,
       connected_accounts:4,
       team_members:3,
-      caption_regenerations:10
     }
   },
   pro:{
@@ -43,7 +41,6 @@ export const PLANS={
       scheduled_posts:300,
       connected_accounts:10,
       team_members:10,
-      caption_regenerations:25
     }
   }
 };
