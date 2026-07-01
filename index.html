@@ -1033,7 +1033,7 @@ body[data-page="audit"] .account-strength-results{
 
 .workspace-badge{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #2d3e61;border-radius:13px;background:#0a1222}.workspace-badge.hidden{display:none}.workspace-dot{width:9px;height:9px;border-radius:50%;background:#65e0af;box-shadow:0 0 0 4px rgba(101,224,175,.12)}.workspace-badge>div{display:flex;flex-direction:column;min-width:0}.workspace-badge small{color:#71809f;font-size:8px;font-weight:900;letter-spacing:.12em}.workspace-badge strong{max-width:170px;overflow:hidden;color:#dbe4f5;font-size:11px;text-overflow:ellipsis;white-space:nowrap}@media(max-width:760px){.workspace-badge{display:none!important}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v38-login-fix" data-page="onboarding">
+</head><body data-build="picplanr-v38-instagram-auth-fix" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -3197,7 +3197,20 @@ function updateConnectionUI(data){
 async function beginConnection(provider){
   try{
     const returnTo=`${location.pathname}?connected_provider=${encodeURIComponent(provider)}`;
-    const r=await fetch(`/api/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`);
+    const {data:{session}}=await authClient.auth.getSession();
+
+    if(!session?.access_token){
+      throw new Error('Your login has expired. Please log in again.');
+    }
+
+    const r=await fetch(
+      `/api/oauth/${provider}/start?returnTo=${encodeURIComponent(returnTo)}`,
+      {
+        headers:{
+          Authorization:`Bearer ${session.access_token}`
+        }
+      }
+    );
     const data=await r.json();
 
     if(!r.ok)throw new Error(data.message||`${provider} connection is not configured yet.`);
@@ -3572,13 +3585,45 @@ function updateWorkspaceBadge(w){
   n.textContent=w.name||'My Workspace';b.classList.remove('hidden');
 }
 async function loadCustomerWorkspace(user){
-  const {data,error}=await authClient.rpc('ensure_current_user_workspace',{requested_name:defaultWorkspaceName(user)});
-  if(error)throw error;const row=Array.isArray(data)?data[0]:data;
-  if(!row?.workspace_id)throw new Error('PicPlanr could not load your workspace.');
-  currentWorkspace={id:row.workspace_id,name:row.workspace_name,role:row.member_role||'owner'};
-  try{sessionStorage.setItem('picplanrWorkspace',JSON.stringify(currentWorkspace))}catch{}
+  if(!authClient)throw new Error('Authentication is not ready.');
+
+  const workspaceRequest=authClient.rpc(
+    'ensure_current_user_workspace',
+    {requested_name:defaultWorkspaceName(user)}
+  );
+
+  const timeout=new Promise((_,reject)=>{
+    setTimeout(
+      ()=>reject(new Error('Your login succeeded, but the workspace took too long to load. Refresh the page and try again.')),
+      12000
+    );
+  });
+
+  const {data,error}=await Promise.race([workspaceRequest,timeout]);
+
+  if(error)throw error;
+
+  const row=Array.isArray(data)?data[0]:data;
+
+  if(!row?.workspace_id){
+    throw new Error('PicPlanr could not load your workspace.');
+  }
+
+  currentWorkspace={
+    id:row.workspace_id,
+    name:row.workspace_name,
+    role:row.member_role||'owner'
+  };
+
+  try{
+    sessionStorage.setItem('picplanrWorkspace',JSON.stringify(currentWorkspace));
+  }catch{}
+
   updateWorkspaceBadge(currentWorkspace);
-  window.dispatchEvent(new CustomEvent('picplanr:workspace-ready',{detail:{...currentWorkspace}}));
+
+  window.dispatchEvent(
+    new CustomEvent('picplanr:workspace-ready',{detail:{...currentWorkspace}})
+  );
 }
 function clearCustomerWorkspace(){currentWorkspace=null;updateWorkspaceBadge(null);try{sessionStorage.removeItem('picplanrWorkspace')}catch{}}
 
@@ -3788,9 +3833,10 @@ document.getElementById('loginForm')?.addEventListener('submit',async event=>{
 
     authMessage('Login successful. Loading your workspace…','success');
 
-    // Do not rely solely on the auth-state callback. This makes login work
-    // reliably in browsers where that callback is delayed.
-    await showAuthenticatedApp(data.user);
+    // Start loading the workspace without keeping the login button frozen.
+    // Supabase's auth-state callback may also run, so this call is deliberately
+    // not awaited here.
+    showAuthenticatedApp(data.user);
   }catch(error){
     console.error('PicPlanr login error:',error);
 

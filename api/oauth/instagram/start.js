@@ -1,9 +1,16 @@
 import crypto from 'node:crypto';
 import {cookie,safeReturnPath} from '../../_lib/http.js';
 import {instagramAuthorisationUrl} from '../../_lib/instagram.js';
+import {requireWorkspace,sendWorkspaceError} from '../../_lib/authenticated-workspace.js';
 
 function stateSecret(){
   return process.env.TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
+}
+
+function requestOrigin(req){
+  const proto=String(req.headers['x-forwarded-proto']||'https').split(',')[0].trim();
+  const host=String(req.headers['x-forwarded-host']||req.headers.host||'').split(',')[0].trim();
+  return `${proto}://${host}`;
 }
 
 function signState(payload){
@@ -17,6 +24,11 @@ function signState(payload){
 }
 
 export default async function handler(req,res){
+  if(req.method!=='GET'){
+    res.setHeader('Allow','GET');
+    return res.status(405).json({message:'Method not allowed.'});
+  }
+
   try{
     if(!(process.env.META_APP_ID&&process.env.META_APP_SECRET&&process.env.META_REDIRECT_URI)){
       return res.status(503).json({
@@ -32,14 +44,19 @@ export default async function handler(req,res){
       });
     }
 
+    const context=await requireWorkspace(req);
     const returnTo=safeReturnPath(req.query?.returnTo||'/?instagram=connected');
+    const origin=requestOrigin(req);
+
     const state=signState({
       nonce:crypto.randomBytes(24).toString('hex'),
       returnTo,
+      origin,
+      userId:context.user.id,
+      workspaceId:context.workspace.id,
       issuedAt:Date.now()
     });
 
-    // Keep these only as backward-compatible fallbacks.
     res.setHeader('Set-Cookie',[
       cookie('pp_ig_state',state,{maxAge:900}),
       cookie('pp_ig_return',returnTo,{maxAge:900})
@@ -49,11 +66,11 @@ export default async function handler(req,res){
       configured:true,
       url:instagramAuthorisationUrl({state})
     });
-  }catch(e){
-    console.error(e);
-    return res.status(500).json({
-      configured:false,
-      message:e.message||'Instagram connection could not be started.'
-    });
+  }catch(error){
+    return sendWorkspaceError(
+      res,
+      error,
+      'Instagram connection could not be started.'
+    );
   }
 }

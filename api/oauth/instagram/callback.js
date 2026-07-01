@@ -8,6 +8,16 @@ function stateSecret(){
   return process.env.TOKEN_ENCRYPTION_KEY || process.env.META_APP_SECRET;
 }
 
+function safeOrigin(value){
+  try{
+    const url=new URL(String(value||''));
+    if(url.protocol!=='https:'&&url.protocol!=='http:')throw new Error();
+    return url.origin;
+  }catch{
+    throw new Error('Instagram return address was invalid. Please reconnect Instagram.');
+  }
+}
+
 function verifySignedState(value){
   if(typeof value!=='string'||!value.includes('.')){
     throw new Error('Instagram connection security check failed. Please try again.');
@@ -42,15 +52,16 @@ function verifySignedState(value){
     throw new Error('Instagram connection expired. Please reconnect Instagram.');
   }
 
-  return {
-    returnTo:safeReturnPath(payload.returnTo||'/?instagram=connected')
-  };
-}
+  if(!payload.userId||!payload.workspaceId){
+    throw new Error('Instagram connection was not linked to a PicPlanr account. Please try again.');
+  }
 
-function appOrigin(req){
-  const proto=String(req.headers['x-forwarded-proto']||'https').split(',')[0].trim();
-  const host=String(req.headers['x-forwarded-host']||req.headers.host||'').split(',')[0].trim();
-  return `${proto}://${host}`;
+  return {
+    returnTo:safeReturnPath(payload.returnTo||'/?instagram=connected'),
+    origin:safeOrigin(payload.origin),
+    userId:String(payload.userId),
+    workspaceId:String(payload.workspaceId)
+  };
 }
 
 function popupResponse(res,{origin,returnTo,status,message=''}) {
@@ -89,7 +100,7 @@ function popupResponse(res,{origin,returnTo,status,message=''}) {
       if(window.opener && !window.opener.closed){
         window.opener.postMessage(payload,origin);
         window.opener.focus();
-        setTimeout(()=>window.close(),250);
+        setTimeout(()=>window.close(),350);
       }else{
         window.location.replace(fallback);
       }
@@ -103,8 +114,8 @@ function popupResponse(res,{origin,returnTo,status,message=''}) {
 
 export default async function handler(req,res){
   const cookies=parseCookies(req);
-  const origin=appOrigin(req);
   let returnTo=safeReturnPath(cookies.pp_ig_return||'/?instagram=connected');
+  let origin='https://www.picplanrapp.com';
 
   try{
     if(req.query?.error){
@@ -117,6 +128,7 @@ export default async function handler(req,res){
 
     const verified=verifySignedState(String(req.query?.state||''));
     returnTo=verified.returnTo;
+    origin=verified.origin;
 
     const token=await exchangeCode(String(req.query.code));
     const profile=await getProfile(token.accessToken);
@@ -127,6 +139,8 @@ export default async function handler(req,res){
 
     await saveInstagramConnection({
       id,
+      user_id:verified.userId,
+      workspace_id:verified.workspaceId,
       provider:'instagram',
       provider_account_id:String(profile.user_id||profile.id||token.userId||''),
       provider_account_name:profile.username||'Instagram account',
@@ -150,8 +164,8 @@ export default async function handler(req,res){
       returnTo,
       status:'connected'
     });
-  }catch(e){
-    console.error(e);
+  }catch(error){
+    console.error(error);
 
     res.setHeader('Set-Cookie',[
       cookie('pp_ig_state','',{maxAge:0}),
@@ -160,9 +174,9 @@ export default async function handler(req,res){
 
     return popupResponse(res,{
       origin,
-      returnTo:'/',
+      returnTo,
       status:'error',
-      message:e.message||'Instagram could not be connected.'
+      message:error.message||'Instagram could not be connected.'
     });
   }
 }
