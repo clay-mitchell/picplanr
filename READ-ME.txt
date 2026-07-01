@@ -1,30 +1,13 @@
-PICPLANR VERSION 41.1 — WORKING WEBSITE LOGO
+PICPLANR VERSION 41.2 — PROFESSIONAL LOGIN LOGO
 
-Replace:
+Replace only:
 
 index.html
-api/website/brand-asset.js
 
-This version fixes the previous logo attempt.
+The temporary gradient P icon and typed PicPlanr wordmark on the login screen
+have been replaced with the approved full PicPlanr logo already used inside
+the workspace.
 
-It searches the client website for:
+The tagline remains underneath the logo.
 
-• Structured logo data
-• Header and brand logo images
-• Website metadata
-• Apple touch icons
-• Favicons
-• Social preview images only as a final fallback
-
-The server downloads the selected image and sends it back to PicPlanr as an
-embedded image. This avoids browser hotlink restrictions and broken external
-image URLs.
-
-Existing saved website reports can load the logo without consuming another
-website analysis. Once found, the logo is saved into the workspace account
-memory.
-
-If no usable logo is available, PicPlanr keeps the professional initials
-fallback.
-
-No SQL, Stripe or Vercel environment changes are required.
+No Supabase, Stripe or Vercel setting changes are required.
