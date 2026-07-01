@@ -8,12 +8,12 @@ function stateSecret(){
 }
 
 function canonicalOrigin(){
-  const configured=process.env.PICPLANR_APP_URL||process.env.APP_URL||'https://www.picplanrapp.com';
+  const configured=process.env.PICPLANR_APP_URL||process.env.APP_URL||'https://picplanrapp.com';
 
   try{
     return new URL(configured).origin;
   }catch{
-    return 'https://www.picplanrapp.com';
+    return 'https://picplanrapp.com';
   }
 }
 

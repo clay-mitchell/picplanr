@@ -115,7 +115,7 @@ function popupResponse(res,{origin,returnTo,status,message=''}) {
 export default async function handler(req,res){
   const cookies=parseCookies(req);
   let returnTo=safeReturnPath(cookies.pp_ig_return||'/?instagram=connected');
-  let origin='https://www.picplanrapp.com';
+  let origin='https://picplanrapp.com';
 
   try{
     if(req.query?.error){

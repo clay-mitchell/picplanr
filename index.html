@@ -2,10 +2,10 @@
 <script>
 (function () {
   try {
-    const canonicalOrigin = 'https://www.picplanrapp.com';
+    const canonicalOrigin = 'https://picplanrapp.com';
     const host = window.location.hostname;
 
-    if (host.endsWith('.vercel.app')) {
+    if (host.endsWith('.vercel.app') || host === 'www.picplanrapp.com') {
       const target =
         canonicalOrigin +
         window.location.pathname +
@@ -1054,7 +1054,7 @@ body[data-page="audit"] .account-strength-results{
 
 .workspace-badge{display:flex;align-items:center;gap:9px;padding:8px 11px;border:1px solid #2d3e61;border-radius:13px;background:#0a1222}.workspace-badge.hidden{display:none}.workspace-dot{width:9px;height:9px;border-radius:50%;background:#65e0af;box-shadow:0 0 0 4px rgba(101,224,175,.12)}.workspace-badge>div{display:flex;flex-direction:column;min-width:0}.workspace-badge small{color:#71809f;font-size:8px;font-weight:900;letter-spacing:.12em}.workspace-badge strong{max-width:170px;overflow:hidden;color:#dbe4f5;font-size:11px;text-overflow:ellipsis;white-space:nowrap}@media(max-width:760px){.workspace-badge{display:none!important}}
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v38-canonical-redirect-fix" data-page="onboarding">
+</head><body data-build="picplanr-v38-apex-domain-fix" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">

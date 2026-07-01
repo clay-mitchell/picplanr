@@ -1,13 +1,24 @@
-PICPLANR FINAL DOMAIN FIX
+PICPLANR APEX DOMAIN FIX
 
-Replace the root index.html file in GitHub with the index.html in this ZIP.
+This fixes the login glitch caused by switching between:
+- https://picplanrapp.com
+- https://www.picplanrapp.com
+- Vercel preview addresses
 
-This forces every PicPlanr page opened on a .vercel.app address to redirect
-immediately to https://www.picplanrapp.com while preserving the path and query.
+Replace these exact files in GitHub:
+1. index.html
+2. api/oauth/instagram/start.js
+3. api/oauth/instagram/callback.js
 
-After replacing:
-1. Commit the change.
-2. Wait for the Production deployment.
-3. Open https://www.picplanrapp.com
-4. Log in.
-5. Test Connect Instagram again.
+Then set these Vercel Production environment variables:
+
+PICPLANR_APP_URL=https://picplanrapp.com
+META_REDIRECT_URI=https://picplanrapp.com/api/oauth/instagram/callback
+
+In Meta Business Login settings, add this exact OAuth redirect URI:
+https://picplanrapp.com/api/oauth/instagram/callback
+
+Remove the www version and any vercel.app versions from the Instagram OAuth redirect list.
+
+Redeploy Production, then always open:
+https://picplanrapp.com
