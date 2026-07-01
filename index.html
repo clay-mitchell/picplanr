@@ -1066,7 +1066,7 @@ body[data-page="audit"] .account-strength-results{
 @media(max-width:1100px){.usage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:780px){.plans-grid,.usage-grid{grid-template-columns:1fr}.billing-plan-banner{align-items:flex-start;flex-direction:column}}
 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v40-5-account-memory" data-page="onboarding">
+</head><body data-build="picplanr-v40-6-no-caption-dashes" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -1425,8 +1425,9 @@ body[data-page="audit"] .account-strength-results{
 const $=id=>document.getElementById(id);
 function cleanCaptionText(text){
   return String(text||'')
-    .replace(/[—–]/g,', ')
-    .replace(/\s+-\s+/g,', ')
+    .replace(/[‐‑‒–—―−]/g,', ')
+    .replace(/([A-Za-z0-9])\-([A-Za-z0-9])/g,'$1 $2')
+    .replace(/\s*\-\s*/g,', ')
     .replace(/\bcolor\b/gi,'colour')
     .replace(/\bcolors\b/gi,'colours')
     .replace(/\borganize\b/gi,'organise')
@@ -1445,8 +1446,10 @@ function cleanCaptionText(text){
     .replace(/\bgray\b/gi,'grey')
     .replace(/\btraveler\b/gi,'traveller')
     .replace(/\btraveling\b/gi,'travelling')
+    .replace(/,{2,}/g,',')
     .replace(/\s{2,}/g,' ')
     .replace(/\s+,/g,',')
+    .replace(/,\s*([.!?])/g,'$1')
     .trim();
 }
 function cleanCaptionObject(caption,index=0){

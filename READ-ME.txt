@@ -1,21 +1,23 @@
-PICPLANR VERSION 40.4 — IMAGE USAGE TRACKING FIX
+PICPLANR VERSION 40.6 — NO DASHES IN CAPTIONS
 
-Replace only the root index.html file in GitHub.
+Replace these two files:
 
-CAUSE
-The main PicPlanr image analysis request was using a normal browser fetch.
-It was not sending the signed-in Supabase access token to /api/picplanr.
-The billing service therefore could not reliably attach image usage to the
-correct workspace.
+index.html
+api/picplanr.js
 
-FIX
-• All PicPlanr artificial intelligence requests now use authenticatedFetch.
-• Image analysis usage is attached to the signed-in workspace.
-• The subscription usage display refreshes automatically after an image
-  analysis or caption regeneration.
+This update applies the rule twice:
 
-IMPORTANT
-The image already analysed before this fix will not be added retrospectively.
-After deployment, analyse one new image. The counter should move to 1 of 250.
+1. The artificial intelligence prompt is told never to use any dash or hyphen
+   character, including hyphenated compound words.
+2. The browser cleans any dash that still slips through before showing the
+   caption to the customer.
 
-No Stripe, Supabase or Vercel settings need to be changed.
+Examples:
+
+city-centre becomes city centre
+behind-the-scenes becomes behind the scenes
+venue — available now becomes venue, available now
+
+This applies to feed captions, caption regenerations and Story text.
+
+No Supabase, Stripe or Vercel environment changes are required.
