@@ -1,13 +1,25 @@
-PICPLANR VERSION 41.2 — PROFESSIONAL LOGIN LOGO
+PICPLANR VERSION 41.3 — ACCOUNT DELETION
 
-Replace only:
+Replace:
 
 index.html
+api/account/delete.js
 
-The temporary gradient P icon and typed PicPlanr wordmark on the login screen
-have been replaced with the approved full PicPlanr logo already used inside
-the workspace.
+WHAT WAS ADDED
 
-The tagline remains underneath the logo.
+• A small, subtle Account controls section at the bottom of Plan and usage.
+• A low emphasis Delete account link.
+• A confirmation modal requiring the customer to type DELETE.
+• Permanent removal of the authenticated user's PicPlanr account.
+• Workspace deletion for a sole workspace owner.
+• Active Stripe subscription cancellation before deletion.
+• Removal of saved content, account voice, analysis, schedules and usage data
+  through the workspace database relationships.
+• Protection against deleting a workspace that still has other team members.
 
-No Supabase, Stripe or Vercel setting changes are required.
+No SQL, Stripe or Vercel environment changes are required.
+
+IMPORTANT
+
+Test this with a separate test customer account. Do not test deletion using the
+main owner account unless you genuinely intend to permanently remove it.
