@@ -1,15 +1,21 @@
-PICPLANR VERSION 40.3 — WEBSITE ANALYSIS LOGIN FIX
+PICPLANR VERSION 40.4 — IMAGE USAGE TRACKING FIX
 
 Replace only the root index.html file in GitHub.
 
-The website analysis button was calling the protected server endpoint without
-sending the signed-in Supabase access token. The server therefore correctly
-responded with "Sign in to continue" even though the customer was logged in.
+CAUSE
+The main PicPlanr image analysis request was using a normal browser fetch.
+It was not sending the signed-in Supabase access token to /api/picplanr.
+The billing service therefore could not reliably attach image usage to the
+correct workspace.
 
-After replacing:
-1. Commit index.html.
-2. Wait for the Production deployment.
-3. Refresh PicPlanr.
-4. Complete page one again.
+FIX
+• All PicPlanr artificial intelligence requests now use authenticatedFetch.
+• Image analysis usage is attached to the signed-in workspace.
+• The subscription usage display refreshes automatically after an image
+  analysis or caption regeneration.
+
+IMPORTANT
+The image already analysed before this fix will not be added retrospectively.
+After deployment, analyse one new image. The counter should move to 1 of 250.
 
 No Stripe, Supabase or Vercel settings need to be changed.

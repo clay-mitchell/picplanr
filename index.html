@@ -1066,7 +1066,7 @@ body[data-page="audit"] .account-strength-results{
 @media(max-width:1100px){.usage-grid{grid-template-columns:repeat(2,1fr)}}@media(max-width:780px){.plans-grid,.usage-grid{grid-template-columns:1fr}.billing-plan-banner{align-items:flex-start;flex-direction:column}}
 
 </style><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-</head><body data-build="picplanr-v40-3-website-auth-fix" data-page="onboarding">
+</head><body data-build="picplanr-v40-4-ai-usage-auth-fix" data-page="onboarding">
 <div class="auth-screen" id="authScreen">
   <div class="auth-shell">
     <div class="auth-brand">
@@ -1808,7 +1808,7 @@ async function api(action,payload,options={}){
 
   for(let attempt=0;attempt<maxAttempts;attempt++){
     try{
-      const r=await fetch('/api/picplanr',{
+      const r=await authenticatedFetch('/api/picplanr',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body:JSON.stringify({action,...payload})
@@ -1824,6 +1824,9 @@ async function api(action,payload,options={}){
       }
 
       if(r.ok){
+        if(action==='image'||action==='validate'){
+          setTimeout(()=>loadBillingUsage(false),250);
+        }
         return body;
       }
 
