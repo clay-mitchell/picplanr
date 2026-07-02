@@ -1,34 +1,30 @@
-PICPLANR VERSION 41.7 — SAFARI INSTAGRAM POPUP FIX
+PICPLANR VERSION 42.2 — INSTAGRAM PUBLISHING DIAGNOSTIC
 
 Replace only:
 
-index.html
+api/instagram/publish.js
 
-ROOT CAUSE
+This does not alter the publishing workflow. It makes the development version
+show the exact safe error returned by Supabase or Meta and the stage where it
+failed.
 
-Safari was blocking the Instagram popup because PicPlanr attempted to open it
-after waiting for the OAuth start request. When that happened, PicPlanr fell
-back to sending the main app tab to Meta. Returning from Meta then loaded the
-login screen.
+Possible stages include:
 
-FIX
+• Subscription check
+• Request validation
+• Instagram connection lookup
+• Instagram token decryption
+• Temporary image upload
+• Publishing record creation
+• Instagram media container creation
+• Instagram media publish
+• Usage recording
 
-• PicPlanr now opens a blank connection popup immediately when the user clicks.
-• The authenticated OAuth request runs after the popup already exists.
-• The popup is then redirected to Meta.
-• The main PicPlanr tab never leaves the app.
-• If Safari blocks the popup, PicPlanr shows a clear message instead of
-  navigating the logged-in app away.
+After deployment:
 
-TEST
+1. Try publishing the same test post once.
+2. Send a screenshot of the new error message.
+3. Do not reconnect Instagram or change Meta settings until the exact stage is
+   known.
 
-1. Deploy index.html.
-2. In Safari, allow popups for www.picplanrapp.com if prompted.
-3. Log into PicPlanr.
-4. Open Connected accounts.
-5. Click Connect Instagram.
-6. Complete Meta authorisation in the popup.
-7. The original PicPlanr tab should remain logged in and show Instagram as
-   connected.
-
-No Meta, Supabase, Stripe or Vercel setting changes are required.
+The detailed error is also written to the Vercel function logs.
