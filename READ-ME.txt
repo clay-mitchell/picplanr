@@ -1,25 +1,34 @@
-PICPLANR VERSION 41.3 — ACCOUNT DELETION
+PICPLANR VERSION 41.7 — SAFARI INSTAGRAM POPUP FIX
 
-Replace:
+Replace only:
 
 index.html
-api/account/delete.js
 
-WHAT WAS ADDED
+ROOT CAUSE
 
-• A small, subtle Account controls section at the bottom of Plan and usage.
-• A low emphasis Delete account link.
-• A confirmation modal requiring the customer to type DELETE.
-• Permanent removal of the authenticated user's PicPlanr account.
-• Workspace deletion for a sole workspace owner.
-• Active Stripe subscription cancellation before deletion.
-• Removal of saved content, account voice, analysis, schedules and usage data
-  through the workspace database relationships.
-• Protection against deleting a workspace that still has other team members.
+Safari was blocking the Instagram popup because PicPlanr attempted to open it
+after waiting for the OAuth start request. When that happened, PicPlanr fell
+back to sending the main app tab to Meta. Returning from Meta then loaded the
+login screen.
 
-No SQL, Stripe or Vercel environment changes are required.
+FIX
 
-IMPORTANT
+• PicPlanr now opens a blank connection popup immediately when the user clicks.
+• The authenticated OAuth request runs after the popup already exists.
+• The popup is then redirected to Meta.
+• The main PicPlanr tab never leaves the app.
+• If Safari blocks the popup, PicPlanr shows a clear message instead of
+  navigating the logged-in app away.
 
-Test this with a separate test customer account. Do not test deletion using the
-main owner account unless you genuinely intend to permanently remove it.
+TEST
+
+1. Deploy index.html.
+2. In Safari, allow popups for www.picplanrapp.com if prompted.
+3. Log into PicPlanr.
+4. Open Connected accounts.
+5. Click Connect Instagram.
+6. Complete Meta authorisation in the popup.
+7. The original PicPlanr tab should remain logged in and show Instagram as
+   connected.
+
+No Meta, Supabase, Stripe or Vercel setting changes are required.
