@@ -1,28 +1,39 @@
-PICPLANR VERSION 40.5 — SAVED ACCOUNT VOICE
+PICPLANR VERSION 41.5 — INSTAGRAM LOGIN SESSION DOMAIN FIX
 
-WHAT THIS FIX DOES
-
-• Saves the client's account voice, onboarding answers and website analysis.
-• Restores them automatically whenever the workspace loads.
-• Lets image analysis continue without repeating page one.
-• Does not consume another website analysis merely to reuse saved information.
-• Uses browser storage as a fallback and Supabase as the permanent workspace record.
-• Restores the account voice on another device after login.
-• Converts an older saved website analysis into a usable account voice automatically.
-
-FILES TO REPLACE
+Replace:
 
 index.html
-api/account/profile.js
+api/oauth/instagram/start.js
+api/oauth/instagram/callback.js
 
-SQL TO RUN ONCE
+CAUSE
 
-supabase/account-voice-memory.sql
+The current front end redirects www.picplanrapp.com to picplanrapp.com, while the
+Meta redirect URI is configured on www.picplanrapp.com. Supabase browser sessions
+are stored per web origin, so moving between www and the apex domain can make the
+customer appear logged out after Instagram returns.
 
-The existing website analysis already completed on this browser can be restored
-without running the website analysis again. After deployment and running the SQL,
-refresh PicPlanr, upload an image and continue.
+FIX
 
-A future separate button can be added for customers who deliberately want to
-refresh their website analysis. Reusing the saved voice does not count as a new
-website analysis.
+• www.picplanrapp.com is now the single canonical domain.
+• picplanrapp.com and Vercel preview domains redirect to www.picplanrapp.com.
+• Instagram OAuth state and fallback URLs use the same www origin.
+• The popup returns to the already logged-in PicPlanr window instead of opening a
+  fresh login session on another domain.
+
+VERIFY THESE SETTINGS
+
+Vercel:
+PICPLANR_APP_URL=https://www.picplanrapp.com
+
+Meta redirect URI:
+https://www.picplanrapp.com/api/oauth/instagram/callback
+
+Supabase Site URL:
+https://www.picplanrapp.com
+
+Supabase Redirect URLs should include:
+https://www.picplanrapp.com/**
+
+After deployment, clear Safari website data for both picplanrapp.com and
+www.picplanrapp.com once, then log in again on www.picplanrapp.com before testing.
