@@ -1,39 +1,49 @@
-PICPLANR VERSION 41.5 — INSTAGRAM LOGIN SESSION DOMAIN FIX
+PICPLANR VERSION 42.1 — META APP REVIEW RECORDING MODE
 
-Replace:
+This build keeps the real Instagram publishing introduced in Version 42 and
+adds a cleaner guided recording experience.
+
+FILES
+
+Replace only:
 
 index.html
-api/oauth/instagram/start.js
-api/oauth/instagram/callback.js
 
-CAUSE
+Keep the Version 42 server files and Supabase publishing SQL already installed.
 
-The current front end redirects www.picplanrapp.com to picplanrapp.com, while the
-Meta redirect URI is configured on www.picplanrapp.com. Supabase browser sessions
-are stored per web origin, so moving between www and the apex domain can make the
-customer appear logged out after Instagram returns.
+HOW TO OPEN REVIEW MODE
 
-FIX
+Use:
 
-• www.picplanrapp.com is now the single canonical domain.
-• picplanrapp.com and Vercel preview domains redirect to www.picplanrapp.com.
-• Instagram OAuth state and fallback URLs use the same www origin.
-• The popup returns to the already logged-in PicPlanr window instead of opening a
-  fresh login session on another domain.
+https://www.picplanrapp.com/?review=instagram
 
-VERIFY THESE SETTINGS
+After login, PicPlanr opens Connected accounts and displays a discreet four-step
+review progress strip:
 
-Vercel:
-PICPLANR_APP_URL=https://www.picplanrapp.com
+1. Connect Instagram
+2. Open Smart calendar
+3. Review and approve
+4. Publish and open the live post
 
-Meta redirect URI:
-https://www.picplanrapp.com/api/oauth/instagram/callback
+RECORDING FLOW
 
-Supabase Site URL:
-https://www.picplanrapp.com
+• Begin on Connected accounts
+• Connect the Instagram professional test account
+• Click Continue to Smart calendar
+• Open one scheduled post
+• Review the selected image and caption
+• Tick the explicit approval box
+• Click Publish to Instagram now
+• Show the large Published successfully result
+• Click Open the Instagram post
 
-Supabase Redirect URLs should include:
-https://www.picplanrapp.com/**
+This mode does not fake or simulate a publish. The final success state only
+appears after the real Instagram publishing endpoint returns successfully.
 
-After deployment, clear Safari website data for both picplanrapp.com and
-www.picplanrapp.com once, then log in again on www.picplanrapp.com before testing.
+NORMAL CUSTOMERS
+
+The guided strip is only visible when the URL contains:
+
+?review=instagram
+
+The normal PicPlanr interface remains unchanged for ordinary customers.
