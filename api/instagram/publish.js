@@ -98,6 +98,84 @@ async function graphGet(path,params){
   return data;
 }
 
+function wait(milliseconds){
+  return new Promise(resolve=>setTimeout(resolve,milliseconds));
+}
+
+async function waitForContainerReady(containerId,accessToken){
+  let lastStatus='IN_PROGRESS';
+
+  for(let attempt=1;attempt<=12;attempt++){
+    const status=await graphGet(
+      `/${encodeURIComponent(containerId)}`,
+      {
+        fields:'status_code,status',
+        access_token:accessToken
+      }
+    );
+
+    lastStatus=String(
+      status.status_code||
+      status.status||
+      'IN_PROGRESS'
+    ).toUpperCase();
+
+    if(lastStatus==='FINISHED'){
+      await wait(1500);
+      return;
+    }
+
+    if(lastStatus==='ERROR'||lastStatus==='EXPIRED'){
+      const error=new Error(
+        `Instagram could not process the image. Container status: ${lastStatus}.`
+      );
+      error.statusCode=400;
+      error.code='instagram_container_failed';
+      throw error;
+    }
+
+    await wait(2500);
+  }
+
+  const error=new Error(
+    `Instagram is still processing the image. Last container status: ${lastStatus}. Please try again.`
+  );
+  error.statusCode=409;
+  error.code='instagram_container_not_ready';
+  throw error;
+}
+
+async function publishContainerWithRetry(
+  instagramUserId,
+  containerId,
+  accessToken
+){
+  for(let attempt=1;attempt<=4;attempt++){
+    try{
+      return await graphRequest(
+        `/${encodeURIComponent(instagramUserId)}/media_publish`,
+        {
+          creation_id:String(containerId),
+          access_token:accessToken
+        }
+      );
+    }catch(error){
+      const mediaNotReady=
+        Number(error?.metaCode)===9007||
+        Number(error?.metaSubcode)===2207027||
+        /media id is not available/i.test(String(error?.message||''));
+
+      if(!mediaNotReady||attempt===4){
+        throw error;
+      }
+
+      await wait(2500);
+    }
+  }
+
+  throw new Error('Instagram could not publish the prepared media.');
+}
+
 function publicStorageUrl(supabase,path){
   const {data}=supabase.storage
     .from('picplanr-publishing')
@@ -330,14 +408,19 @@ export default async function handler(req,res){
       throw new Error('Instagram did not create a media container.');
     }
 
+    stage='Instagram media processing';
+
+    await waitForContainerReady(
+      String(container.id),
+      accessToken
+    );
+
     stage='Instagram media publish';
 
-    const published=await graphRequest(
-      `/${encodeURIComponent(instagramUserId)}/media_publish`,
-      {
-        creation_id:String(container.id),
-        access_token:accessToken
-      }
+    const published=await publishContainerWithRetry(
+      instagramUserId,
+      String(container.id),
+      accessToken
     );
 
     if(!published.id){

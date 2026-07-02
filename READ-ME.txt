@@ -1,30 +1,19 @@
-PICPLANR VERSION 42.2 — INSTAGRAM PUBLISHING DIAGNOSTIC
+PICPLANR VERSION 42.3 — INSTAGRAM MEDIA READY FIX
 
 Replace only:
 
 api/instagram/publish.js
 
-This does not alter the publishing workflow. It makes the development version
-show the exact safe error returned by Supabase or Meta and the stage where it
-failed.
+WHY IT FAILED
 
-Possible stages include:
+Meta accepted the image and returned a container ID, but PicPlanr attempted to
+publish before Instagram had finished processing that container.
 
-• Subscription check
-• Request validation
-• Instagram connection lookup
-• Instagram token decryption
-• Temporary image upload
-• Publishing record creation
-• Instagram media container creation
-• Instagram media publish
-• Usage recording
+FIX
 
-After deployment:
+• Waits for container status FINISHED
+• Adds a short safety delay
+• Retries Meta error 9007 and subcode 2207027
+• Returns a clear timeout or processing error if Meta never becomes ready
 
-1. Try publishing the same test post once.
-2. Send a screenshot of the new error message.
-3. Do not reconnect Instagram or change Meta settings until the exact stage is
-   known.
-
-The detailed error is also written to the Vercel function logs.
+No SQL or environment changes are required.
