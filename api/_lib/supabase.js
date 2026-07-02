@@ -124,3 +124,12 @@ export async function saveBrandProfile(row){
     headers:{Prefer:'return=representation'}
   }).then(x=>x?.[0]);
 }
+export async function saveLinkedInConnection(row) {
+  return request('social_connections', {
+    method: 'POST',
+    body: row,
+    headers: {
+      Prefer: 'return=representation'
+    }
+  }).then((result) => result?.[0]);
+}
