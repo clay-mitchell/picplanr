@@ -1,6 +1,6 @@
 import {PLANS,normalisePlan} from './plans.js';
 
-const ACTIVE_STATUSES=new Set(['active','trialing']);
+const PAID_ACTIVE_STATUSES=new Set(['active','trialing']);
 
 function monthWindow(now=new Date()){
   const start=new Date(Date.UTC(now.getUTCFullYear(),now.getUTCMonth(),1));
@@ -19,12 +19,15 @@ export async function ensureWorkspaceSubscription(supabase,workspaceId){
   if(existing)return existing;
 
   const {start,end}=monthWindow();
+  const now=new Date().toISOString();
+
   const {data:created,error:createError}=await supabase
     .from('workspace_subscriptions')
     .insert({
       workspace_id:workspaceId,
       plan_key:'starter',
-      status:'active',
+      status:'trialing',
+      trial_started_at:now,
       current_period_start:start,
       current_period_end:end
     })
@@ -35,9 +38,17 @@ export async function ensureWorkspaceSubscription(supabase,workspaceId){
   return created;
 }
 
+export function isFreeTrialSubscription(subscription){
+  return (
+    String(subscription?.status||'')==='trialing' &&
+    !subscription?.stripe_subscription_id
+  );
+}
+
 export async function getWorkspaceBilling(supabase,workspaceId){
   const subscription=await ensureWorkspaceSubscription(supabase,workspaceId);
-  const planKey=normalisePlan(subscription.plan_key);
+  const isTrial=isFreeTrialSubscription(subscription);
+  const planKey=isTrial?'trial':normalisePlan(subscription.plan_key);
   const plan=PLANS[planKey];
   const {start,end}=monthWindow();
 
@@ -50,13 +61,22 @@ export async function getWorkspaceBilling(supabase,workspaceId){
 
   if(usageError)throw usageError;
 
-  const usage=Object.fromEntries(Object.keys(plan.limits).map(key=>[key,0]));
+  const usage=Object.fromEntries(
+    Object.keys(plan.limits).map(key=>[key,0])
+  );
+
   for(const row of usageRows||[]){
-    usage[row.metric]=(usage[row.metric]||0)+Number(row.quantity||0);
+    if(Object.prototype.hasOwnProperty.call(usage,row.metric)){
+      usage[row.metric]=(usage[row.metric]||0)+Number(row.quantity||0);
+    }
   }
 
-  const status=String(subscription.status||'active');
-  const accessAllowed=ACTIVE_STATUSES.has(status)||(!subscription.stripe_subscription_id&&planKey==='starter');
+  const trialCompleted=Boolean(subscription.trial_completed_at);
+  const paidAccess=
+    Boolean(subscription.stripe_subscription_id) &&
+    PAID_ACTIVE_STATUSES.has(String(subscription.status||''));
+
+  const accessAllowed=isTrial?!trialCompleted:paidAccess;
 
   return {
     subscription,
@@ -64,6 +84,9 @@ export async function getWorkspaceBilling(supabase,workspaceId){
     plan,
     usage,
     accessAllowed,
+    isTrial,
+    trialCompleted,
+    paidAccess,
     period:{start,end}
   };
 }
@@ -76,14 +99,37 @@ export async function assertAndConsumeUsage({
   metadata={}
 }){
   const billing=await getWorkspaceBilling(supabase,workspaceId);
-  const limit=Number(billing.plan.limits[metric]);
+
+  if(billing.isTrial&&billing.trialCompleted){
+    const error=new Error(
+      'Your one-time free trial has been completed. Choose a plan to continue.'
+    );
+    error.statusCode=402;
+    error.code='free_trial_completed';
+    error.plan='trial';
+    throw error;
+  }
+
+  if(billing.isTrial&&metric==='scheduled_posts'){
+    const error=new Error(
+      'Your free trial includes the schedule preview, but a subscription is required to save or schedule posts.'
+    );
+    error.statusCode=402;
+    error.code='subscription_required_to_schedule';
+    error.plan='trial';
+    throw error;
+  }
 
   if(!billing.accessAllowed){
-    const error=new Error('Your subscription is not active. Update your billing details to continue.');
+    const error=new Error(
+      'Your subscription is not active. Choose a plan to continue.'
+    );
     error.statusCode=402;
     error.code='subscription_inactive';
     throw error;
   }
+
+  const limit=Number(billing.plan.limits[metric]);
 
   if(!Number.isFinite(limit)){
     const error=new Error(`No limit is configured for ${metric}.`);
@@ -95,9 +141,13 @@ export async function assertAndConsumeUsage({
   const requested=Math.max(0,Number(quantity)||0);
 
   if(used+requested>limit){
-    const error=new Error(`You have reached the ${billing.plan.name} plan limit for this feature.`);
+    const error=new Error(
+      billing.isTrial
+        ?'You have reached the allowance for your one-time free trial.'
+        :`You have reached the ${billing.plan.name} plan limit for this feature.`
+    );
     error.statusCode=402;
-    error.code='plan_limit_reached';
+    error.code=billing.isTrial?'free_trial_limit_reached':'plan_limit_reached';
     error.metric=metric;
     error.used=used;
     error.limit=limit;
@@ -123,8 +173,13 @@ export async function assertAndConsumeUsage({
   };
 }
 
-export function sendBillingError(res,error,fallback='This action could not be completed.'){
+export function sendBillingError(
+  res,
+  error,
+  fallback='This action could not be completed.'
+){
   const status=Number(error?.statusCode)||500;
+
   return res.status(status).json({
     error:error?.message||fallback,
     code:error?.code||'billing_error',
